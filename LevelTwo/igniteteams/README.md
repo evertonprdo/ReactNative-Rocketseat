@@ -30,10 +30,10 @@ Ignite Teams é um aplicativo que permite a criação e gerenciamento de turmas 
 ## Capturas de Tela
 
 ### Tela Inicial
-[!Tela Inicial](screenshots/1.png)
+![Tela Inicial](screenshots/1.png)
 ### Cadastro de Time, Cadastro e Listagem de jogadores
-[!Cadastro de Time](screenshots/3.png)
-[!Jogadores e Cadastro](screenshots/2.png)
+![Cadastro de Time](screenshots/3.png)
+![Jogadores e Cadastro](screenshots/2.png)
 
 ## Créditos
 
