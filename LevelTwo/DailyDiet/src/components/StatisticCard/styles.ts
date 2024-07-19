@@ -1,3 +1,4 @@
+import { ArrowUpRight } from "phosphor-react-native";
 import { Pressable } from "react-native";
 import styled, { css } from "styled-components/native";
 
@@ -38,3 +39,22 @@ export const SubHeadline = styled.Text`
         color: ${theme.COLORS.GRAY_200};
     `}
 `;
+
+export const PressableIcon = styled.Pressable`
+    position: absolute;
+    border-radius: 73px;
+    padding: 7px;
+
+    top: 8px;
+    right: 8px;
+
+    z-index: 7;
+`;
+
+type OverviewProps = {
+    type: "GREEN" | "RED"
+}
+export const Icon = styled(ArrowUpRight).attrs<OverviewProps>(({ theme, type }) => ({
+    color: type === "GREEN" ? theme.COLORS.GREEN_DARK : theme.COLORS.RED_DARK,
+    size: 24,
+}))``;

@@ -1,3 +1,4 @@
+import { Plus } from "phosphor-react-native";
 import { Pressable, Text } from "react-native";
 import styled, { css } from "styled-components/native";
 
@@ -35,3 +36,20 @@ export const Label = styled(Text)< Omit<Props, "activited"> >`
         font-size: ${ theme.FONT_SIZE.BS }px;
     `}
 `;
+
+export const NewMealContainer = styled.View`
+    gap: 8px;
+`;
+
+export const ButtonLabel = styled.Text`
+    ${({theme}) => css`
+        font-family: ${theme.FONT_FAMILY.REGULAR};
+        font-size: ${theme.FONT_SIZE.BM }px;
+        color: ${theme.COLORS.GRAY_100};
+    `}
+`;
+
+export const Icon = styled(Plus).attrs(({ theme }) => ({
+    color: theme.COLORS.WHITE,
+    size: 18,
+}))``;

@@ -1,14 +1,22 @@
+import { useState } from "react";
 import { View } from "react-native";
-import { Container, Header, Icon, Logo, Profile } from "./styles";
+import { useNavigation } from "@react-navigation/native";
 
 import logoImg from "@assets/logo/logo.png"
 import profileImg from "@assets/profile/profile.jpeg"
 
+import { Container, Header, Logo, Profile } from "./styles";
+import { NewMealButton } from "@components/Button";
+import { StatisticCardOverview } from "@components/StatisticCard";
+
+import { MealsDTO, DATA } from "../../DATA";
 import { MealsSectionList } from "@components/MealsSectionList";
-import { NewMealButton } from "@components/MealsSectionList/NewMealButton";
-import { StatisticCard } from "@components/StatisticCard";
 
 export function Home() {
+    const navigation = useNavigation();
+
+    const [ data, setData ] = useState<MealsDTO>(DATA);
+
     return (
         <Container>
             <Header>
@@ -20,18 +28,18 @@ export function Home() {
                 />
             </Header>
 
-            <View>
-                <StatisticCard
-                    type="RED"
-                    headline="32,03%"
-                    subHeadline="das refeições dentro da dieta"
-                />
-                <Icon type="RED"/>
-            </View>
+            <StatisticCardOverview
+                onPress={() => navigation.navigate("statistics")}
+            />
 
-            <NewMealButton/>
+            <NewMealButton
+                onPress={ () => navigation.navigate("menage_meal") }
+            />
 
-            <MealsSectionList/>
+            <MealsSectionList
+                data={data}
+                onPress={ () => navigation.navigate("meal") }
+            />
         </Container>
     )
 }

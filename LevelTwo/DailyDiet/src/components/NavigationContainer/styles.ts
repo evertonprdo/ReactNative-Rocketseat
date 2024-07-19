@@ -39,6 +39,8 @@ export const Content = styled.View`
 
 export const PressableIcon = styled.Pressable`
     position: absolute;
+    border-radius: 73px;
+    padding: 7px;
 
     top: 24px;
     left: 24px;

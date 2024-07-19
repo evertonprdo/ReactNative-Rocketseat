@@ -8,7 +8,6 @@ type Props = TextInputProps & {
 }
 
 export function Input({ type, label, sizeNumber = 70, ...rest }: Props) {
-    console.log(sizeNumber)
     return (
         <Container sizeNumber={sizeNumber}>
             <Label>

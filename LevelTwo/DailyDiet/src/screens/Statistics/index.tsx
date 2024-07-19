@@ -1,8 +1,12 @@
+import { useNavigation } from "@react-navigation/native";
+
+import { Container, Data, Title, TwoColumn } from "./styles";
 import { NavigationContainer } from "@components/NavigationContainer";
 import { StatisticCard } from "@components/StatisticCard";
-import { Container, Data, Title, TwoColumn } from "./styles";
 
 export function Statistics() {
+    const { navigate } = useNavigation();
+
     return (
         <NavigationContainer
             type="RED"
@@ -13,6 +17,7 @@ export function Statistics() {
                     type="RED"
                 />
             )}
+            onPress={() => navigate("home")}
         >
             <Container>
                 <Title>Estatísticas gerais</Title>

@@ -1,6 +1,6 @@
-import styled, { css } from "styled-components/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ArrowUpRight } from "phosphor-react-native";
+import styled from "styled-components/native";
 
 export const Container = styled(SafeAreaView)`
     flex: 1;
@@ -31,18 +31,21 @@ export const Profile = styled.Image`
     border-radius: 73px;
 `;
 
-type Props = {
-    type: "GREEN" | "RED"
-}
-
-export const Icon = styled(ArrowUpRight).attrs<Props>(({ theme, type }) => ({
-    color: type === "GREEN" ? theme.COLORS.GREEN_DARK : theme.COLORS.RED_DARK,
-    size: 24,
-}))`
+export const PressableIcon = styled.Pressable`
     position: absolute;
+    border-radius: 73px;
+    padding: 7px;
 
     top: 8px;
     right: 8px;
 
     z-index: 7;
 `;
+
+type Props = {
+    type: "GREEN" | "RED"
+}
+export const Icon = styled(ArrowUpRight).attrs<Props>(({ theme, type }) => ({
+    color: type === "GREEN" ? theme.COLORS.GREEN_DARK : theme.COLORS.RED_DARK,
+    size: 24,
+}))``;

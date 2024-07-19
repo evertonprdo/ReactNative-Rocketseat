@@ -9,7 +9,6 @@ type Props = {
 }
 export const Container = styled.View< Omit<Props, "type"> >`
     flex: 1;
-
     gap: 4px;
 
     ${({sizeNumber}) => css`

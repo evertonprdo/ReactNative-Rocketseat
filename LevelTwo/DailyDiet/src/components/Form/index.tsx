@@ -1,44 +1,65 @@
+import { ScrollView } from "react-native";
+
+import { Container, FieldsContainer, Options, OptionsContainer, OptionTitle, TwoColumn } from "./styles";
 import { Input } from "@components/Input";
-import { Container, Options, OptionsContainer, OptionTitle, TwoColumn } from "./styles";
 import { Select } from "@components/Select";
 
-export function Form() {
+import type { MealStorageDTO } from "@storage/meal/MealStorageDTO";
+
+type Props = {
+    meal?: Omit<MealStorageDTO, "id">
+    children?: React.ReactNode
+}
+export function Form({ meal, children }: Props) {
     return (
         <Container>
-            <Input
-                label="Nome"
-                type="Light-Border"
-            />
-            <Input
-                label="Descrição"
-                type="Light-Border"
-                sizeNumber={132}
-            />
-            <TwoColumn>
-                <Input
-                    label="Data"
-                    type="Light-Border"
-                />
-                <Input
-                    label="Hora"
-                    type="Light-Border"
-                />
-            </TwoColumn>
-
-            <OptionsContainer>
-                <OptionTitle>
-                    Está dentro da dieta?
-                </OptionTitle>
-
-                <Options>
-                    <Select
-                        type="YES"
+            <ScrollView
+                showsVerticalScrollIndicator={false}
+                style={{flex: 1}}
+                automaticallyAdjustContentInsets
+            >
+                <FieldsContainer>
+                    <Input
+                        label="Nome"
+                        type="Light-Border"
                     />
-                    <Select
-                        type="NO"
+
+                    <Input
+                        label="Descrição"
+                        type="Light-Border"
+                        sizeNumber={132}
                     />
-                </Options>
-            </OptionsContainer>
+
+                    <TwoColumn>
+                        <Input
+                            label="Data"
+                            type="Light-Border"
+                        />
+                        <Input
+                            label="Hora"
+                            type="Light-Border"
+                        />
+                    </TwoColumn>
+
+                    <OptionsContainer>
+                        <OptionTitle>
+                            Está dentro da dieta?
+                        </OptionTitle>
+
+                        <Options>
+                            <Select
+                                type="YES"
+                            />
+
+                            <Select
+                                type="NO"
+                            />
+                        </Options>
+                    </OptionsContainer>
+                </FieldsContainer>
+            </ScrollView>
+
+            { children }
         </Container>
     )
 }

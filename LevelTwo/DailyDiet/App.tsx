@@ -6,9 +6,7 @@ import { ThemeProvider } from 'styled-components/native';
 import { NunitoSans_400Regular, NunitoSans_700Bold, useFonts } from '@expo-google-fonts/nunito-sans'
 
 import theme from 'src/theme';
-import { Home } from '@screens/Home';
-import { Statistics } from '@screens/Statistics';
-import { NewMeal } from '@screens/NewMeal';
+import { Routes } from 'src/routes';
 
 export default function App() {
     const [ fontsLoaded ] = useFonts({ NunitoSans_400Regular, NunitoSans_700Bold })
@@ -21,8 +19,7 @@ export default function App() {
                     backgroundColor='transparent'
                     translucent
                 />
-
-                { !fontsLoaded ? <ActivityIndicator /> : <Statistics/> }
+                { !fontsLoaded ? <ActivityIndicator /> : <Routes/> }
             </ThemeProvider>
         </SafeAreaProvider>
     );
