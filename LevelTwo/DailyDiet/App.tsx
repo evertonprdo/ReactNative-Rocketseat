@@ -7,6 +7,8 @@ import { NunitoSans_400Regular, NunitoSans_700Bold, useFonts } from '@expo-googl
 
 import theme from 'src/theme';
 import { Home } from '@screens/Home';
+import { Statistics } from '@screens/Statistics';
+import { NewMeal } from '@screens/NewMeal';
 
 export default function App() {
     const [ fontsLoaded ] = useFonts({ NunitoSans_400Regular, NunitoSans_700Bold })
@@ -20,7 +22,7 @@ export default function App() {
                     translucent
                 />
 
-                { !fontsLoaded ? <ActivityIndicator /> : <Home/> }
+                { !fontsLoaded ? <ActivityIndicator /> : <Statistics/> }
             </ThemeProvider>
         </SafeAreaProvider>
     );

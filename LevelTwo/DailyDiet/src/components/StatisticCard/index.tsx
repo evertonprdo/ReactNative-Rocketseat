@@ -3,22 +3,24 @@ import {
     Headline,
     Container,
     SubHeadline,
-    type StatisticCardStyleProps,
+    type StatusVariantType,
+    type HeadlineSizeVariantType,
 } from "./styles";
 
 type Props = PressableProps & {
-    type: StatisticCardStyleProps
+    type: StatusVariantType
     headline: string
     subHeadline: string
+    size?: HeadlineSizeVariantType
 }
 
-export function StatisticCard({ type, headline, subHeadline, ...rest  }: Props) {
+export function StatisticCard({ type, headline, subHeadline, size, ...rest  }: Props) {
     return (
         <Container
             type={type}
             {...rest}
         >
-            <Headline>
+            <Headline size={size}>
                 {headline}
             </Headline>
 

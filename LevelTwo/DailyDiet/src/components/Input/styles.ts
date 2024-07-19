@@ -5,10 +5,17 @@ export type InputStyleProps = "Dark-Border" | "Light-Border"
 
 type Props = {
     type: InputStyleProps
+    sizeNumber?: number 
 }
-
-export const Container = styled.View`
+export const Container = styled.View< Omit<Props, "type"> >`
     flex: 1;
+
+    gap: 4px;
+
+    ${({sizeNumber}) => css`
+        min-height: ${sizeNumber}px;
+        max-height: ${sizeNumber}px;
+    `};
 `;
 
 export const Label = styled.Text`
@@ -19,10 +26,13 @@ export const Label = styled.Text`
     `};
 `;
 
-export const InputField = styled(TextInput).attrs<Props>(({ theme }) => ({
+export const InputField = styled(TextInput).attrs< Omit<Props, "size"> >(({ theme }) => ({
     cursorColor: theme.COLORS.GRAY_100
 }))`
+    flex: 1;
+
     padding: 14px;
+
     border-width: 1px;
     border-radius: 6px;
 

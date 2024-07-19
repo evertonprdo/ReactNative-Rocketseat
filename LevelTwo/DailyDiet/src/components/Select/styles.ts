@@ -33,7 +33,7 @@ export const Container = styled(Pressable)<Props>`
 export const Title = styled.Text`
     ${({ theme }) => css`
         font-family: ${theme.FONT_FAMILY.BOLD};
-        font-size: ${theme.FONT_SIZE.TS}px;
+        font-size: ${theme.FONT_SIZE.BS}px;
         color: ${theme.COLORS.GRAY_100};
     `};
 `;

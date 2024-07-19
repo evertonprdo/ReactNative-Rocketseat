@@ -1,35 +1,21 @@
 import { useState } from "react";
+import { SectionList } from "react-native";
 
-import { ButtonLabel, Container, Icon, NewMeal, SectionTitle } from "./styles";
-import { Button } from "@components/Button";
-import { SectionList, Text } from "react-native";
-import { Meal } from "@components/Meal";
+import { Container, SectionTitle } from "./styles";
+import { ListItem } from "./ListItem";
 
 import { DATA, type MealDTO, type MealsDTO } from "./DATA";
 
-export function Meals() {
+export function MealsSectionList() {
     const [ data, setData ] = useState<MealsDTO>(DATA)
 
     return (
         <Container>
-            <NewMeal>
-                <ButtonLabel>
-                    Refeições
-                </ButtonLabel>
-                
-                <Button
-                    type="Dark"
-                    title="Nova refeição"
-                >
-                    <Icon/>
-                </Button>
-            </NewMeal>
-
             <SectionList 
                 sections={ data }
                 keyExtractor={({time, description}) => time + "_" + description}
                 renderItem={({item}) => (
-                    <Meal
+                    <ListItem
                         time={item.time}
                         description={item.description}
                         status={item.status}

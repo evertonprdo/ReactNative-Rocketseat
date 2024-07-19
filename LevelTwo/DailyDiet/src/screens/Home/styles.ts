@@ -1,10 +1,11 @@
 import styled, { css } from "styled-components/native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { ArrowUpRight } from "phosphor-react-native";
 
 export const Container = styled(SafeAreaView)`
     flex: 1;
 
-    padding: 24px;
+    padding: 24px 24px 0px;
     gap: 32px;
 
     background-color: ${({ theme }) => theme.COLORS.GRAY_700};
@@ -30,9 +31,18 @@ export const Profile = styled.Image`
     border-radius: 73px;
 `;
 
-export const Card = styled.View`
-    flex: 1;
+type Props = {
+    type: "GREEN" | "RED"
+}
 
-    max-height: 136px;
-    min-height: 136px;
+export const Icon = styled(ArrowUpRight).attrs<Props>(({ theme, type }) => ({
+    color: type === "GREEN" ? theme.COLORS.GREEN_DARK : theme.COLORS.RED_DARK,
+    size: 24,
+}))`
+    position: absolute;
+
+    top: 8px;
+    right: 8px;
+
+    z-index: 7;
 `;

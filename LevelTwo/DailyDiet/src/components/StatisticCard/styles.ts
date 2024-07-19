@@ -1,16 +1,15 @@
 import { Pressable } from "react-native";
 import styled, { css } from "styled-components/native";
 
-export type StatisticCardStyleProps = "Green" | "Red" | "Default"
+export type StatusVariantType = "GREEN" | "RED" | "NONE"
+export type HeadlineSizeVariantType = "TM" | "TG"
 
 type Props = {
-    type: StatisticCardStyleProps
+    type: StatusVariantType
+    size?: HeadlineSizeVariantType
 }
 
 export const Container = styled(Pressable)<Props>`
-    flex: 1;
-
-    justify-content: center;
     align-items: center;
 
     padding: 20px 16px;
@@ -18,16 +17,16 @@ export const Container = styled(Pressable)<Props>`
     border-radius: 8px;
 
     background-color: ${({theme, type}) => (
-        type === "Green" ? theme.COLORS.GREEN_LIGHT
-        : type === "Red" ? theme.COLORS.RED_LIGHT
+        type === "GREEN" ? theme.COLORS.GREEN_LIGHT
+        : type === "RED" ? theme.COLORS.RED_LIGHT
         : theme.COLORS.GRAY_600
     )};
 `;
 
-export const Headline = styled.Text`
-    ${({ theme }) => css`
+export const Headline = styled.Text< Omit<Props, "type"> >`
+    ${({ theme, size }) => css`
         font-family: ${theme.FONT_FAMILY.BOLD};
-        font-size: ${theme.FONT_SIZE.TG}px;
+        font-size: ${ size === "TM" ? theme.FONT_SIZE.TM : theme.FONT_SIZE.TG}px;
         color: ${theme.COLORS.GRAY_100};
     `}
 `;
