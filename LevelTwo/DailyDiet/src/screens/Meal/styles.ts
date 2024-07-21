@@ -1,6 +1,8 @@
 import { Circle, PencilSimpleLine, Trash } from "phosphor-react-native";
 import styled, { css } from "styled-components/native";
 
+import type { StatusProps } from "@storage/meal/MealStorageDTO";
+
 export const Container = styled.View`
     flex: 1;
     gap: 24px;
@@ -46,7 +48,7 @@ export const Tag = styled.View`
     background-color: ${({theme}) => theme.COLORS.GRAY_600};
 `;
 
-type Props = { type: "RED" | "GREEN" }
+type Props = { type: StatusProps }
 export const TagIcon = styled(Circle).attrs<Props>(({theme, type}) => ({
     color: type === "GREEN" ? theme.COLORS.GREEN_DARK : theme.COLORS.RED_DARK,
     size: 8,

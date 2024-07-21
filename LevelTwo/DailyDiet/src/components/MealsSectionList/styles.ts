@@ -1,8 +1,10 @@
 import { Circle } from "phosphor-react-native";
 import styled, { css } from "styled-components/native";
 
+import type { StatusProps } from "@storage/meal/MealStorageDTO";
+
 type Props = {
-    type: "GREEN" | "RED"
+    type: StatusProps
 }
 
 export const Container = styled.Pressable`

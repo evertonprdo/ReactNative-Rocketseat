@@ -1,5 +1,7 @@
 import styled, { css } from "styled-components/native";
 
+import type { StatusProps } from "@storage/meal/MealStorageDTO";
+
 export const Container = styled.View`
     flex: 1;
     justify-content: center;
@@ -14,7 +16,7 @@ export const FeedbackContainer =  styled.View`
     gap: 8px;
 `;
 
-type Props = { type: "RED" | "GREEN" }
+type Props = { type: StatusProps }
 
 export const Headline = styled.Text<Props>`
     ${({ theme, type }) => css`

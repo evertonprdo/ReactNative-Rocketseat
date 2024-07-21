@@ -7,8 +7,10 @@ import { Button } from "@components/Button";
 import GoodImg from "@assets/feedback/good/image.png"
 import BadImg from "@assets/feedback/bad/image.png"
 
+import type { StatusProps } from "@storage/meal/MealStorageDTO";
+
 type RouteProps = {
-    status: "GREEN" | "RED"
+    status: StatusProps
 }
 export function Feedback() {
     const { navigate } = useNavigation();

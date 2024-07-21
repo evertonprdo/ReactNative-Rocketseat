@@ -2,6 +2,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { ArrowUpRight } from "phosphor-react-native";
 import styled from "styled-components/native";
 
+import type { StatusProps } from "@storage/meal/MealStorageDTO";
+
 export const Container = styled(SafeAreaView)`
     flex: 1;
 
@@ -43,7 +45,7 @@ export const PressableIcon = styled.Pressable`
 `;
 
 type Props = {
-    type: "GREEN" | "RED"
+    type: StatusProps
 }
 export const Icon = styled(ArrowUpRight).attrs<Props>(({ theme, type }) => ({
     color: type === "GREEN" ? theme.COLORS.GREEN_DARK : theme.COLORS.RED_DARK,

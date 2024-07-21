@@ -11,6 +11,8 @@ import {
     Icon,
 } from "./styles";
 
+import type { StatusProps } from "@storage/meal/MealStorageDTO";
+
 type Props = PressableProps & {
     type: StatusVariantType
     headline: string
@@ -35,14 +37,18 @@ export function StatisticCard({ type, headline, subHeadline, size, ...rest  }: P
     )
 }
 
-export function StatisticCardOverview({ ...rest }: PressableProps) {
+type CardOverviewProps = PressableProps & {
+    headline: string
+    type: StatusProps
+}
+export function StatisticCardOverview({ headline, type, ...rest }: CardOverviewProps) {
     const [ pressIn, setPressIn ] = useState(false);
     
     return (
         <View>
             <StatisticCard
-                type="RED"
-                headline="32,03%"
+                type={type}
+                headline={ headline }
                 subHeadline="das refeições dentro da dieta"
             />
             <PressableIcon
@@ -53,7 +59,7 @@ export function StatisticCardOverview({ ...rest }: PressableProps) {
                 }}
                 {...rest}
             >
-                <Icon type="RED"/>
+                <Icon type={type} />
             </PressableIcon>
         </View>
     )

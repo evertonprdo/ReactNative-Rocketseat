@@ -1,3 +1,5 @@
+import type { StatusProps } from "@storage/meal/MealStorageDTO"
+
 export declare global {
     namespace ReactNavigation {
         interface RootParamList {
@@ -5,9 +7,11 @@ export declare global {
             menage_meal: undefined | {
                 id: number
             }
-            meal: undefined
+            meal: {
+                id: number
+            }
             feedback: undefined | {
-                status: "GREEN" | "RED"
+                status: StatusProps
             }
             statistics: undefined
         }

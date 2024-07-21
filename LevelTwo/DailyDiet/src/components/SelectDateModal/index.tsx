@@ -5,21 +5,18 @@ import {
 
 } from "react-native-calendars"
 
-import theme from "src/theme"
-
 import { Container, DimissZone, ModalBg } from "./styles"
+import { useTheme } from "styled-components"
 
-type Props = {
-
-}
 export function Calendar({...rest}: CalendarProps) {
+    const theme = useTheme();
     return (
         <CalendarRN
             hideExtraDays
             style={{
                 backgroundColor: "transparent",
                 borderRadius: 12,
-                overflow: "hidden"
+                overflow: "hidden",
             }}
             theme= {{
                 textMonthFontSize: 18,

@@ -2,7 +2,9 @@ import { ArrowUpRight } from "phosphor-react-native";
 import { Pressable } from "react-native";
 import styled, { css } from "styled-components/native";
 
-export type StatusVariantType = "GREEN" | "RED" | "NONE"
+import type { StatusProps } from "@storage/meal/MealStorageDTO";
+
+export type StatusVariantType = StatusProps | "NONE"
 export type HeadlineSizeVariantType = "TM" | "TG"
 
 type Props = {
@@ -52,7 +54,7 @@ export const PressableIcon = styled.Pressable`
 `;
 
 type OverviewProps = {
-    type: "GREEN" | "RED"
+    type: StatusProps
 }
 export const Icon = styled(ArrowUpRight).attrs<OverviewProps>(({ theme, type }) => ({
     color: type === "GREEN" ? theme.COLORS.GREEN_DARK : theme.COLORS.RED_DARK,

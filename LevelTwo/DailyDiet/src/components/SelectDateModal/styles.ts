@@ -8,13 +8,15 @@ export const ModalBg = styled.View`
 `;
 
 export const DimissZone = styled.Pressable`
-    flex: 1;
+    flex: 4;
 `;
 
 export const Container = styled.View`
-    flex: 1;
+    flex: 5;
     padding: 24px;
     gap: 12px;
+
+    justify-content: space-between;
 
     border: 1px solid black;
     background-color: ${({theme}) => theme.COLORS.GRAY_700};

@@ -7,21 +7,26 @@ import type { MealStorageDTO } from "@storage/meal/MealStorageDTO";
 
 type Props = PressableProps & {
     data: SectionListMealsProps
+    onPressMealItem: (id: number) => void
 }
-type SectionListMealsProps = {
+
+export type SectionListDateMealsProps = {
     date: string
     data: MealStorageDTO[]
-}[]
-export function MealsSectionList({data, ...rest}: Props) {
+}
+export type SectionListMealsProps = SectionListDateMealsProps[]
+
+export function MealsSectionList({data, onPressMealItem, ...rest}: Props) {
     return (
         <SectionList 
             sections={ data }
-            keyExtractor={({time, description}) => time + "_" + description}
+            keyExtractor={({id}) => "MealKey_" + id}
             renderItem={({item}) => (
                 <ListItem
                     time={item.time}
-                    description={item.description}
+                    description={item.name}
                     status={item.status}
+                    onPress={ () => onPressMealItem(item.id) }
                     {...rest}
                 />
             )}
@@ -40,8 +45,9 @@ type ItemProps = PressableProps & Omit<MealStorageDTO, "id" | "date" | "name">
 
 function ListItem({ time, description, status, ...rest }: ItemProps) {
     const [ pressIn, setPressIn ] = useState(false);
-
     const theme = useTheme();
+
+    const maxLenght = 33;
 
     return (
         <Container 
@@ -53,11 +59,14 @@ function ListItem({ time, description, status, ...rest }: ItemProps) {
             {...rest}
         >
             <Time>
-                {String(time)}
+                {time}
             </Time>
 
             <Description>
-                {description}
+                {description.length <= maxLenght
+                    ? description
+                    : description.slice(0, maxLenght - 3) + "..."
+                }
             </Description>
 
             <StatusIcon

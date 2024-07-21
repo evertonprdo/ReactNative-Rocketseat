@@ -1,3 +1,5 @@
+export type StatusProps = "RED" | "GREEN"
+
 export type MealStorageDTO = {
     id: number
 
@@ -7,7 +9,7 @@ export type MealStorageDTO = {
     date: string
     time: string
 
-    status: "RED" | "GREEN"
+    status: StatusProps
 }
 
 export type MealsStorageDTO = {
