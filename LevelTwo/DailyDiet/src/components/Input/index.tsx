@@ -4,12 +4,12 @@ import { Container, InputField, InputStyleProps, Label } from "./styles";
 type Props = TextInputProps & {
     type: InputStyleProps
     label: string
-    sizeNumber?: number
+    inputHeight?: number
 }
 
-export function Input({ type, label, sizeNumber = 70, ...rest }: Props) {
+export function Input({ type, label, inputHeight = 70, ...rest }: Props) {
     return (
-        <Container sizeNumber={sizeNumber}>
+        <Container inputHeight={inputHeight}>
             <Label>
                 { label }
             </Label>

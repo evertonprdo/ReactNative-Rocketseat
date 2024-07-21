@@ -3,13 +3,13 @@ import { Container, Icon, type SelectStyleProps, Title } from "./styles";
 
 type Props = PressableProps & {
     type: SelectStyleProps
-    Selected?: boolean
+    selected?: boolean
 }
-export function Select({ type, Selected, ...rest }: Props) {
+export function Select({ type, selected, ...rest }: Props) {
     return (
         <Container
             type= {type}
-            Selected= {Selected}
+            Selected= {selected}
             {...rest}
         >
             <Icon

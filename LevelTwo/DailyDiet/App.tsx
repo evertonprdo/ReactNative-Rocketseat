@@ -3,6 +3,8 @@ import { ActivityIndicator } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ThemeProvider } from 'styled-components/native';
 
+import "src/utils/dayjsLocaleConfig"
+
 import { NunitoSans_400Regular, NunitoSans_700Bold, useFonts } from '@expo-google-fonts/nunito-sans'
 
 import theme from 'src/theme';

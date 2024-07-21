@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 
 import { BoldText, Container, FeedbackContainer, Headline, ImageFeedback } from "./styles";
 import { SubHeadline } from "@components/StatisticCard/styles";
@@ -8,10 +7,17 @@ import { Button } from "@components/Button";
 import GoodImg from "@assets/feedback/good/image.png"
 import BadImg from "@assets/feedback/bad/image.png"
 
+type RouteProps = {
+    status: "GREEN" | "RED"
+}
 export function Feedback() {
     const { navigate } = useNavigation();
 
-    const [ isGood, setIsGood ] = useState(false);
+    const route = useRoute();
+    const { status } = route.params as RouteProps
+
+    const isGood = status === "GREEN" ? true : false
+
     const headlineText = isGood
         ? "Continue Assim!"
         : "Que pena!"
@@ -20,7 +26,7 @@ export function Feedback() {
     return (
         <Container>
             <FeedbackContainer>
-                <Headline type={ isGood ? "GREEN" : "RED" }>
+                <Headline type={ status }>
                     { headlineText }
                 </Headline>
 

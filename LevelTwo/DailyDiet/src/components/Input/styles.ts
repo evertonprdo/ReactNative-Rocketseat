@@ -5,15 +5,15 @@ export type InputStyleProps = "Dark-Border" | "Light-Border"
 
 type Props = {
     type: InputStyleProps
-    sizeNumber?: number 
+    inputHeight?: number 
 }
 export const Container = styled.View< Omit<Props, "type"> >`
     flex: 1;
     gap: 4px;
 
-    ${({sizeNumber}) => css`
-        min-height: ${sizeNumber}px;
-        max-height: ${sizeNumber}px;
+    ${({inputHeight}) => css`
+        min-height: ${inputHeight}px;
+        max-height: ${inputHeight}px;
     `};
 `;
 

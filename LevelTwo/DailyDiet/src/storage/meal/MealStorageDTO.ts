@@ -4,8 +4,13 @@ export type MealStorageDTO = {
     name: string
     description: string
 
-    date: Date
-    time: Date
+    date: string
+    time: string
 
     status: "RED" | "GREEN"
+}
+
+export type MealsStorageDTO = {
+    meals: MealStorageDTO[]
+    last_id: number
 }

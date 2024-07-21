@@ -1,9 +1,16 @@
+import { useState } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
 
 import { Button } from "@components/Button";
 import { Form } from "@components/Form";
 import { NavigationContainer } from "@components/NavigationContainer";
-import { getLastId } from "@storage/meal/getStorageMeal";
+
+import type { MealStorageDTO } from "@storage/meal/MealStorageDTO";
+import { Alert } from "react-native";
+
+export type MealFormProps = Omit<MealStorageDTO, "id" | "status"> & {
+    status: "RED" | "GREEN" | "NONE"
+}
 
 type RouteParams = {
     id: number
@@ -14,22 +21,42 @@ export function MenageMeal() {
 
     const Editing = route.params ? true : false
 
+    const [ meal, setMeal ] = useState({
+        name: "",
+        description: "",
+        date: "",
+        time: "",
+        status: "NONE"
+    } as MealFormProps);
+
+    function isValidMeal() {
+        let isValid = true
+        for (const key in meal) {
+            if(!(meal[key as keyof MealFormProps].trim())) {
+                Alert.alert("Formulário", "Todos os campos devem ser preenchidos!");
+                return isValid = false;
+            }
+        }
+        return isValid
+    }
+
     function handleOnPressButton() {
         if(Editing) {
             navigation.goBack()
         } else {
-            handlePutMeal();
-            navigation.navigate("feedback");
+            if(!isValidMeal()) return
+
+            handlePostMeal();
+            navigation.navigate("feedback", {status: meal.status as "GREEN" | "RED"});
         }
     }
 
-    async function handlePutMeal() {
+    async function handlePostMeal() {
         try {
-            const lastId = await getLastId();
-            console.log(lastId)
+            console.log(meal)
 
         } catch (error) {
-            console.log("Erro", error)
+            console.log(error)
         }
     }
 
@@ -39,7 +66,10 @@ export function MenageMeal() {
             type="NONE"
             onPress={() => navigation.navigate("home")}
         >
-            <Form>
+            <Form 
+                meal={ meal }
+                setMeal={ setMeal }
+            >
                 <Button 
                     title={ Editing ? "Salvar alterações" : "Cadastrar refeição"}
                     type="Dark"

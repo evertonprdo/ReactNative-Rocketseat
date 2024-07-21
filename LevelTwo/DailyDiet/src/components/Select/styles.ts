@@ -20,13 +20,14 @@ export const Container = styled(Pressable)<Props>`
     gap: 8px;
     border-radius: 6px;
 
+    border-width: 1px;
     ${({ theme, type, Selected }) => Selected ? 
     css`
-        border-width: 1px;
         background-color: ${type === "YES" ? theme.COLORS.GREEN_LIGHT : theme.COLORS.RED_LIGHT};
         border-color: ${type === "YES" ? theme.COLORS.GREEN_DARK : theme.COLORS.RED_DARK};
     `: css`
         background-color: ${theme.COLORS.GRAY_600};
+        border-color: transparent;
     `}
 `;
 
