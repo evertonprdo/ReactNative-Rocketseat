@@ -7,7 +7,6 @@ export type MealStorageDTO = {
     description: string
 
     date: string
-    time: string
 
     status: StatusProps
 }

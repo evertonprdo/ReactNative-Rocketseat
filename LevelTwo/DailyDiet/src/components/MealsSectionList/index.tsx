@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { type PressableProps, SectionList } from "react-native";
 import { useTheme } from "styled-components/native";
+import dayjs from "dayjs";
 
 import { Container, Description, SectionTitle, StatusIcon, Time } from "./styles";
 import type { MealStorageDTO } from "@storage/meal/MealStorageDTO";
@@ -23,7 +24,7 @@ export function MealsSectionList({data, onPressMealItem, ...rest}: Props) {
             keyExtractor={({id}) => "MealKey_" + id}
             renderItem={({item}) => (
                 <ListItem
-                    time={item.time}
+                    date={dayjs(item.date).format("HH:mm")}
                     description={item.name}
                     status={item.status}
                     onPress={ () => onPressMealItem(item.id) }
@@ -41,9 +42,9 @@ export function MealsSectionList({data, onPressMealItem, ...rest}: Props) {
     )
 }
 
-type ItemProps = PressableProps & Omit<MealStorageDTO, "id" | "date" | "name">
+type ItemProps = PressableProps & Omit<MealStorageDTO, "id" | "name">
 
-function ListItem({ time, description, status, ...rest }: ItemProps) {
+function ListItem({ date, description, status, ...rest }: ItemProps) {
     const [ pressIn, setPressIn ] = useState(false);
     const theme = useTheme();
 
@@ -59,7 +60,7 @@ function ListItem({ time, description, status, ...rest }: ItemProps) {
             {...rest}
         >
             <Time>
-                {time}
+                {date}
             </Time>
 
             <Description>

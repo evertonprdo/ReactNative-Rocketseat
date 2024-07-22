@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Alert } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
+import dayjs from "dayjs";
 
 import { Button } from "@components/Button";
 import { Form } from "@components/Form";
@@ -11,11 +12,11 @@ import { validateForm } from "@utils/validateForm";
 import { postMeal } from "@storage/meal/postStorageMeal";
 import { getStorageMealById } from "@storage/meal/getStorageMeal";
 import { putStorageMealById } from "@storage/meal/putStorageMeal";
-
 import type { MealStorageDTO, StatusProps } from "@storage/meal/MealStorageDTO";
 
 export type MealFormProps = Omit<MealStorageDTO, "id" | "status"> & {
     status: StatusProps | ""
+    time: string
 }
 
 type RouteParams = {
@@ -38,17 +39,25 @@ export function MenageMeal() {
     } as MealFormProps);
 
     function handleOnPressButton() {
-        if(!(validateForm.allInputsFill(meal))) {
+        if(!(validateForm.allInputsFill(meal, 5))) {
             return Alert.alert("Formulário", "Preencha todos os campos!")
         }
         if (!validateForm.validateTime(meal.time)) {
             return Alert.alert("Formulário", "Hora inválida!")
         }
 
+        const date = dayjs(`${meal.date} ${meal.time}`).toISOString()
+        const validatedMeal: Omit<MealStorageDTO, "id"> = {
+            name: meal.name,
+            description: meal.description,
+            date,
+            status: meal.status as StatusProps
+        }
+
         if(Editing) {
-            handlePutMeal(meal as Omit<MealStorageDTO, "id">);
+            handlePutMeal(validatedMeal);
         } else {
-            handlePostMeal(meal as Omit<MealStorageDTO, "id">)
+            handlePostMeal(validatedMeal)
         }
     }
 
@@ -78,12 +87,12 @@ export function MenageMeal() {
     }
     async function getCurrentMeal(RouteId: number) {
         try {
-            const { id, name, description, date, time, status } = await getStorageMealById(RouteId)
+            const { id, name, description, date, status } = await getStorageMealById(RouteId)
             setMeal({
                 name,
                 description,
-                date,
-                time,
+                date: dayjs(date).format("YYYY/MM/DD"),
+                time: dayjs(date).format("HH:mm"),
                 status
             })
             editId = id;
@@ -102,7 +111,7 @@ export function MenageMeal() {
         <NavigationContainer
             title={ Editing ? "Editar refeição" : "Nova refeição"}
             type="NONE"
-            onPress={() => navigation.navigate("home")}
+            onPress={() => Editing ? navigation.goBack() : navigation.navigate("home")}
         >
             <Form 
                 meal={ meal }

@@ -1,15 +1,14 @@
 import { useState } from "react";
-import { Keyboard, ScrollView } from "react-native";
+import { Keyboard, TouchableWithoutFeedback } from "react-native";
+import dayjs from "dayjs";
 
-import { Container, FieldsContainer, Options, OptionsContainer, OptionTitle, TwoColumn } from "./styles";
+import { ChildContainer, Container, FieldsContainer, Options, OptionsContainer, OptionTitle, TwoColumn } from "./styles";
 import { Input } from "@components/Input";
 import { Select } from "@components/Select";
-
-import type { MealFormProps } from "@screens/MenageMeal";
 import { Calendar, SelectDateModal } from "@components/SelectDateModal";
 import { Button } from "@components/Button";
 
-import dayjs from "dayjs";
+import type { MealFormProps } from "@screens/MenageMeal";
 
 type Props = {
     meal: MealFormProps
@@ -18,8 +17,14 @@ type Props = {
 }
 export function Form({ meal, setMeal, children }: Props) {
     const [showModal, setShowModal] = useState(false);
+    const [ currentFocus, setCurrentFocus ] = useState<keyof MealFormProps | null>(null)
 
     const selectedDate = meal.date === "" ? "" : dayjs(meal.date).format("DD/MM/YYYY");
+
+    function handleOnBluer() {
+        Keyboard.dismiss();
+        setCurrentFocus(null);
+    }
 
     function handleOnChangeTime(value: string) {
         let formatedTime = value.replace(/[^0-9:]/g, '');
@@ -40,72 +45,87 @@ export function Form({ meal, setMeal, children }: Props) {
     }
     return (
         <Container>
-            <ScrollView
-                showsVerticalScrollIndicator={false}
-                style={{ flex: 1 }}
-                automaticallyAdjustContentInsets
+            <TouchableWithoutFeedback
+                onPress={() => handleOnBluer()}
             >
-                <FieldsContainer>
-                    <Input
-                        label="Nome"
-                        type="Light-Border"
-                        value={meal.name}
-                        onChangeText={(text) => handleOnChangeInput(text, "name")}
-                    />
-
-                    <Input
-                        label="Descrição"
-                        type="Light-Border"
-                        value={meal.description}
-                        onChangeText={(text) => handleOnChangeInput(text, "description")}
-                        style={{ textAlign: "justify", textAlignVertical: "top" }}
-                        inputHeight={132}
-                        multiline
-                    />
-
-                    <TwoColumn>
+                <Container>
+                    <FieldsContainer>
                         <Input
-                            label="Data"
-                            type="Light-Border"
-                            value={selectedDate}
-                            onChangeText={(text) => handleOnChangeInput(text, "date")}
-                            onPressIn={() => setShowModal(true)}
-                            onFocus={() => Keyboard.dismiss()}
-                            showSoftInputOnFocus={false}
+                            label="Nome"
+                            name="name"
+                            value={meal.name}
+
+                            onChangeText={(text) => handleOnChangeInput(text, "name")}
+                            currentFocus={currentFocus}
+                            onPressIn={() => setCurrentFocus("name")}
                         />
                         <Input
-                            label="Hora"
-                            type="Light-Border"
-                            value={meal.time}
-                            onChangeText={(text) => handleOnChangeTime(text)}
-                            inputMode="numeric"
-                            maxLength={5}
+                            label="Descrição"
+                            name="description"
+                            value={meal.description}
+
+                            onChangeText={(text) => handleOnChangeInput(text, "description")}
+                            currentFocus={currentFocus}
+                            onPressIn={() => setCurrentFocus("description")}
+
+                            style={{ textAlign: "justify", textAlignVertical: "top" }}
+                            inputHeight={132}
+                            multiline
                         />
-                    </TwoColumn>
+                        <TwoColumn>
+                            <Input
+                                label="Data"
+                                name="date"
+                                value={selectedDate}
 
-                    <OptionsContainer>
-                        <OptionTitle>
-                            Está dentro da dieta?
-                        </OptionTitle>
+                                onChangeText={(text) => handleOnChangeInput(text, "date")}
+                                onPressIn={() => setShowModal(true)}
+                                onFocus={() => {Keyboard.dismiss(); setCurrentFocus(null)}}
 
-                        <Options>
-                            <Select
-                                type="YES"
-                                selected={meal.status === "GREEN"}
-                                onPress={() => handleOnChangeInput("GREEN", "status")}
+                                showSoftInputOnFocus={false}
                             />
+                            <Input
+                                label="Hora"
+                                name="time"
+                                value={meal.time}
 
-                            <Select
-                                type="NO"
-                                selected={meal.status === "RED"}
-                                onPress={() => handleOnChangeInput("RED", "status")}
+                                onChangeText={(text) => handleOnChangeTime(text)}
+                                currentFocus={currentFocus}
+                                onPressIn={() => setCurrentFocus("time")}
+
+                                inputMode="numeric"
+                                maxLength={5}
                             />
-                        </Options>
-                    </OptionsContainer>
-                </FieldsContainer>
-            </ScrollView>
+                        </TwoColumn>
 
-            {children}
+                        <OptionsContainer>
+                            <OptionTitle>
+                                Está dentro da dieta?
+                            </OptionTitle>
+
+                            <Options>
+                                <Select
+                                    type="YES"
+                                    selected={meal.status === "GREEN"}
+                                    onPress={() => handleOnChangeInput("GREEN", "status")}
+                                    onPressIn={() => handleOnBluer()}
+                                />
+                                <Select
+                                    type="NO"
+                                    selected={meal.status === "RED"}
+                                    onPress={() => handleOnChangeInput("RED", "status")}
+                                    onPressIn={() => handleOnBluer()}
+                                />
+                            </Options>
+
+                        </OptionsContainer>
+                    </FieldsContainer>
+
+                    <ChildContainer>
+                        {children}
+                    </ChildContainer>
+                </Container>
+            </TouchableWithoutFeedback>
 
             <SelectDateModal
                 visible={showModal}

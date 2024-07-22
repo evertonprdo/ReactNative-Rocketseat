@@ -1,12 +1,11 @@
 import { Modal, type ModalProps } from "react-native"
+import { useTheme } from "styled-components"
 import {
     Calendar as CalendarRN,
     type CalendarProps,
-
 } from "react-native-calendars"
 
 import { Container, DimissZone, ModalBg } from "./styles"
-import { useTheme } from "styled-components"
 
 export function Calendar({...rest}: CalendarProps) {
     const theme = useTheme();

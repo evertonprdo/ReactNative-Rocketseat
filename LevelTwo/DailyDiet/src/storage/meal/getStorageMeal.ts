@@ -30,13 +30,3 @@ export async function getStorageMealById(id: number) {
         throw error
     }
 }
-
-export async function getStorageStreak() {
-    try {
-        const storage = await getStorageMeals();
-
-        return storage.streak ??= 0;
-    } catch (error) {
-        throw error
-    }
-}

@@ -23,13 +23,14 @@ function goodMealsPercent(meals : MealsStorageDTO["meals"]) {
 }
 
 function orderByDate(meals : MealsStorageDTO["meals"]) {
-    return meals.sort((a, b) => Number(new Date(a.date)) - Number(new Date(b.date)));
+    return meals.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 }
 
 function screenData(meals: MealsStorageDTO["meals"]): StatisticsScreenDataProps {
     let goodMeals = 0;
     let badMeals = 0;
     let streak = 0;
+    let bestStreak = 0;
 
     const orderedMeals = orderByDate(meals);
 
@@ -37,6 +38,9 @@ function screenData(meals: MealsStorageDTO["meals"]): StatisticsScreenDataProps 
         if(meal.status === "GREEN") {
             goodMeals++
             streak++
+            if(streak > bestStreak) {
+                bestStreak = streak
+            }
         } else {
             badMeals++
             streak = 0
@@ -46,7 +50,7 @@ function screenData(meals: MealsStorageDTO["meals"]): StatisticsScreenDataProps 
     const formatedPercent = percentFloat.toFixed(2) + "%"
 
     return {
-        streak,
+        streak: bestStreak,
         registers: meals.length,
         goodMeals,
         badMeals,

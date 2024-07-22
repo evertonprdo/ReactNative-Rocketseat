@@ -1,5 +1,6 @@
 import { useCallback, useState } from "react";
 import { useFocusEffect, useNavigation, useRoute } from "@react-navigation/native";
+import dayjs from "dayjs";
 
 import {
     Tag,
@@ -21,10 +22,8 @@ import { DeleteModal } from "@components/DeleteModal";
 import { Loading } from "@components/Loading";
 
 import { deleteMealById } from "@storage/meal/deleteStorageMeal";
-
-import type { MealStorageDTO } from "@storage/meal/MealStorageDTO";
 import { getStorageMealById } from "@storage/meal/getStorageMeal";
-import dayjs from "dayjs";
+import type { MealStorageDTO } from "@storage/meal/MealStorageDTO";
 
 export function Meal() {
     const { navigate } = useNavigation();
@@ -75,7 +74,7 @@ export function Meal() {
 
                     <Info>
                         <SubHeadline>Data e hora</SubHeadline>
-                        <Description>{dayjs(screenData.date).format("DD/MM/YYYY")} às {screenData.time}</Description>
+                        <Description>{dayjs(screenData.date).format("DD/MM/YYYY")} às {dayjs(screenData.date).format("HH:mm")}</Description>
                     </Info>
 
                     <Tag>

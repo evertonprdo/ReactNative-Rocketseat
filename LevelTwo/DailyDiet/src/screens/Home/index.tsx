@@ -6,13 +6,14 @@ import profileImg from "@assets/profile/profile.jpeg"
 
 import { Container, Header, Logo, Profile } from "./styles";
 import { NewMealButton } from "@components/Button";
-import { StatisticCardOverview } from "@components/StatisticCard";
-
+import { StatisticCard, StatisticCardOverview } from "@components/StatisticCard";
+import { Loading } from "@components/Loading";
 import { MealsSectionList, type SectionListMealsProps } from "@components/MealsSectionList";
-import { getStorageMeals } from "@storage/meal/getStorageMeal";
+
 import { parseMealsToSectionList } from "@utils/sectionList";
 import { statistics } from "@utils/statistics";
 
+import { getStorageMeals } from "@storage/meal/getStorageMeal";
 import type { MealsStorageDTO, StatusProps } from "@storage/meal/MealStorageDTO";
 
 type PercentTypeProps = {
@@ -24,15 +25,12 @@ export function Home() {
 
     const [ data, setData ] = useState<SectionListMealsProps>([]);
     const [ percent, setPercent ] = useState({} as PercentTypeProps);
+    const [ isLoading, setIsLoading ] = useState(true);
+
+    let firstTime = percent.percent === "NaN%" ? true : false;
 
     function handleOnPressListItem(mealId: number) {
         navigation.navigate("meal", { id: mealId })
-    }
-
-    function fetchMealsToSectionList(meals: MealsStorageDTO) {
-        const parsedMeals = parseMealsToSectionList(meals.meals)
-
-        setData(parsedMeals)
     }
 
     function getGoodMealsPercent(meals: MealsStorageDTO) {
@@ -40,20 +38,25 @@ export function Home() {
 
         let formatedPercent = result.toFixed(2) + "%"
 
-        setPercent({
-            type: result >= 50 ? "GREEN" : "RED",
+        return {
+            type: result >= 50 ? "GREEN" : "RED" as StatusProps,
             percent: formatedPercent
-        })
+        }
     }
 
     async function getHomeData() {
         try {
             const meals = await getStorageMeals();
 
-            fetchMealsToSectionList(meals)
-            getGoodMealsPercent(meals);
+            const sectionList = parseMealsToSectionList(meals.meals)
+            const percentInfo = getGoodMealsPercent(meals);
+            
+            setData(sectionList)
+            setPercent(percentInfo)
         } catch (error) {
             console.log(error)
+        } finally {
+            setIsLoading(false)
         }
     }
 
@@ -72,11 +75,21 @@ export function Home() {
                 />
             </Header>
 
-            <StatisticCardOverview
-                headline={ percent.percent }
-                type={ percent.type }
-                onPress={() => navigation.navigate("statistics")}
-            />
+            {firstTime && (
+                <StatisticCard
+                    headline="Bem vindo(a)!"
+                    subHeadline="Que tal começar cadastrando sua primeira refeição clicando no botão abaixo"
+                    type="NONE"
+                />
+            )}
+
+            {(isLoading && !firstTime) ? <Loading/> : ( !firstTime &&
+                <StatisticCardOverview
+                    headline={ percent.percent }
+                    type={ percent.type }
+                    onPress={() => navigation.navigate("statistics")}
+                />
+            )}
 
             <NewMealButton
                 onPress={ () => navigation.navigate("menage_meal")}

@@ -7,14 +7,19 @@ export function parseMealsToSectionList(meals: MealsStorageDTO["meals"]): Sectio
     let dates: string[] = getOrderedDates(meals);
     
     for(const date of dates) {
+
         const dateMeals: SectionListDateMealsProps = {date: "", data: []}
+
         for(const meal of meals) {
-            if(date === meal.date) {
+
+            if(dayjs(date).isSame(meal.date, "day")) {
                 dateMeals.date = dayjs(date).format("DD.MM.YYYY")
                 dateMeals.data.push(meal)
             }
         }
-        dateMeals.data = orderSectionDateMealsByTime(dateMeals.data)
+        dateMeals.data = dateMeals.data.sort((a, b) => {
+            return new Date(b.date).getTime() - new Date(a.date).getTime()
+        })
         result.push(dateMeals)
     }
     return result
@@ -22,22 +27,18 @@ export function parseMealsToSectionList(meals: MealsStorageDTO["meals"]): Sectio
 
 export function getOrderedDates(meals: MealsStorageDTO["meals"]) {
     let dates: string[] = [];
+
     for(const meal of meals) {
-        if(!dates.includes(meal.date)) {
-            dates.push(meal.date)
+        
+        let date = dayjs(meal.date).format("YYYY-MM-DD");
+        date = dayjs(date).toISOString();
+
+        if(!dates.includes(date)) {
+            dates.push(date)
         }
     }
-    dates = dates.sort((a, b) => Number(new Date(b)) - Number(new Date(a)));
+    dates = dates.sort((a, b) => {
+        return new Date(b).getTime() - new Date(a).getTime()
+    });
     return dates
-}
-
-export function orderSectionDateMealsByTime(data: SectionListDateMealsProps["data"]) {
-    return data.sort((a, b) => {
-        const aParts = a.time.split(":");
-        const bParts = b.time.split(":");
-
-        const aMinutes = parseInt(aParts[0]) * 60 + parseInt(bParts[1]);
-        const bMinutes = parseInt(bParts[0]) * 60 + parseInt(aParts[1]);
-        return bMinutes - aMinutes;
-    })
 }

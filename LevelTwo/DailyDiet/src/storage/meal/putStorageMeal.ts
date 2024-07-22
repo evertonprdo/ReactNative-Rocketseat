@@ -1,7 +1,8 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { getStorageMeals } from "./getStorageMeal";
 import { AppError } from "@utils/appError";
 import { MEALS_COLLECTION } from "@storage/storageConfig";
+import { getStorageMeals } from "./getStorageMeal";
+
 import type { MealStorageDTO } from "./MealStorageDTO";
 
 export async function putStorageMealById(updatedMeal: MealStorageDTO) {

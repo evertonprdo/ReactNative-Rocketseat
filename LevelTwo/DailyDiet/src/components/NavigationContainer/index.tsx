@@ -1,7 +1,8 @@
-import type { PressableProps } from "react-native";
-import type { StatusVariantType } from "@components/StatisticCard/styles";
-import { Container, Content, Header, Icon, PressableIcon, Title } from "./styles";
 import { useState } from "react";
+import type { PressableProps } from "react-native";
+
+import { Container, Content, Header, Icon, PressableIcon, Title } from "./styles";
+import type { StatusVariantType } from "@components/StatisticCard/styles";
 
 type Props = PressableProps & {
     type: StatusVariantType

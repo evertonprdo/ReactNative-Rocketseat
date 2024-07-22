@@ -1,7 +1,8 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import type { MealStorageDTO, MealsStorageDTO } from "./MealStorageDTO";
 import { getStorageMeals } from "./getStorageMeal";
 import { MEALS_COLLECTION } from "@storage/storageConfig";
+
+import type { MealStorageDTO, MealsStorageDTO } from "./MealStorageDTO";
 
 export async function postMeal(meal: Omit<MealStorageDTO, "id">) {
     try {

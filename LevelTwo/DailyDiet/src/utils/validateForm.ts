@@ -14,8 +14,8 @@ function validateTime(filteredText: string) {
     return false
 }
 
-function allInputsFill(meal: MealFormProps) {
-    if(Object.keys(meal).length !== 5 ) return false
+function allInputsFill(meal: MealFormProps, iptLenght: number) {
+    if(Object.keys(meal).length !== iptLenght ) return false
 
     let isValid = true
     for (const key in meal) {

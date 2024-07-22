@@ -4,10 +4,11 @@ import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { Container, Data, Title, TwoColumn } from "./styles";
 import { NavigationContainer } from "@components/NavigationContainer";
 import { StatisticCard } from "@components/StatisticCard";
-import { getStorageMeals} from "@storage/meal/getStorageMeal";
+import { Loading } from "@components/Loading";
 
 import { statistics, type StatisticsScreenDataProps } from "@utils/statistics";
-import { Loading } from "@components/Loading";
+
+import { getStorageMeals} from "@storage/meal/getStorageMeal";
 
 export function Statistics() {
     const { navigate } = useNavigation();

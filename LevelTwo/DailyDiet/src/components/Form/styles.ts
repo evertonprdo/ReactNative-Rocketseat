@@ -5,8 +5,8 @@ export const Container = styled.View`
 `;
 
 export const FieldsContainer = styled.View`
-    flex: 1;
     gap: 24px;
+    height: 500px;
 `;
 
 export const TwoColumn = styled.View`
@@ -29,4 +29,9 @@ export const OptionTitle = styled.Text`
 export const Options = styled.View`
     flex-direction: row;
     gap: 8px;
+`;
+
+export const ChildContainer = styled.View`
+    flex: 1;
+    justify-content: flex-end;
 `;

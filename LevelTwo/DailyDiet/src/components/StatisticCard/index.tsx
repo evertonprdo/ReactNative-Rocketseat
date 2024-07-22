@@ -30,7 +30,7 @@ export function StatisticCard({ type, headline, subHeadline, size, ...rest  }: P
                 {headline}
             </Headline>
 
-            <SubHeadline>
+            <SubHeadline style={{textAlign: 'center'}}>
                 {subHeadline}
             </SubHeadline>
         </Container>
