@@ -23,7 +23,7 @@ module.exports = function(api) {
             '@theme': './src/theme',
           }
         }
-      ]
+      ], 'react-native-reanimated/plugin'
     ]
   };
 };
