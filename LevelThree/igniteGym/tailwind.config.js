@@ -1,5 +1,5 @@
 import { colors } from "./src/theme/colors";
-import { fontFamily } from "./src/theme/fontFamily";
+import { fontFamily, fontSize } from "./src/theme/fontFamily";
 import { sizes } from "./src/theme/size";
 
 /** @type {import('tailwindcss').Config} */
@@ -11,6 +11,7 @@ module.exports = {
             colors,
             fontFamily,
             spacing: sizes,
+            fontSize
         },
     },
     plugins: [],

@@ -1,3 +1,3 @@
 export const sizes = {
-    33: "148px"
+    33: '148px'
 }

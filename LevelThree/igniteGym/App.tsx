@@ -1,8 +1,10 @@
+import { ActivityIndicator, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-import { ActivityIndicator, Text, View } from 'react-native';
 import { useFonts, Roboto_400Regular, Roboto_700Bold } from '@expo-google-fonts/roboto';
+
 import "./src/theme/global.css"
-import SingIn from '@screens/SingIn';
+
+import { Login } from '@screens/Login';
 
 export default function App() {
     const [ isLoaded ] = useFonts({Roboto_400Regular, Roboto_700Bold});
@@ -13,7 +15,7 @@ export default function App() {
                 translucent
                 backgroundColor='transparent'
             />
-            { !isLoaded ? <ActivityIndicator/> : <SingIn/>}
+            { !isLoaded ? <ActivityIndicator/> : <Login/>}
         </View>
     );
 }
