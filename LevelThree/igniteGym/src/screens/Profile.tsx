@@ -1,31 +1,69 @@
 import { useState } from "react";
-import { ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { Alert, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import * as ImagePicker from "expo-image-picker"
+import * as FileSystem from 'expo-file-system'
 
 import { Header } from "@components/Header";
 import { UserPhoto, UserPhotoSkeleton } from "@components/UserPhoto";
 import { Input } from "@components/Input";
 import { Button } from "@components/Button";
+import { useToast } from "@components/Toast";
 
 const photoSize = 148
 
 export function Profile() {
     const [photoLoaded, setPhotoLoaded] = useState(true);
+    const [ userPhoto, setUserPhoto ] = useState('https://avatars.githubusercontent.com/u/170630423?v=4')
+
+    const { showToast } = useToast();
+
+    async function handleUserPhotoSelect() {
+        setPhotoLoaded(false)
+
+        try {
+            const photoSelected = await ImagePicker.launchImageLibraryAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                quality: 1,
+                aspect: [4, 4],
+                allowsEditing: true,
+                allowsMultipleSelection: false
+            });
+
+            if(photoSelected.canceled) return
+
+            if(photoSelected.assets[0].uri) {
+                const photoInfo = await FileSystem.getInfoAsync(photoSelected.assets[0].uri)
+
+                if(photoInfo.exists && (photoInfo.size / 1024 / 1024) > 3) {
+                    return showToast('Essa imagem é muito grande! Escolha uma até 3MB.')
+                }
+                setUserPhoto(photoSelected.assets[0].uri)
+            }
+    
+        } catch (error) {
+            console.log(error)
+        } finally {
+            setPhotoLoaded(true)
+        }
+    }
 
     return (
         <View className="flex-1">
-            <Header title="Perfil" />
+            <Header>
+                <Header.Title>Perfil</Header.Title>
+            </Header>
 
             <ScrollView contentContainerClassName="pb-9">
                 <View className="items-center mt-6 px-10">
                     {photoLoaded ? (
                         <UserPhoto
-                            source={{ uri: "https://avatars.githubusercontent.com/u/170630423?v=4" }}
+                            source={{ uri: userPhoto }}
                             alt="Foto do usuario"
                             size={photoSize}
                         />
                     ) : <UserPhotoSkeleton />}
 
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={handleUserPhotoSelect}>
                         <Text className="text-green-500 font-bold mt-2 mb-8">
                             Alterar foto
                         </Text>

@@ -23,7 +23,9 @@ export function History() {
 
     return (
         <View className="flex-1">
-            <Header title="Histórico de Exercícios"/>
+            <Header>
+                <Header.Title>Histórico de Exercícios</Header.Title>
+            </Header>
 
             <SectionList 
                 sections={ exercises }

@@ -9,7 +9,7 @@ type Props = PressableProps & {
 export function Group({ name, isActive, ...rest }: Props) {
     return (
         <Pressable
-            className={cn("mr-3 w-24 h-10 bg-gray-600 rounded-md items-center justify-center overflow-hidden border-[1px] border-transparent",
+            className={cn("mr-3 w-24 h-10 bg-gray-600 rounded-md items-center justify-center overflow-hidden border border-transparent",
                 {
                     "border-green-500": isActive
                 }
