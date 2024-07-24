@@ -13,7 +13,7 @@ export function HistoryCard() {
                 </Text>
 
                 <Text
-                    className="text-gray-100 text-lg"
+                    className="text-gray-100 text-lg font-regular"
                     numberOfLines={1}
                     ellipsizeMode="tail"
                 >

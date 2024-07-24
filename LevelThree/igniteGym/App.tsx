@@ -6,10 +6,10 @@ import { useFonts, Roboto_400Regular, Roboto_700Bold } from '@expo-google-fonts/
 import "./src/theme/global.css"
 
 import { Routes } from '@routes/index';
-import { ToastProvider } from '@components/Toast';
+import { AuthContextProvider } from '@contexts/AuthContext';
 
 export default function App() {
-    const [ isLoaded ] = useFonts({Roboto_400Regular, Roboto_700Bold});
+    const [ fontsLoaded ] = useFonts({Roboto_400Regular, Roboto_700Bold});
     return (
         <SafeAreaProvider>
             <StatusBar
@@ -17,15 +17,12 @@ export default function App() {
                 style='light'
                 translucent
             />
-
-            { !isLoaded 
-                ? <ActivityIndicator/>
-                : (
-                    <ToastProvider>
-                        <Routes/>
-                    </ToastProvider>
-                )
-            }
+            <AuthContextProvider>
+                { !fontsLoaded 
+                    ? <ActivityIndicator/>
+                    : <Routes/>
+                }
+            </AuthContextProvider>
         </SafeAreaProvider>
     );
 }

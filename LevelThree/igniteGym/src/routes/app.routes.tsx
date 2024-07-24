@@ -1,9 +1,9 @@
 import { Platform, View } from "react-native";
 import { createBottomTabNavigator, type BottomTabNavigationProp } from "@react-navigation/bottom-tabs"
 
-import HomeSvg from "@assets/home.svg";
-import HistorySvg from "@assets/history.svg";
-import ProfileSvg from "@assets/profile.svg";
+import HomeSvg from "@assets/SvgView/Home";
+import HistorySvg from "@assets/SvgView/History";
+import ProfileSvg from "@assets/SvgView/Profile";
 
 import { Home } from "@screens/Home"
 import { Exercise } from "@screens/Exercise"

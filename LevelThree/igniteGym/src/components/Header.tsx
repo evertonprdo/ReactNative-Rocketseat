@@ -1,26 +1,28 @@
 import { Text, type TextProps, TouchableOpacity, TouchableOpacityProps, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { MaterialIcons, Feather } from "@expo/vector-icons"
 
 import { colors } from "@theme/colors";
 import { UserPhoto } from "./UserPhoto";
 import cn from "@utils/cn";
 
-import BodySvg from "@assets/body.svg"
+import BodySvg from "@assets/SvgView/Body"
 
 type HeaderProps = {
     children?: React.ReactNode
     className?: string
+    paddingTop?: number
 }
 
-function Header({ children, className }: HeaderProps) {
-    return (
-        <SafeAreaView style={{ backgroundColor: colors.gray[600] }}>
-            <View className={cn("py-6 px-8 items-center", className)}>
+function Header({ children, paddingTop = 24, className }: HeaderProps) {
+    const { top } = useSafeAreaInsets();
+    paddingTop = top + paddingTop
 
-                {children}
-            </View>
-        </SafeAreaView>
+    return (
+        <View className={cn("bg-gray-600 pb-6 px-8 items-center", className)} style={{ paddingTop }}>
+
+            {children}
+        </View>
     )
 }
 
@@ -43,7 +45,7 @@ function Home() {
             />
 
             <View className="justify-center flex-1">
-                <Text className="text-gray-100 text-base">
+                <Text className="text-gray-100 text-base font-regular">
                     Olá
                 </Text>
                 <Text className="text-gray-100 text-base font-bold">

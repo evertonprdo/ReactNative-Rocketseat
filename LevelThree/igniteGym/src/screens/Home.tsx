@@ -21,7 +21,7 @@ export function Home() {
 
     return (
         <View className="flex-1 justify-start">
-            <Header className="py-5 flex-row items-center">
+            <Header className="pb-5 flex-row items-center" paddingTop={20}>
                 <Header.Home/>
             </Header>
 

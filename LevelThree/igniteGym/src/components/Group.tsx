@@ -16,7 +16,7 @@ export function Group({ name, isActive, ...rest }: Props) {
             )}
             {...rest}
         >
-            <Text className={cn("text-gray-200 uppercase text-xs", 
+            <Text className={cn("text-gray-200 uppercase text-xs font-regular", 
                 {
                     "text-green-500": isActive
                 }

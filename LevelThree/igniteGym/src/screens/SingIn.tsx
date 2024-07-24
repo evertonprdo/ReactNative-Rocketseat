@@ -6,13 +6,26 @@ import type { AuthNavigatorRoutesProps } from "@routes/auth.routes";
 import { Input } from "@components/Input";
 import { Button } from "@components/Button";
 import { LoginTemplate } from "@components/LoginTemplate";
+import { Controller, useForm } from "react-hook-form";
+import { useAuth } from "@hooks/useAuth";
+
+type FormData = {
+    email: string
+    password: string
+}
 
 export function SingIn() {
+    const { singIn } = useAuth();
+
+    const { control, handleSubmit, formState: { errors } } = useForm<FormData>();
 
     const navigation = useNavigation<AuthNavigatorRoutesProps>();
-
     function handleNewAccount() {
         navigation.navigate("singUp")
+    }
+
+    function handleSingIn({ email, password }: FormData) {
+        singIn(email, password)
     }
 
     return (
@@ -22,18 +35,37 @@ export function SingIn() {
                     Acesse sua conta
                 </Text>
 
-                <Input
-                    placeholder="E-mail"
-                    keyboardType="email-address"
-                    autoCapitalize="none"
+                <Controller
+                    control={control}
+                    name="email"
+                    rules={{ required: "Informe o e-mail" }}
+                    render={({ field: { onChange } }) => (
+                        <Input
+                            placeholder="E-mail"
+                            keyboardType="email-address"
+                            onChangeText={onChange}
+                            errorMessage={errors.email?.message}
+                            autoCapitalize="none"
+                        />
+                    )}
                 />
-                <Input
-                    placeholder="Senha"
-                    secureTextEntry
+                <Controller
+                    control={control}
+                    name="password"
+                    rules={{ required: "Informe a senha" }}
+                    render={({ field: { onChange } }) => (
+                        <Input
+                            placeholder="Senha"
+                            onChangeText={onChange}
+                            errorMessage={errors.email?.message}
+                            secureTextEntry
+                        />
+                    )}
                 />
 
                 <Button
                     title="Acessar"
+                    onPress={handleSubmit(handleSingIn)}
                 />
             </View>
 

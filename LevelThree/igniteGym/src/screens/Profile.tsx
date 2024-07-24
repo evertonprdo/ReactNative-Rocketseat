@@ -7,7 +7,7 @@ import { Header } from "@components/Header";
 import { UserPhoto, UserPhotoSkeleton } from "@components/UserPhoto";
 import { Input } from "@components/Input";
 import { Button } from "@components/Button";
-import { useToast } from "@components/Toast";
+import { useToast } from "@hooks/useToast";
 
 const photoSize = 148
 

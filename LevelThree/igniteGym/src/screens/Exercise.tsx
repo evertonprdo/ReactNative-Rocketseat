@@ -2,8 +2,8 @@ import { Image, ScrollView, Text, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
 import { Header } from "@components/Header";
-import SeriesSvg from "@assets/series.svg"
-import RepetionsSvg from "@assets/repetitions.svg"
+import SeriesSvg from "@assets/SvgView/Series"
+import RepetionsSvg from "@assets/SvgView/Repetitions"
 
 import type { AppNavigatorRoutesProps } from "@routes/app.routes";
 import { Button } from "@components/Button";
@@ -40,7 +40,7 @@ export function Exercise() {
                             <View className="flex-row">
                                 <SeriesSvg/>
                                 
-                                <Text className="text-gray-200 ml-2">
+                                <Text className="text-gray-200 ml-2 font-regular">
                                     3 séries
                                 </Text>
                             </View>
@@ -48,7 +48,7 @@ export function Exercise() {
                             <View className="flex-row">
                                 <RepetionsSvg/>
 
-                                <Text className="text-gray-200 ml-2">
+                                <Text className="text-gray-200 ml-2 font-regular">
                                     12 repetições
                                 </Text>
                             </View>
