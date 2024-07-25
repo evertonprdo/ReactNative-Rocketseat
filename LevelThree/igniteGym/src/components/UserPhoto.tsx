@@ -1,5 +1,5 @@
-import { Image, ImageProps } from "react-native";
-import Animated, { Easing, useAnimatedStyle, useSharedValue, withRepeat, withTiming } from "react-native-reanimated"
+import { Image, ImageProps, View } from "react-native";
+import Animated, { useAnimatedStyle, useSharedValue, withRepeat, withTiming } from "react-native-reanimated"
 import cn from "@utils/cn";
 import { useEffect } from "react";
 import { colors } from "@theme/colors";
@@ -9,12 +9,19 @@ type Props = ImageProps & {
 }
 export function UserPhoto({ size, className, ...rest }: Props) {
     return (
-        <Image
-            className={cn("rounded-full border-2 border-gray-400", className)}
-            width={size}
-            height={size}
-            {...rest}
-        />
+        <View
+            className={cn("items-center justify-center rounded-full border-2 border-gray-400 overflow-hidden", className)}
+            style={{width: size, height: size}}
+        >
+            <Image
+                className="flex-1"
+                width={size}
+                height={size}
+
+                resizeMode="cover"
+                {...rest}
+            />
+        </View>
     )
 }
 

@@ -57,7 +57,7 @@ export function SingUp() {
             const isAppError = error instanceof AppError
             const title = isAppError ? error.message : "Não foi possível criar a conta. Tente novamente mais tarde."
 
-            showToast(title)
+            showToast(title, "bg-red-500")
         }
     }
 

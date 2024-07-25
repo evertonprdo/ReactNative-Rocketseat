@@ -1,6 +1,10 @@
+import { HistoryDTO } from "@dtos/HistoryDTO";
 import { Text, View } from "react-native";
 
-export function HistoryCard() {
+type Props = {
+    data: HistoryDTO
+}
+export function HistoryCard({ data }: Props) {
     return (
         <View className="flex-row w-full px-5 py-4 mb-3 bg-gray-600 rounded-md items-center justify-between">
             <View className="mr-5 flex-1">
@@ -9,7 +13,7 @@ export function HistoryCard() {
                     numberOfLines={1}
                     ellipsizeMode="tail"
                 >
-                    Costas
+                    {data.group}
                 </Text>
 
                 <Text
@@ -17,12 +21,12 @@ export function HistoryCard() {
                     numberOfLines={1}
                     ellipsizeMode="tail"
                 >
-                    Puxada frontal
+                    {data.name}
                 </Text>
             </View>
 
             <Text className="text-gray-300 font-regular">
-                08:56
+                {data.hour}
             </Text>
         </View>
     )

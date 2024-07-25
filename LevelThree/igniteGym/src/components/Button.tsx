@@ -14,10 +14,11 @@ export function Button({title, variant, className, isLoading, ...rest }: Props) 
         <Pressable
             className={cn("w-full h-14 bg-green-700 rounded-md active:bg-green-500 justify-center items-center border border-transparent",
                 {
-                    "border-green-500 bg-transparent active:bg-gray-500": variant === "outline"
+                    "border-green-500 bg-transparent active:bg-gray-500": variant === "outline",
                 },
                 className
             )}
+            style={isLoading && {pointerEvents: "none"}}
             {...rest}
         >
             {isLoading

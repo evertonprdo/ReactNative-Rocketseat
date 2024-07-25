@@ -4,6 +4,7 @@ import { MaterialIcons, Feather } from "@expo/vector-icons"
 import cn from "@utils/cn";
 
 import { useAuth } from "@hooks/useAuth";
+import { api } from "@services/api";
 
 import { colors } from "@theme/colors";
 import { UserPhoto } from "./UserPhoto";
@@ -45,7 +46,10 @@ function Home() {
     return (
         <>
             <UserPhoto
-                source={ user.avatar ? { uri: user.avatar } : UserPhotoDefaultImg }
+                source={user.avatar
+                    ? { uri: `${api.defaults.baseURL}/avatar/${user.avatar}` }
+                    : UserPhotoDefaultImg
+                }
                 size={64}
                 alt="Imagem do usuário"
                 className="mr-4"
@@ -56,11 +60,11 @@ function Home() {
                     Olá
                 </Text>
                 <Text className="text-gray-100 text-base font-bold">
-                    { user.name }
+                    {user.name}
                 </Text>
             </View>
 
-            <TouchableOpacity onPress={ singOut }>
+            <TouchableOpacity onPress={singOut}>
                 <MaterialIcons
                     name="logout"
                     color={colors.gray[200]}
@@ -89,14 +93,14 @@ function Exercises({ data, ...rest }: ExerciseProps) {
 
             <View className="flex-row w-full justify-between mt-4 items-center">
                 <Text className="text-gray-100 text-lg font-bold flex-shrink">
-                    { data.name }
+                    {data.name}
                 </Text>
 
                 <View className="flex-row items-center">
                     <BodySvg />
 
                     <Text className="text-gray-200 ml-1 capitalize font-regular">
-                        { data.group }
+                        {data.group}
                     </Text>
                 </View>
             </View>

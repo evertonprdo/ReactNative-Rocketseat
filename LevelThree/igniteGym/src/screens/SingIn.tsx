@@ -41,7 +41,7 @@ export function SingIn() {
 
             const title = isAppError ? error.message : "Não foi possível entrar. tente novamente mais tarde."
 
-            showToast(title);
+            showToast(title, "bg-red-500");
             setIsLoading(false);
         }
     }

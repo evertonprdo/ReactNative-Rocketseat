@@ -40,7 +40,7 @@ export function Home() {
             const isAppError = error instanceof AppError;
             const title = isAppError ? error.message : "Não foi possivel carregar os grupos musculares."
 
-            showToast(title)
+            showToast(title, "bg-red-500")
         }
     }
 
@@ -55,7 +55,7 @@ export function Home() {
             const isAppError = error instanceof AppError;
             const title = isAppError ? error.message : "Não foi possivel pegar os exercicios."
 
-            showToast(title)
+            showToast(title, "bg-red-500")
         } finally {
             setIsLoading(false);
         }
