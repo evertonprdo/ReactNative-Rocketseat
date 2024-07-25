@@ -2,12 +2,16 @@ import { Text, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
 import type { AuthNavigatorRoutesProps } from "@routes/auth.routes";
+import { AppError } from "@utils/AppError";
 
 import { Input } from "@components/Input";
 import { Button } from "@components/Button";
 import { LoginTemplate } from "@components/LoginTemplate";
 import { Controller, useForm } from "react-hook-form";
+
 import { useAuth } from "@hooks/useAuth";
+import { useToast } from "@hooks/useToast";
+import { useState } from "react";
 
 type FormData = {
     email: string
@@ -16,16 +20,30 @@ type FormData = {
 
 export function SingIn() {
     const { singIn } = useAuth();
+    const { showToast } = useToast();
 
     const { control, handleSubmit, formState: { errors } } = useForm<FormData>();
-
     const navigation = useNavigation<AuthNavigatorRoutesProps>();
+    
+    const [ isLoading, setIsLoading ] = useState(false);
+
     function handleNewAccount() {
         navigation.navigate("singUp")
     }
 
-    function handleSingIn({ email, password }: FormData) {
-        singIn(email, password)
+    async function handleSingIn({ email, password }: FormData) {
+        try {
+            setIsLoading(true);
+            await singIn(email, password);
+            
+        } catch (error) {
+            const isAppError = error instanceof AppError;
+
+            const title = isAppError ? error.message : "Não foi possível entrar. tente novamente mais tarde."
+
+            showToast(title);
+            setIsLoading(false);
+        }
     }
 
     return (
@@ -66,6 +84,7 @@ export function SingIn() {
                 <Button
                     title="Acessar"
                     onPress={handleSubmit(handleSingIn)}
+                    isLoading={isLoading}
                 />
             </View>
 

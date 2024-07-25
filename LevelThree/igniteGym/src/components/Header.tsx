@@ -1,12 +1,17 @@
 import { Text, type TextProps, TouchableOpacity, TouchableOpacityProps, View } from "react-native";
-import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { MaterialIcons, Feather } from "@expo/vector-icons"
+import cn from "@utils/cn";
+
+import { useAuth } from "@hooks/useAuth";
 
 import { colors } from "@theme/colors";
 import { UserPhoto } from "./UserPhoto";
-import cn from "@utils/cn";
 
+import UserPhotoDefaultImg from "@assets/userPhotoDefault.png"
 import BodySvg from "@assets/SvgView/Body"
+
+import type { ExerciseDTO } from "@dtos/ExerciseDTO";
 
 type HeaderProps = {
     children?: React.ReactNode
@@ -35,10 +40,12 @@ function Title({ children }: TextProps) {
 }
 
 function Home() {
+    const { user, singOut } = useAuth();
+
     return (
         <>
             <UserPhoto
-                source={{ uri: "https://avatars.githubusercontent.com/u/170630423?v=4" }}
+                source={ user.avatar ? { uri: user.avatar } : UserPhotoDefaultImg }
                 size={64}
                 alt="Imagem do usuário"
                 className="mr-4"
@@ -49,11 +56,11 @@ function Home() {
                     Olá
                 </Text>
                 <Text className="text-gray-100 text-base font-bold">
-                    Everton
+                    { user.name }
                 </Text>
             </View>
 
-            <TouchableOpacity>
+            <TouchableOpacity onPress={ singOut }>
                 <MaterialIcons
                     name="logout"
                     color={colors.gray[200]}
@@ -64,7 +71,10 @@ function Home() {
     )
 }
 
-function Exercises({ ...rest }: TouchableOpacityProps) {
+type ExerciseProps = TouchableOpacityProps & {
+    data: ExerciseDTO
+}
+function Exercises({ data, ...rest }: ExerciseProps) {
     return (
         <>
             <TouchableOpacity
@@ -79,14 +89,14 @@ function Exercises({ ...rest }: TouchableOpacityProps) {
 
             <View className="flex-row w-full justify-between mt-4 items-center">
                 <Text className="text-gray-100 text-lg font-bold flex-shrink">
-                    Puxada frontal
+                    { data.name }
                 </Text>
 
                 <View className="flex-row items-center">
                     <BodySvg />
 
                     <Text className="text-gray-200 ml-1 capitalize font-regular">
-                        Costas
+                        { data.group }
                     </Text>
                 </View>
             </View>

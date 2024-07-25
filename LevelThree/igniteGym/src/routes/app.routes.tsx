@@ -15,7 +15,7 @@ import { colors } from "@theme/colors";
 
 type AppRoutes = {
     home: undefined
-    exercise: undefined
+    exercise: { exerciseId: string }
     profile: undefined
     history: undefined
 }

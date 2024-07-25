@@ -1,65 +1,112 @@
+import { useEffect, useState } from "react";
 import { Image, ScrollView, Text, View } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
+
+import { useToast } from "@hooks/useToast";
+import { AppError } from "@utils/AppError";
+import { api } from "@services/api";
+import type { ExerciseDTO } from "@dtos/ExerciseDTO";
 
 import { Header } from "@components/Header";
-import SeriesSvg from "@assets/SvgView/Series"
-import RepetionsSvg from "@assets/SvgView/Repetitions"
-
-import type { AppNavigatorRoutesProps } from "@routes/app.routes";
 import { Button } from "@components/Button";
 
+import SeriesSvg from "@assets/SvgView/Series";
+import RepetionsSvg from "@assets/SvgView/Repetitions";
+
+import type { AppNavigatorRoutesProps } from "@routes/app.routes";
+import { Loading } from "@components/Loading";
+
+type RouteParamsProps = {
+    exerciseId: string
+}
+
 export function Exercise() {
+    const [isLoading, setIsLoading] = useState(true);
+    const [exercise, setExercise] = useState<ExerciseDTO>({} as ExerciseDTO);
 
     const navigation = useNavigation<AppNavigatorRoutesProps>();
+    const route = useRoute();
+    const { showToast } = useToast();
+
+    const { exerciseId } = route.params as RouteParamsProps
 
     function handleGoBack() {
         navigation.goBack();
     }
 
+    async function fetchExerciseDetails() {
+        try {
+            setIsLoading(true)
+
+            const response = await api.get(`/exercises/${exerciseId}`)
+            setExercise(response.data)
+
+        } catch (error) {
+            const isAppError = error instanceof AppError;
+            const title = isAppError ? error.message : "Não foi possivel carregar os detalhes do exercício."
+
+            showToast(title)
+        } finally {
+            setIsLoading(false)
+        }
+    }
+
+    useEffect(() => {
+        fetchExerciseDetails()
+    }, [exerciseId])
+
     return (
         <View className="flex-1">
             <Header className="pb-8 items-start">
-                <Header.Exercises 
-                    onPress={ handleGoBack }
+                <Header.Exercises
+                    data={exercise}
+                    onPress={handleGoBack}
                 />
             </Header>
 
-            <ScrollView
-                showsVerticalScrollIndicator={false}
-                contentContainerStyle={{paddingBottom: 32}}
-            >
-                <View className="p-8">
-                    <Image
-                        className="w-full h-[364px] mb-3 rounded-lg"
-                        source={{ uri: "https://conteudo.imguol.com.br/c/entretenimento/0c/2019/12/03/remada-unilateral-com-halteres-1575402100538_v2_600x600.jpg" }}
-                        resizeMode="cover"
-                    />
-
-                    <View className="bg-gray-600 rounded-md pb-4 px-4">
-                        <View className="items-center justify-around mb-6 mt-5 flex-row">
-                            <View className="flex-row">
-                                <SeriesSvg/>
-                                
-                                <Text className="text-gray-200 ml-2 font-regular">
-                                    3 séries
-                                </Text>
+            { isLoading
+                ? <Loading />
+                : (
+                    <ScrollView
+                        showsVerticalScrollIndicator={false}
+                        contentContainerStyle={{ paddingBottom: 32 }}
+                    >
+                        <View className="p-8">
+                            <View className="w-full h-[364px] mb-3 rounded-lg overflow-hidden">
+                                <Image
+                                    className="flex-1"
+                                    source={{ uri: `${api.defaults.baseURL}/exercise/demo/${exercise.demo}` }}
+                                    resizeMode="cover"
+                                />
                             </View>
 
-                            <View className="flex-row">
-                                <RepetionsSvg/>
+                            <View className="bg-gray-600 rounded-md pb-4 px-4">
+                                <View className="items-center justify-around mb-6 mt-5 flex-row">
+                                    <View className="flex-row">
+                                        <SeriesSvg />
 
-                                <Text className="text-gray-200 ml-2 font-regular">
-                                    12 repetições
-                                </Text>
+                                        <Text className="text-gray-200 ml-2 font-regular">
+                                            {exercise.series} séries
+                                        </Text>
+                                    </View>
+
+                                    <View className="flex-row">
+                                        <RepetionsSvg />
+
+                                        <Text className="text-gray-200 ml-2 font-regular">
+                                            {exercise.repetitions} repetições
+                                        </Text>
+                                    </View>
+                                </View>
+
+                                <Button
+                                    title="Marcar como realizado"
+                                />
                             </View>
                         </View>
-
-                        <Button
-                            title="Marcar como realizado"
-                        />
-                    </View>
-                </View>
-            </ScrollView>
+                    </ScrollView>
+                )
+            }
         </View>
     )
 }

@@ -1,8 +1,12 @@
+import { useState } from "react";
 import { Text, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useForm, Controller } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
 import * as yup from "yup"
+
+import { useToast } from "@hooks/useToast";
+import { useAuth } from "@hooks/useAuth";
 
 import { api } from "@services/api"
 import { AppError } from "@utils/AppError";
@@ -10,7 +14,6 @@ import { AppError } from "@utils/AppError";
 import { Button } from "@components/Button";
 import { LoginTemplate } from "@components/LoginTemplate";
 import { Input } from "@components/Input";
-import { useToast } from "@hooks/useToast";
 
 type FormDataProps = {
     name: string
@@ -28,6 +31,9 @@ const singUpSchema = yup.object({
 
 export function SingUp() {
     const { showToast } = useToast();
+    const { singIn } = useAuth();
+
+    const [ isLoading, setIsLoading ] = useState(false);
 
     const { control, handleSubmit, formState: { errors } } = useForm<FormDataProps>({
         resolver: yupResolver(singUpSchema)
@@ -38,11 +44,16 @@ export function SingUp() {
         navigation.goBack();
     }
 
-    async function handleSingUp({ name, email, password, password_confirm }: FormDataProps) {
+    async function handleSingUp({ name, email, password }: FormDataProps) {
         try {
-            const response = await api.post("/users", { name, email, password });
-            console.log(response.data)
+            setIsLoading(true)
+
+            await api.post("/users", { name, email, password });
+            await singIn(email, password)
+
         } catch (error) {
+            setIsLoading(false);
+            
             const isAppError = error instanceof AppError
             const title = isAppError ? error.message : "Não foi possível criar a conta. Tente novamente mais tarde."
 
@@ -116,6 +127,7 @@ export function SingUp() {
                 <Button
                     title="Criar e acessar"
                     onPress={ handleSubmit(handleSingUp) }
+                    isLoading={isLoading}
                 />
             </View>
 
