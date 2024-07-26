@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import { Pressable, type TextProps, type PressableProps, View, ViewProps } from "react-native";
+import { Pressable, type TextProps, type PressableProps } from "react-native";
 import cn from "@utils/cn";
 
 import { TextApp } from "@components/atoms/Text";
@@ -25,7 +25,7 @@ function Button({
 }: ButtonProps) {
     return (
         <Pressable
-            className={cn("p-3 justify-center items-center rounded-md",{
+            className={cn("flex-row p-3 justify-center items-center rounded-md gap-2",{
                 "bg-gray-100 active:bg-gray-200": variant === "black",
                 "bg-gray-500 active:bg-gray-400": variant === "gray",
                 "bg-blue-light active:bg-blue": variant === "blue"
@@ -35,8 +35,13 @@ function Button({
         >
             <ThemeContext.Provider value={{ variant }}>
                 { isLoading
-                    ? <Loading/>
-                    : children 
+                    ? <Loading
+                        className={cn({
+                            "color-gray-700": variant === "gray" || variant === "black",
+                            "color-gray-300": variant === "gray"
+                        })}
+                    />
+                    : children
                 }
             </ThemeContext.Provider>
         </Pressable>
@@ -48,7 +53,7 @@ function Title({children, className, ...props}: TextProps) {
     return (
         <TextApp
             className={cn("font-bold text-sm",{
-                "text-white": variant === "black" || variant === "blue",
+                "text-gray-700": variant === "black" || variant === "blue",
                 "text-gray-200": variant === "gray",
             }, className)}
             {...props}
@@ -58,15 +63,6 @@ function Title({children, className, ...props}: TextProps) {
     )
 }
 
-function HView({children, ...props}: ViewProps) {
-    return (
-        <View className="flex-row items-center justify-center gap-2" {...props}>
-            { children }
-        </View>
-    )
-}
-
 Button.Title = Title;
-Button.HView = HView;
 
 export { Button }
