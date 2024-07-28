@@ -7,34 +7,32 @@ import { createContext, useContext } from "react";
 
 const size = 24;
 const hitSlop = 4; 
-const OnPressLabelContext = createContext<CheckableProps["onPressLabel"]>(() => {});
+const OnPressLabelContext = createContext<CheckableProps>({} as CheckableProps);
 
 type CheckableProps = ViewProps & {
     checked?: boolean
-    onPressLabel?: () => void
+    onPress?: () => void
 }
-function Checkable({children, onPressLabel, ...props}: CheckableProps) {
+function Checkable({children, checked, onPress, ...props}: CheckableProps) {
     return (
         <View
             className="flex-row gap-2"
             {...props}
         >
-            <OnPressLabelContext.Provider value={ onPressLabel }>
+            <OnPressLabelContext.Provider value={{ checked, onPress  }}>
                 { children }
             </OnPressLabelContext.Provider>
         </View>
     )
 }
 
-type CheckboxProps = PressableProps & {
-    checked?: boolean
-}
-function Checkbox({ checked, ...props }: CheckboxProps) {
-    const onPressLabel = useContext(OnPressLabelContext)
+type CheckboxProps = PressableProps
+function Checkbox({ ...props }: CheckboxProps) {
+    const { checked, onPress } = useContext(OnPressLabelContext)
     return (
         <Pressable
-            onPress={ onPressLabel }
-            hitSlop={hitSlop}
+            onPress={ onPress }
+            hitSlop={ hitSlop }
             {...props}
         >
             { checked
@@ -47,12 +45,12 @@ function Checkbox({ checked, ...props }: CheckboxProps) {
 
 type RadioProps = CheckboxProps
 
-function Radio({ checked, ...props }: RadioProps) {
-    const onPressLabel = useContext(OnPressLabelContext)
+function Radio({ ...props }: RadioProps) {
+    const { checked, onPress} = useContext(OnPressLabelContext)
     return (
         <Pressable
-            onPress={ onPressLabel }
-            hitSlop={hitSlop}
+            onPress={ onPress }
+            hitSlop={ hitSlop }
             {...props}
         >
             { checked
@@ -64,12 +62,12 @@ function Radio({ checked, ...props }: RadioProps) {
 }
 
 function Title({children, ...props}: TextProps) {
-    const onPressLabel = useContext(OnPressLabelContext)
+    const { onPress } = useContext(OnPressLabelContext)
     return (
         <Pressable
-            onPress={ onPressLabel }
-            disabled={ !onPressLabel }
-            hitSlop={hitSlop}
+            onPress={ onPress }
+            disabled={ !onPress }
+            hitSlop={ hitSlop }
         >
             <TextApp {...props}>
                 { children }

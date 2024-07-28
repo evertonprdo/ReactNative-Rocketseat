@@ -1,103 +1,132 @@
-import { createContext, useContext, useState } from "react";
-import { Pressable, type PressableProps, TextProps } from "react-native";
+import React, { Children, createContext, useContext, useState } from "react";
+import { Pressable, TextProps, View, ViewProps } from "react-native";
 import Animated, { Easing, ReduceMotion, useSharedValue, withTiming } from "react-native-reanimated"
 import { CaretDown, CaretUp } from "phosphor-react-native"
 
 import { TextApp } from "@components/atoms/Text";
 import cn from "@utils/cn";
 
-const SelectedContext = createContext({selected: ""});
-
-type SelectProps = Omit<PressableProps, "onPress"> & {
-    selected?: string
-    children?: React.ReactNode
+type SelectedContextProps = {
+    selected: string
+    setSelected?: (v: string) => void,
+    setShowOptions: (v: boolean) => void,
 }
-function Select({ selected = "", children, ...props }: SelectProps) {
+const SelectedContext = createContext({} as SelectedContextProps);
+
+type OptionChildProps = {
+    [key: string]: TextProps["children"]
+}
+type SelectProps = ViewProps & {
+    selected?: string
+    setSelected?: (val: string) => void
+    children: React.ReactNode
+}
+function Select({ selected = "", setSelected, children, ...props }: SelectProps) {
     const [showOptions, setShowOptions] = useState(false);
-    const [showContent, setShowContent] = useState(false);
 
-    const [display, setDisplay] = useState<"none" | "flex">("none");
-    const paddingVertical = useSharedValue(0);
-    const maxHeight = useSharedValue(0);
+    const childProps = {} as OptionChildProps
+    Children.map<void, React.ReactNode>(children, child => {
+        if(React.isValidElement(child)) {
+            const name = child.props["name"]
+            const optChild = child.props["children"]
 
-    const userConfig = {
-        duration: 275,
-        easing: Easing.inOut(Easing.ease),
-        reduceMotion: ReduceMotion.System
-    }
-
-    function wait(ms: number) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
-
-    function animation(pad: number, maxh: number) {
-        paddingVertical.value = withTiming(pad, userConfig)
-        maxHeight.value = withTiming(maxh, userConfig)
-    }
-
-    async function handleOnPress() {
-        setShowOptions(v => v = !showOptions);
-
-        if (!showOptions && display === "none") {
-            setDisplay("flex");
-            animation(12, 999);
-
-            await wait(125);
-            setShowContent(true);
-
-            return
+            childProps[name] = optChild
         }
-        if (showOptions && display === "flex") {
-            animation(0, 0);
-
-            await wait(100);
-            setShowContent(false);
-
-            await wait(userConfig.duration);
-            setDisplay("none");
-            return
+    })
+    const anOpt = {
+        maxh: {
+            sv: useSharedValue(0),
+            start: 0,
+            end: Children.count(children) * 40,
+        },
+        py: {
+            sv: useSharedValue(0),
+            start: 0,
+            end: 6
+        },
+        config: {
+            duration: 275,
+            easing: Easing.inOut(Easing.ease),
+            reduceMotion: ReduceMotion.System
         }
     }
 
+    function animation(py: number, maxh: number) {
+        anOpt.maxh.sv.value = withTiming(maxh, anOpt.config)
+        anOpt.py.sv.value = withTiming(py, anOpt.config)
+    }
+    function handleOnSelectPress(val: boolean) {
+        if (val && val !== showOptions) {
+            setShowOptions(val)
+            animation(anOpt.py.end, anOpt.maxh.end);
+            return
+        }
+        if (!val && val !== showOptions) {
+            setShowOptions(val)
+            animation(anOpt.py.start, anOpt.maxh.start);
+            return
+        }
+    }
+    const maxHeight = anOpt.maxh.sv
+    const paddingVertical = anOpt.py.sv
+    
     return (
-        <SelectedContext.Provider value={{ selected }}>
-            <Pressable
-                className="w-28 items-center flex-row rounded-md px-3 py-2 gap-2 border border-gray-400 justify-between"
-                onPress={ handleOnPress }
-                {...props}
-            >
-                <TextApp className="text-sm text-gray-100">
-                    { !selected ? "Select" : selected }
-                </TextApp>
+        <SelectedContext.Provider value={{ selected, setSelected, setShowOptions: handleOnSelectPress }}>
+            <View className="w-28" {...props}>
+                <Pressable
+                    className="w-full items-center flex-row gap-2 px-3 py-2 rounded-md border border-gray-400"
+                    onPress={ () => handleOnSelectPress(!showOptions) }  
+                >
+                    <TextApp
+                        className="text-sm text-gray-100 flex-1"
+                        numberOfLines={1}
+                        ellipsizeMode="tail"
+                    >
+                        { selected ? childProps[selected] : "Selecione" }
+                    </TextApp>
 
-                { showOptions ? <CaretUp size={16} /> : <CaretDown size={16}/> }
+                    { showOptions ? <CaretUp size={16} /> : <CaretDown size={16}/> }
+                </Pressable>
 
                 <Animated.View
-                    className="w-28 absolute px-3 bg-gray-700 top-10 border border-transparent rounded-md shadow-md gap-6"
-                    style={{ display, paddingVertical, maxHeight }}
+                    className="w-full absolute bg-gray-700 top-10 rounded-md shadow-md overflow-hidden"
+                    style={{ maxHeight, paddingVertical }}
+
                 >
-                    { showContent && children }
+                    { children }
                 </Animated.View>
-            </Pressable>
+            </View>
         </SelectedContext.Provider>
     )
 }
 
-type OptionProps = PressableProps & {
-    children?: TextProps["children"] | React.ReactNode
+type OptionProps = {
+    name: string
+    children: TextProps["children"]
+    className?: string
 }
-function Option({ children, className, ...props }: OptionProps) {
-    const { selected } = useContext(SelectedContext);
-    const isSelected = selected.toLowerCase() === children?.toString().toLowerCase();
+function Option({ name, children, className, ...props }: OptionProps) {
+    const { selected, setSelected, setShowOptions } = useContext(SelectedContext);
+    const isSelected = selected === name;
 
+    function handleOnPressOption() {
+        if(setSelected) { setSelected(name) }
+        setShowOptions(false)
+    }
     return (
         <Pressable
-            className={cn("active:bg-gray-500 -m-3 py-2 px-3 rounded-md", className)}
+            className={cn("py-[6px] px-3 rounded-md", className)}
+            onPress={ handleOnPressOption }
+            disabled={ isSelected }
             {...props}
         >
             <TextApp
-                className={ isSelected ? "font-bold" : '' }>
-                {children}
+                className={ isSelected ? "font-bold" : '' }
+                disabled={ isSelected }
+                numberOfLines={1}
+                ellipsizeMode="tail"
+            >
+                { children }
             </TextApp>
         </Pressable>
     )

@@ -18,13 +18,16 @@ export function SingIn() {
 
     return (
         <View className="flex-1 justify-center p-5 gap-3">
-            <Checkable>
+            <Checkable checked={ checkedC }>
                 <Checkable.Title>Selection</Checkable.Title>
-                <Checkable.Checkbox checked={checkedC} onPress={() => setCheckedC(!checkedC)}/>
+                <Checkable.Checkbox onPress={() => setCheckedC(!checkedC)}/>
             </Checkable>
 
-            <Checkable onPressLabel={() => setChecked(!checked)}>
-                <Checkable.Radio checked={checked}/>
+            <Checkable
+                onPress={() => setChecked(!checked)}
+                checked={ checked }
+            >
+                <Checkable.Radio/>
                 <Checkable.Title>Selection</Checkable.Title>
             </Checkable>
 
@@ -47,10 +50,14 @@ export function SingIn() {
                 onPress={() => setToggled(!toggled)}
             />
 
-            <Select selected={ selected }>
-                <Select.Option onPress={() => setSelected("Todos")}>Todos</Select.Option>
-                <Select.Option onPress={() => setSelected("Ativos")}>Ativos</Select.Option>
-                <Select.Option onPress={() => setSelected("Inativos")}>Inativos</Select.Option>
+            <Select
+                selected={selected}
+                setSelected={ setSelected }
+                className="w-full"
+            >
+                <Select.Option name="all">Todos</Select.Option>
+                <Select.Option name="active">Ativos</Select.Option>
+                <Select.Option name="inactive">Inativos</Select.Option>
             </Select>
         </View>
     )
