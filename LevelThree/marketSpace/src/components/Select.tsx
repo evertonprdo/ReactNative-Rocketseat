@@ -21,7 +21,7 @@ type SelectProps = ViewProps & {
     setSelected?: (val: string) => void
     children: React.ReactNode
 }
-function Select({ selected = "", setSelected, children, ...props }: SelectProps) {
+function Select({ selected = "", setSelected, className, children, ...props }: SelectProps) {
     const [showOptions, setShowOptions] = useState(false);
 
     const childProps = {} as OptionChildProps
@@ -29,7 +29,6 @@ function Select({ selected = "", setSelected, children, ...props }: SelectProps)
         if(React.isValidElement(child)) {
             const name = child.props["name"]
             const optChild = child.props["children"]
-
             childProps[name] = optChild
         }
     })
@@ -72,7 +71,7 @@ function Select({ selected = "", setSelected, children, ...props }: SelectProps)
     
     return (
         <SelectedContext.Provider value={{ selected, setSelected, setShowOptions: handleOnSelectPress }}>
-            <View className="w-28" {...props}>
+            <View className={cn("w-28 z-30", className)} {...props}>
                 <Pressable
                     className="w-full items-center flex-row gap-2 px-3 py-2 rounded-md border border-gray-400"
                     onPress={ () => handleOnSelectPress(!showOptions) }  
