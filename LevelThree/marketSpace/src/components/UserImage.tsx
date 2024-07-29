@@ -1,4 +1,4 @@
-import { Image, View } from "react-native";
+import { Image, Pressable, PressableProps, View } from "react-native";
 import { PencilSimpleLine } from "phosphor-react-native"
 
 import UserImg from "@assets/avatar.png"
@@ -7,8 +7,9 @@ import cn from "@utils/cn";
 
 type ImagePickProps = {
     className?: string
+    children?: React.ReactNode
 }
-function ImagePick({ className }: ImagePickProps) {
+function UserImage({ className, children }: ImagePickProps) {
     return (
         <View
             className={cn("size-[88px] rounded-full border-[3px] border-blue-light", className)}
@@ -18,17 +19,22 @@ function ImagePick({ className }: ImagePickProps) {
                 className="w-full h-full"
                 resizeMode="cover"
             />
-                <EditIcon/>
+                {children}
         </View>
     )
 }
 
-function EditIcon() {
+function Edit({className, ...props}: PressableProps) {
     return (
-        <View className="absolute rounded-full bg-blue-light p-3 bottom-0 -right-2">
+        <Pressable
+            className={cn("absolute rounded-full active:bg-blue bg-blue-light p-3 bottom-0 -right-2", className)}
+            {...props}
+        >
             <PencilSimpleLine color={colors.gray[600]} size={16}/>
-        </View>
+        </Pressable>
     )
 }
 
-export { ImagePick }
+UserImage.Edit = Edit
+
+export { UserImage }

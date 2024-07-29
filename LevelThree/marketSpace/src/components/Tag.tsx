@@ -1,8 +1,9 @@
-import { Pressable, PressableProps, type TextProps, View } from "react-native";
+import { Pressable, PressableProps, type TextProps } from "react-native";
 import { XCircle } from "phosphor-react-native"
 import cn from "@utils/cn";
 
 import { TextApp } from "@components/atoms/Text";
+import { colors } from "@theme/colors";
 
 type TagProps = PressableProps & {
     selected?: boolean
@@ -27,7 +28,7 @@ export function Tag({ selected, children, className, ...props }: TagProps) {
             </TextApp>
 
             { selected &&
-                <XCircle weight="fill" size={13} color="#fff"/>
+                <XCircle weight="fill" size={13} color={colors.gray[600]}/>
             }
         </Pressable>
     )

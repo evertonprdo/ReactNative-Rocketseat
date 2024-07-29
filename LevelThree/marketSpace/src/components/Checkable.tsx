@@ -9,24 +9,26 @@ const size = 24;
 const hitSlop = 4; 
 const OnPressLabelContext = createContext<CheckableProps>({} as CheckableProps);
 
+// TODO Simplify it
+
 type CheckableProps = ViewProps & {
     checked?: boolean
     onPress?: () => void
 }
 function Checkable({children, checked, onPress, ...props}: CheckableProps) {
     return (
-        <View
-            className="flex-row gap-2"
-            {...props}
-        >
-            <OnPressLabelContext.Provider value={{ checked, onPress  }}>
-                { children }
-            </OnPressLabelContext.Provider>
-        </View>
+        <OnPressLabelContext.Provider value={{ checked, onPress  }}>
+            <View
+                className="flex-row gap-2"
+                {...props}
+            >
+                    { children }
+            </View>
+        </OnPressLabelContext.Provider>
     )
 }
 
-type CheckboxProps = PressableProps
+type CheckboxProps = Omit<PressableProps, "children">
 function Checkbox({ ...props }: CheckboxProps) {
     const { checked, onPress } = useContext(OnPressLabelContext)
     return (
@@ -75,9 +77,22 @@ function Title({children, ...props}: TextProps) {
         </Pressable>
     )
 }
+type CheckboxTemplateProps = CheckableProps
+
+function CheckboxTemplate({children, ...props}: CheckboxTemplateProps) {
+    return (
+        <Checkable {...props}>
+            <Checkbox/>
+            <Title>
+                {children}
+            </Title>
+        </Checkable>
+    )
+}
 
 Checkable.Checkbox = Checkbox;
 Checkable.Radio = Radio;
 Checkable.Title = Title
+Checkable.CheckboxTemplate = CheckboxTemplate
 
 export { Checkable }

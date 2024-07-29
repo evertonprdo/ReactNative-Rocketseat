@@ -2,7 +2,7 @@ import { createContext, useContext } from "react";
 import { Image, ImageBackground, ImageProps, Pressable, PressableProps, TextProps, View, ViewProps } from "react-native";
 import cn from "@utils/cn";
 
-import AvatarImg from "@assets/Avatar.png"
+import AvatarImg from "@assets/avatar.png"
 import ProductImg from "@assets/Image.png"
 
 import { TextApp } from "@components/atoms/Text";

@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { View, ScrollView } from "react-native";
+import { View, ScrollView, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context"
 import { useNavigation } from "@react-navigation/native";
 
 import LogoSvg from "@assets/SvgView/Logo"
 
 import { TextApp } from "@components/atoms/Text";
-import { ImagePick } from "@components/ImagePick";
+import { UserImage } from "@components/UserImage";
 import { Input } from "@components/Input";
 import { Button } from "@components/Button";
 
@@ -38,6 +38,7 @@ export function SingUp() {
             >
                 <View className="my-12 items-center gap-3">
                     <LogoSvg/>
+                    
                     <TextApp className="font-bold text-xl">Boas vindas!</TextApp>
 
                     <TextApp 
@@ -49,7 +50,12 @@ export function SingUp() {
                 </View>
 
                 <View className="w-full gap-6 mb-12">
-                    <ImagePick className="self-center"/>
+                    <UserImage className="self-center">
+                        <UserImage.Edit
+                            onPress={() => Alert.alert("Edit image", "TODO")}
+                        />
+                        
+                    </UserImage>
 
                     <Input.Template
                         name="name"

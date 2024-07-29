@@ -12,19 +12,19 @@ function Toggle({value, className, ...props}: ToggleProps) {
     const padding = 22;
     const anim = {
         pl: {
+            start: tooglePadding,
+            end: padding,
+            sv: useSharedValue(tooglePadding)
+        },
+        pr: {
             start: padding,
             end: tooglePadding,
             sv: useSharedValue(padding)
         },
-        pr: {
-            start: tooglePadding,
-            end: padding,
-            sv: useSharedValue(padding)
-        },
         bg: {
-            start: colors["blue-light"],
-            end: colors.gray[500],
-            sv: useSharedValue(colors["blue-light"])
+            start: colors.gray[500],
+            end: colors["blue-light"],
+            sv: useSharedValue(colors.gray[500])
         },
         config: {
             duration: 150,
@@ -40,12 +40,12 @@ function Toggle({value, className, ...props}: ToggleProps) {
     }
 
     const animatedStyle = useAnimatedStyle(() => ({
-        backgroundColor: anim.bg.sv.value
+        backgroundColor: anim.bg.sv.value,
+        paddingLeft: anim.pl.sv.value,
+        paddingRight: anim.pr.sv.value
     }))
-    const paddingLeft = anim.pl.sv
-    const paddingRight = anim.pr.sv
     
-    if(value) {
+    if(!value) {
         animation(anim.pr.start, anim.pl.start, anim.bg.start);
     } else {
         animation(anim.pr.end, anim.pl.end, anim.bg.end);
@@ -55,7 +55,7 @@ function Toggle({value, className, ...props}: ToggleProps) {
         <Pressable className={cn("items-start", className)} hitSlop={5} {...props}>
             <Animated.View
                 className="p-[2px] rounded-full"
-                style={[{paddingLeft, paddingRight}, animatedStyle]}
+                style={[animatedStyle]}
             >
                 <View className="size-6 bg-gray-700 rounded-full"/>
             </Animated.View>
