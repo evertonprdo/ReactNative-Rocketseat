@@ -5,10 +5,10 @@ import { useNavigation } from "@react-navigation/native";
 
 import LogoSvg from "@assets/SvgView/Logo"
 
-import { TextApp } from "@components/atoms/Text";
-import { UserImage } from "@components/UserImage";
-import { Input } from "@components/Input";
-import { Button } from "@components/Button";
+import { TextApp } from "@components/base/Text";
+import { UserImage } from "@components/base/UserImage";
+import { Input } from "@components/base/Input";
+import { Button } from "@components/base/Button";
 
 import type { AuthNavigatorRoutesProps } from "@routes/auth.routes";
 

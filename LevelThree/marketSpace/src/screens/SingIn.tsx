@@ -4,9 +4,9 @@ import { useNavigation } from "@react-navigation/native";
 
 import LogoHomeImg from "@assets/SvgView/LogoHome"
 
-import { Input } from "@components/Input";
-import { TextApp } from "@components/atoms/Text";
-import { Button } from "@components/Button";
+import { Input } from "@components/base/Input";
+import { TextApp } from "@components/base/Text";
+import { Button } from "@components/base/Button";
 import { colors } from "@theme/colors";
 import { useState } from "react";
 

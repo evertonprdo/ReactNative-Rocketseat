@@ -1,29 +1,35 @@
 import { useState } from "react";
-import { Pressable, View, FlatList } from "react-native";
+import { Pressable, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ArrowRight, MagnifyingGlass, Plus, Sliders, Tag } from "phosphor-react-native";
 
 import { colors } from "@theme/colors";
-import { TextApp } from "@components/atoms/Text";
-import { Button } from "@components/Button";
-import { UserImage } from "@components/UserImage";
-import { Input } from "@components/Input";
-import { ProductDisplay } from "@components/ProductDisplayTemplate";
+import { TextApp } from "@components/base/Text";
+import { Button } from "@components/base/Button";
+import { UserImage } from "@components/base/UserImage";
+import { Input } from "@components/base/Input";
+import { ProductList } from "@components/ProductList";
 import { AnimatedModal } from "@components/AnimatedModal";
+
 import { defaultFilterStateObj, FilterAd, type FilterOptions } from "@components/Filter";
+import { PressableIcon } from "@components/base/PressableIcon";
 
 export function Home() {
     const [ showModal, setShowModal ] = useState(false);
     const [ filter, setFilter ] = useState(defaultFilterStateObj)
 
     function handleOnCloseModal() {
-        if(showModal) {
-            setShowModal(false)
-        }
+        setShowModal(false)
+    }
+
+    function handleOpenModal() {
+        setShowModal(true)
     }
 
     function handleOnAplyfilters(filterState: FilterOptions) {
-        handleOnCloseModal();
+        if(showModal) {
+            handleOnCloseModal();
+        }
         setFilter(filterState);
     }
 
@@ -76,41 +82,29 @@ export function Home() {
                                 placeholder="Buscar anúncio"
                             />
                             <View className="flex-row gap-3 h-full items-center">
-                                <Pressable className="rounded-full active:bg-gray-500 p-2 -m-2">
+                                <PressableIcon
+                                    className="p-2 -m-2"
+                                >
                                     <MagnifyingGlass
                                         size={20}
                                     />
-                                </Pressable>
+                                </PressableIcon>
                         
                                 <View className="w-[1px] h-3/4 bg-gray-400"/>
 
-                                <Pressable
-                                    className="rounded-full p-2 -m-2"
-                                    onPress={() => setShowModal(true)}
+                                <PressableIcon
+                                    className="p-2 -m-2"
+                                    onPress={handleOpenModal}
                                 >
                                     <Sliders
                                         size={20}
                                     />
-                                </Pressable>
+                                </PressableIcon>
                             </View>
                         </Input>
                     </View>
                     
-                    <FlatList
-                        data={[0,1,2,3,4,5,6,7,8,9]}
-                        keyExtractor={item => "Key_" + item}
-                        numColumns={2}
-                        renderItem={() => (
-                            <ProductDisplay
-                                title="Tênis vermelho"
-                                price="59,90"
-                                isNew
-                            />
-                        )}
-                        columnWrapperClassName="gap-6"
-                        contentContainerClassName="gap-6 pb-16"
-                        showsVerticalScrollIndicator={false}
-                    />
+                    <ProductList/>
                 </View>
             </View>
 

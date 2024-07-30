@@ -4,7 +4,7 @@ import Animated, { ReduceMotion, useSharedValue, withDelay, withTiming, Easing }
 import { X } from "phosphor-react-native";
 
 import { colors } from "@theme/colors";
-import { TextApp } from "./atoms/Text";
+import { TextApp } from "./base/Text";
 import { wait } from "@utils/util";
 
 type FilterProps = Omit<ModalProps, "visible"> & {
@@ -42,19 +42,18 @@ export function AnimatedModal({title, showModal, onCloseModal, children, ...prop
         setShow(false)
         
         if(onCloseModal) {
-            onCloseModal()
+            onCloseModal();
         }
     }
     
     useEffect(() => {
-        if(showModal) {
+        if(showModal && !show) {
             setShow(true)
             animation(0)
             return
-        } 
-        if(!showModal) {
+        }
+        if(!showModal && show) {
             handleOnCloseModal();
-            return
         }
     }, [showModal])
 
@@ -68,10 +67,7 @@ export function AnimatedModal({title, showModal, onCloseModal, children, ...prop
             {...props}
         >
             <View className="bg-black/60 flex-1">
-                <Pressable
-                    onPress={ handleOnCloseModal }
-                    className="flex-1"
-                />
+
 
                 <Animated.View
                     className="absolute w-full p-6 bg-gray-600 rounded-t-3xl gap-6"

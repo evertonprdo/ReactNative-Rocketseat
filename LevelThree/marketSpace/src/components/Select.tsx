@@ -3,7 +3,7 @@ import { Pressable, TextProps, View, ViewProps } from "react-native";
 import Animated, { Easing, ReduceMotion, useSharedValue, withTiming } from "react-native-reanimated"
 import { CaretDown, CaretUp } from "phosphor-react-native"
 
-import { TextApp } from "@components/atoms/Text";
+import { TextApp } from "@components/base/Text";
 import cn from "@utils/cn";
 
 type SelectedContextProps = {
@@ -71,10 +71,10 @@ function Select({ selected = "", setSelected, className, children, ...props }: S
     
     return (
         <SelectedContext.Provider value={{ selected, setSelected, setShowOptions: handleOnSelectPress }}>
-            <View className={cn("w-28 z-30", className)} {...props}>
+            <View className={cn("w-28 z-50", className)} {...props}>
                 <Pressable
                     className="w-full items-center flex-row gap-2 px-3 py-2 rounded-md border border-gray-400"
-                    onPress={ () => handleOnSelectPress(!showOptions) }  
+                    onPress={ () => handleOnSelectPress(!showOptions) }
                 >
                     <TextApp
                         className="text-sm text-gray-100 flex-1"

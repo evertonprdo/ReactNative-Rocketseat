@@ -2,7 +2,7 @@ import { Pressable, PressableProps, type TextProps } from "react-native";
 import { XCircle } from "phosphor-react-native"
 import cn from "@utils/cn";
 
-import { TextApp } from "@components/atoms/Text";
+import { TextApp } from "@components/base/Text";
 import { colors } from "@theme/colors";
 
 type TagProps = PressableProps & {

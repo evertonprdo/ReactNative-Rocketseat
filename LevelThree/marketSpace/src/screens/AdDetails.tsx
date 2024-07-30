@@ -4,11 +4,11 @@ import { ArrowLeft, Bank, Barcode, CreditCard, Money, QrCode, WhatsappLogo } fro
 
 import { colors } from "@theme/colors";
 
-import { ProductCarrosel } from "@components/ProductCarrosel";
-import { UserImage } from "@components/UserImage";
-import { TextApp } from "@components/atoms/Text";
-import { Tag } from "@components/Tag";
-import { Button } from "@components/Button";
+import { ImageCarrosel } from "@components/ImageCarrosel";
+import { UserImage } from "@components/base/UserImage";
+import { TextApp } from "@components/base/Text";
+import { Tag } from "@components/base/Tag";
+import { Button } from "@components/base/Button";
 
 export function AdDetails() {
     return (
@@ -21,7 +21,7 @@ export function AdDetails() {
             </View>
 
             <ScrollView>
-                <ProductCarrosel />
+                <ImageCarrosel />
 
                 <View className="p-6">
                     <View className="gap-6">

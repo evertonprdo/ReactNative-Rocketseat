@@ -16,6 +16,9 @@
       "@screens/*": [
         "./src/screens/*"
       ],
+      "@templates/*": [
+        "./src/templates/*"
+      ],
       "@storage/*": [
         "./src/storage/*"
       ],

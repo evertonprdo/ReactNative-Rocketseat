@@ -2,8 +2,8 @@ import { createContext, useContext, useState } from "react";
 import { Pressable, type TextProps, type PressableProps, GestureResponderEvent } from "react-native";
 import cn from "@utils/cn";
 
-import { TextApp } from "@components/atoms/Text";
-import { Loading } from "@components/atoms/Loading";
+import { TextApp } from "@components/base/Text";
+import { Loading } from "@components/base/Loading";
 
 type Variants = "black" | "blue" | "gray"
 

@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { View } from "react-native";
 
-import { TextApp } from "@components/atoms/Text";
-import { Tag } from "@components/Tag";
-import { Toggle } from "@components/Toggle";
-import { Checkable } from "@components/Checkable";
-import { Button } from "@components/Button";
+import { TextApp } from "@components/base/Text";
+import { Tag } from "@components/base/Tag";
+import { Toggle } from "@components/base/Toggle";
+import { Checkable } from "@components/base/Checkable";
+import { Button } from "@components/base/Button";
 
 export const defaultFilterStateObj = {
     condition: {
@@ -76,7 +76,6 @@ function FilterAd({ state, onApplyFilters }: FilterAdProps) {
             });
         }
     }
-    console.log(exchange)
     return (
         <>
             <View className="gap-3">

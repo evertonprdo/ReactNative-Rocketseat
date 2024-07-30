@@ -5,8 +5,9 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import "./src/theme/global.css"
 
-import { Loading } from '@components/atoms/Loading';
+import { Loading } from '@components/base/Loading';
 import { Routes } from '@routes/index';
+
 import { Home } from '@screens/Home';
 import { AdDetails } from '@screens/AdDetails';
 
@@ -19,7 +20,7 @@ export default function App() {
                 <StatusBar style="auto" />
                 { !fontLoaded
                     ? <Loading/>
-                    : <AdDetails/>
+                    : <Routes/>
                 }
             </View>
         </SafeAreaProvider>

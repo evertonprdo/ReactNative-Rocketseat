@@ -2,7 +2,7 @@ import { Pressable, type PressableProps, type TextProps, } from "react-native";
 import { CheckSquare, Square, Circle, RadioButton } from "phosphor-react-native";
 
 import { colors } from "@theme/colors";
-import { TextApp } from "@components/atoms/Text";
+import { TextApp } from "@components/base/Text";
 import cn from "@utils/cn";
 
 const size = 24;

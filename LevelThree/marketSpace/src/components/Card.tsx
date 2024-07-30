@@ -5,15 +5,15 @@ import cn from "@utils/cn";
 import AvatarImg from "@assets/avatar.png"
 import ProductImg from "@assets/Image.png"
 
-import { TextApp } from "@components/atoms/Text";
+import { TextApp } from "@components/base/Text";
 
 const DisableContext = createContext<boolean | undefined | null>(false)
 
-function Card({ children, disabled, ...props }: PressableProps) {
+function Card({ children, disabled, className, ...props }: PressableProps) {
     return (
         <DisableContext.Provider value={ disabled }>
             <Pressable
-                className="gap-1 flex-1"
+                className={cn("gap-1 flex-1", className)}
                 disabled={ disabled }
                 hitSlop={5}
                 {...props}

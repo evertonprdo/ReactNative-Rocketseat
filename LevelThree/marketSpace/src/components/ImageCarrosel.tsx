@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { FlatList, useWindowDimensions, View, ViewProps } from "react-native"
-import { TextApp } from "@components/atoms/Text";
+import { TextApp } from "@components/base/Text";
 import cn from "@utils/cn";
 
 type ProductCarroselProsp = ViewProps & {
     imagesUri?: string[],
     disabledAd?: boolean
 }
-export function ProductCarrosel({ imagesUri, disabledAd, className, ...props }: ProductCarroselProsp) {
+export function ImageCarrosel({ imagesUri, disabledAd, className, ...props }: ProductCarroselProsp) {
     const [ currentView, setCurrentView ] = useState("")
     const { width } = useWindowDimensions();
 
