@@ -7,13 +7,14 @@ import { colors } from "@theme/colors";
 import { TextApp } from "./atoms/Text";
 import { wait } from "@utils/util";
 
-type FilterProps = ModalProps & {
+type FilterProps = Omit<ModalProps, "visible"> & {
     title?: string
     onCloseModal?: () => void
+    showModal?: boolean
 }
-export function AnimatedModal({visible, title, onCloseModal, children, ...props }: FilterProps) {
+export function AnimatedModal({title, showModal, onCloseModal, children, ...props }: FilterProps) {
     const { height } = useWindowDimensions();
-    const [ show, setShow ] = useState(visible);
+    const [ show, setShow ] = useState(showModal);
 
     const anim = {
         bottom: {
@@ -40,15 +41,22 @@ export function AnimatedModal({visible, title, onCloseModal, children, ...props 
         await wait(anim.config.duration)
         setShow(false)
         
-        if(onCloseModal) {onCloseModal()}
+        if(onCloseModal) {
+            onCloseModal()
+        }
     }
     
     useEffect(() => {
-        if(visible) {
+        if(showModal) {
             setShow(true)
             animation(0)
+            return
+        } 
+        if(!showModal) {
+            handleOnCloseModal();
+            return
         }
-    }, [visible])
+    }, [showModal])
 
     const bottom = anim.bottom.sv
     return (
@@ -56,8 +64,8 @@ export function AnimatedModal({visible, title, onCloseModal, children, ...props 
             statusBarTranslucent
             transparent
             animationType="fade"
-            {...props}
             visible={show}
+            {...props}
         >
             <View className="bg-black/60 flex-1">
                 <Pressable

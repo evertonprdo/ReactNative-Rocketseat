@@ -1,98 +1,41 @@
-import { Pressable, View, ViewProps, type PressableProps, type TextProps, } from "react-native";
+import { Pressable, type PressableProps, type TextProps, } from "react-native";
 import { CheckSquare, Square, Circle, RadioButton } from "phosphor-react-native";
 
 import { colors } from "@theme/colors";
 import { TextApp } from "@components/atoms/Text";
-import { createContext, useContext } from "react";
+import cn from "@utils/cn";
 
 const size = 24;
 const hitSlop = 4; 
-const OnPressLabelContext = createContext<CheckableProps>({} as CheckableProps);
 
-// TODO Simplify it
-
-type CheckableProps = ViewProps & {
+type CheckboxProps = PressableProps & {
+    variant?: "checkbox" | "radio"
     checked?: boolean
-    onPress?: () => void
+    children?: TextProps["children"]
 }
-function Checkable({children, checked, onPress, ...props}: CheckableProps) {
-    return (
-        <OnPressLabelContext.Provider value={{ checked, onPress  }}>
-            <View
-                className="flex-row gap-2"
-                {...props}
-            >
-                    { children }
-            </View>
-        </OnPressLabelContext.Provider>
-    )
-}
-
-type CheckboxProps = Omit<PressableProps, "children">
-function Checkbox({ ...props }: CheckboxProps) {
-    const { checked, onPress } = useContext(OnPressLabelContext)
+function Checkable({ variant = "checkbox", children, checked, className, ...props }: CheckboxProps) {
     return (
         <Pressable
-            onPress={ onPress }
             hitSlop={ hitSlop }
+            className={cn("flex-row gap-2", className)}
             {...props}
         >
-            { checked
+            { variant !== "checkbox"
+                ? null : checked
                 ? <CheckSquare color={colors["blue-light"]} weight="fill" size={size}/>
                 : <Square color={colors.gray[400]} size={size} />
             }
-        </Pressable>
-    )
-}
 
-type RadioProps = CheckboxProps
-
-function Radio({ ...props }: RadioProps) {
-    const { checked, onPress} = useContext(OnPressLabelContext)
-    return (
-        <Pressable
-            onPress={ onPress }
-            hitSlop={ hitSlop }
-            {...props}
-        >
-            { checked
+            { variant !== "radio"
+                ? null : checked
                 ? <RadioButton color={colors["blue-light"]} weight="fill" size={size}/>
                 : <Circle color={colors.gray[400]} size={size} />
             }
-        </Pressable>
-    )
-}
-
-function Title({children, ...props}: TextProps) {
-    const { onPress } = useContext(OnPressLabelContext)
-    return (
-        <Pressable
-            onPress={ onPress }
-            disabled={ !onPress }
-            hitSlop={ hitSlop }
-        >
-            <TextApp {...props}>
+            <TextApp>
                 { children }
             </TextApp>
         </Pressable>
     )
 }
-type CheckboxTemplateProps = CheckableProps
-
-function CheckboxTemplate({children, ...props}: CheckboxTemplateProps) {
-    return (
-        <Checkable {...props}>
-            <Checkbox/>
-            <Title>
-                {children}
-            </Title>
-        </Checkable>
-    )
-}
-
-Checkable.Checkbox = Checkbox;
-Checkable.Radio = Radio;
-Checkable.Title = Title
-Checkable.CheckboxTemplate = CheckboxTemplate
 
 export { Checkable }

@@ -8,6 +8,7 @@ import "./src/theme/global.css"
 import { Loading } from '@components/atoms/Loading';
 import { Routes } from '@routes/index';
 import { Home } from '@screens/Home';
+import { AdDetails } from '@screens/AdDetails';
 
 export default function App() {
     const [ fontLoaded ] = useFonts({Karla_400Regular, Karla_700Bold})
@@ -18,7 +19,7 @@ export default function App() {
                 <StatusBar style="auto" />
                 { !fontLoaded
                     ? <Loading/>
-                    : <Home/>
+                    : <AdDetails/>
                 }
             </View>
         </SafeAreaProvider>

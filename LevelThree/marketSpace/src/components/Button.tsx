@@ -1,5 +1,5 @@
-import { createContext, useContext } from "react";
-import { Pressable, type TextProps, type PressableProps } from "react-native";
+import { createContext, useContext, useState } from "react";
+import { Pressable, type TextProps, type PressableProps, GestureResponderEvent } from "react-native";
 import cn from "@utils/cn";
 
 import { TextApp } from "@components/atoms/Text";
@@ -21,17 +21,38 @@ function Button({
     disabled,
     isLoading,
     className,
+    onPressIn,
+    onPressOut,
     ...props
 }: ButtonProps) {
+    const [ pressIn, setPressIn ] = useState(false);
+
+    function handlePressIn(event: GestureResponderEvent) {
+        setPressIn(true);
+        if(onPressIn) {
+            onPressIn(event);
+        }
+    }
+    function handlePressOut(event: GestureResponderEvent) {
+        setPressIn(false);
+        if(onPressOut) {
+            onPressOut(event);
+        }
+    }
     return (
         <Pressable
             className={cn("flex-row p-3 justify-center items-center rounded-md gap-2",{
-                "bg-gray-100 active:bg-gray-200": variant === "black",
-                "bg-gray-500 active:bg-gray-400": variant === "gray",
-                "bg-blue-light active:bg-blue": variant === "blue"
+                "bg-gray-100": variant === "black",
+                "bg-gray-500": variant === "gray",
+                "bg-blue-light": variant === "blue",
+                "bg-gray-200": variant === "black" && pressIn,
+                "bg-gray-400": variant === "gray" && pressIn,
+                "bg-blue": variant === "blue" && pressIn,
             }, className)}
             style= {disabled && {pointerEvents: "none"}}
             {...props}
+            onPressIn={(e) => handlePressIn(e)}
+            onPressOut={(e) => handlePressOut(e)}
         >
             <ThemeContext.Provider value={{ variant }}>
                 { isLoading

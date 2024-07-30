@@ -9,31 +9,24 @@ import { Button } from "@components/Button";
 import { UserImage } from "@components/UserImage";
 import { Input } from "@components/Input";
 import { ProductDisplay } from "@components/ProductDisplayTemplate";
-import { FilterAd } from "@components/Filter";
 import { AnimatedModal } from "@components/AnimatedModal";
+import { defaultFilterStateObj, FilterAd, type FilterOptions } from "@components/Filter";
 
 export function Home() {
     const [ showModal, setShowModal ] = useState(false);
-    const [ filter, setFilter ] = useState({
-        condition: {
-            new: true,
-            used: true,
-        },
-        exchange: true,
-        payment: {
-            "Boleto": true,
-            "Pix": true,
-            "Dinheiro": true,
-            "Cartão de Crédito": true,
-            "Deposito Bancário": true,
-        }
-    })
+    const [ filter, setFilter ] = useState(defaultFilterStateObj)
 
-    function handleShowModal() {
+    function handleOnCloseModal() {
         if(showModal) {
             setShowModal(false)
         }
     }
+
+    function handleOnAplyfilters(filterState: FilterOptions) {
+        handleOnCloseModal();
+        setFilter(filterState);
+    }
+
     return (
         <SafeAreaView style={{flex: 1}}>
             <View className="flex-1 px-6 pt-6 gap-8">
@@ -92,7 +85,7 @@ export function Home() {
                                 <View className="w-[1px] h-3/4 bg-gray-400"/>
 
                                 <Pressable
-                                    className="rounded-full active:bg-gray-500 p-2 -m-2"
+                                    className="rounded-full p-2 -m-2"
                                     onPress={() => setShowModal(true)}
                                 >
                                     <Sliders
@@ -123,12 +116,12 @@ export function Home() {
 
             <AnimatedModal
                 title="Filtrar anúncios"
-                visible={showModal}
-                onCloseModal={handleShowModal}
+                showModal={showModal}
+                onCloseModal={handleOnCloseModal}
             >
                 <FilterAd
                     state={filter}
-                    setState={setFilter}
+                    onApplyFilters={ handleOnAplyfilters }
                 />
             </AnimatedModal>
         </SafeAreaView>
