@@ -1,24 +1,33 @@
-import { Pressable, View } from "react-native";
+import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Plus } from "phosphor-react-native";
+import { type CompositeScreenProps } from "@react-navigation/native";
+import { type BottomTabScreenProps } from "@react-navigation/bottom-tabs";
+import { type NativeStackScreenProps } from "@react-navigation/native-stack";
 
-import { colors } from "@theme/colors";
 import { TextApp } from "@components/base/Text";
 import { ProductList } from "@components/ProductList";
 import { Select } from "@components/Select";
+import { Header } from "@components/Header";
 
-export function UserAds() {
+import type { AppTabParamList } from "@routes/app.tab.routes";
+import type { AppStackParamList } from "@routes/app.stack.routes";
+
+type Props = CompositeScreenProps<
+    BottomTabScreenProps<AppTabParamList, "userAds">,
+    NativeStackScreenProps<AppStackParamList, "Home">
+>
+export function UserAds({ navigation }: Props) {
     return (
         <SafeAreaView style={{flex: 1}}>
-            <View className="justify-between items-center flex-row p-6 gap-2">
-                <TextApp className="pl-8 font-bold flex-1 text-xl text-center">Meus anúncios</TextApp>
+            <Header>
+                <Header.Empty/>
+                <Header.Title>Meus anúncios</Header.Title>
+                <Header.Add
+                    onPress={() => navigation.navigate("createAd")}
+                />
+            </Header>
 
-                <Pressable className="w-6 h-6 items-center justify-center">
-                    <Plus color={colors.gray[100]} size={24}/>
-                </Pressable>
-            </View>
-
-            <View className="px-6 mt-6 flex-1">
+            <View className="px-6 flex-1">
                 <View className="flex-row justify-between items-center mb-5 z-30">
                     <TextApp>9 anúncios</TextApp>
 
@@ -29,7 +38,40 @@ export function UserAds() {
                     </Select>
                 </View>
 
-                <ProductList/>
+                <ProductList
+                    data={[
+                        {   
+                            isNew: true,
+                            price: "11",
+                            title: "weq2we",
+                            onPress: () => navigation.navigate("userAdDetails")
+                        },
+                        {   
+                            isNew: true,
+                            price: "11",
+                            title: "we3qwe",
+                            onPress: () => navigation.navigate("userAdDetails")
+                        },
+                        {   
+                            isNew: true,
+                            price: "11",
+                            title: "we11qwe",
+                            onPress: () => navigation.navigate("userAdDetails")
+                        },
+                        {   
+                            isNew: true,
+                            price: "11",
+                            title: "we1qwe",
+                            onPress: () => navigation.navigate("userAdDetails")
+                        },
+                        {   
+                            isNew: true,
+                            price: "11",
+                            title: "w111e1qwe",
+                            onPress: () => navigation.navigate("userAdDetails")
+                        },
+                    ]}
+                />
             </View>
         </SafeAreaView>
     )

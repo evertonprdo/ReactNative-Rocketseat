@@ -1,6 +1,5 @@
 import { type PressableProps, FlatList } from "react-native";
-import { Card } from "./Card";
-import { useNavigation } from "@react-navigation/native";
+import { Card } from "@components/Card";
 
 type CardProps = PressableProps & {
     isNew: boolean
@@ -12,31 +11,33 @@ type CardProps = PressableProps & {
 }
 
 type ProductListProps = {
-
+    data: CardProps[]
+    className?: string
 }
-function ProductList({}: ProductListProps) {
+function ProductList({data, className}: ProductListProps) {
     return(
         <FlatList
-            data={[0,1,2,3,4,5,6,7,8,9]}
-            keyExtractor={item => "Key_" + item}
+            data={data}
+            keyExtractor={item => "Key_" + item?.title}
             numColumns={2}
-            renderItem={() => (
+            renderItem={({item: {title, isNew, price, ...props}}) => (
                 <DisplayItem
                     title="Tênis vermelho"
                     price="59,90"
-                    className="z-0"
                     isNew
+                    style={{maxWidth: "50%"}}
+                    {...props}
                 />
             )}
             columnWrapperClassName="gap-6"
             contentContainerClassName="gap-6 pb-16"
             showsVerticalScrollIndicator={false}
+            className={className + ""}
         />
     )
 }
 
 function DisplayItem({title, price, isNew, disabledAd, imgUri, currency = "R$", ...props}: CardProps) {
-    const { navigate } = useNavigation();
     return (
         <Card
             disabled={disabledAd}

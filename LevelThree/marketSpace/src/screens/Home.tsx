@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { Pressable, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { type NativeStackScreenProps } from "@react-navigation/native-stack";
+import { type BottomTabScreenProps } from "@react-navigation/bottom-tabs";
+import { type CompositeScreenProps } from "@react-navigation/native";
 import { ArrowRight, MagnifyingGlass, Plus, Sliders, Tag } from "phosphor-react-native";
 
 import { colors } from "@theme/colors";
@@ -10,11 +13,17 @@ import { UserImage } from "@components/base/UserImage";
 import { Input } from "@components/base/Input";
 import { ProductList } from "@components/ProductList";
 import { AnimatedModal } from "@components/AnimatedModal";
-
-import { defaultFilterStateObj, FilterAd, type FilterOptions } from "@components/Filter";
 import { PressableIcon } from "@components/base/PressableIcon";
+import { defaultFilterStateObj, FilterAd, type FilterOptions } from "@components/Filter";
 
-export function Home() {
+import type { AppTabParamList } from "@routes/app.tab.routes";
+import type { AppStackParamList } from "@routes/app.stack.routes";
+
+type Props = CompositeScreenProps<
+    BottomTabScreenProps<AppTabParamList, "TabHome">,
+    NativeStackScreenProps<AppStackParamList, "Home">
+>
+export function Home({ navigation }: Props) {
     const [ showModal, setShowModal ] = useState(false);
     const [ filter, setFilter ] = useState(defaultFilterStateObj)
 
@@ -32,7 +41,6 @@ export function Home() {
         }
         setFilter(filterState);
     }
-
     return (
         <SafeAreaView style={{flex: 1}}>
             <View className="flex-1 px-6 pt-6 gap-8">
@@ -48,7 +56,11 @@ export function Home() {
                         </View>
                     </View>
 
-                    <Button variant="black" className="flex-1">
+                    <Button
+                        variant="black"
+                        className="flex-1"
+                        onPress={() => navigation.navigate("createAd")}
+                    >
                         <Plus color={colors.gray[700]} size={16}/>
                         <Button.Title>Criar anúncio</Button.Title>
                     </Button>
@@ -67,7 +79,7 @@ export function Home() {
                             </View>
                         </View>
 
-                        <Pressable className="flex-row items-center gap-2">
+                        <Pressable className="flex-row items-center gap-2" onPress={() => navigation.navigate("userAds")}>
                             <TextApp className="text-blue font-bold">Meus anúncios</TextApp>
                             <ArrowRight size={16} color={colors.blue}/>
                         </Pressable>
@@ -104,7 +116,82 @@ export function Home() {
                         </Input>
                     </View>
                     
-                    <ProductList/>
+                    <ProductList
+                        data={[
+                            {   
+                                isNew: true,
+                                price: "11",
+                                title: "weq2we",
+                                onPress: () => navigation.navigate("adDetails")
+                            },
+                            {   
+                                isNew: true,
+                                price: "11",
+                                title: "we3qw2323e",
+                                onPress: () => navigation.navigate("adDetails")
+                            },
+                            {   
+                                isNew: true,
+                                price: "113",
+                                title: "we11q2323we",
+                                onPress: () => navigation.navigate("adDetails")
+                            },
+                            {   
+                                isNew: true,
+                                price: "1111",
+                                title: "we1q123123we",
+                                onPress: () => navigation.navigate("adDetails")
+                            },
+                            {   
+                                isNew: true,
+                                price: "11",
+                                title: "weq21352we",
+                                onPress: () => navigation.navigate("adDetails")
+                            },
+                            {   
+                                isNew: true,
+                                price: "11",
+                                title: "we3q3151we",
+                                onPress: () => navigation.navigate("adDetails")
+                            },
+                            {   
+                                isNew: true,
+                                price: "11",
+                                title: "we115215215521qwe",
+                                onPress: () => navigation.navigate("adDetails")
+                            },
+                            {   
+                                isNew: true,
+                                price: "11",
+                                title: "we1qw512125e",
+                                onPress: () => navigation.navigate("adDetails")
+                            },
+                            {   
+                                isNew: true,
+                                price: "11",
+                                title: "weq2w512521152e",
+                                onPress: () => navigation.navigate("adDetails")
+                            },
+                            {   
+                                isNew: true,
+                                price: "11",
+                                title: "we3q512251512we",
+                                onPress: () => navigation.navigate("adDetails")
+                            },
+                            {   
+                                isNew: true,
+                                price: "11",
+                                title: "we11q521521512we",
+                                onPress: () => navigation.navigate("adDetails")
+                            },
+                            {   
+                                isNew: true,
+                                price: "11",
+                                title: "we15122512515215215215qwe",
+                                onPress: () => navigation.navigate("adDetails")
+                            },
+                        ]}
+                    />
                 </View>
             </View>
 
