@@ -1,10 +1,17 @@
-import { TextApp } from "@components/base/Text";
-import { View } from "react-native";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
-export function CreateAd() {
+import type { AppStackParamList } from "@routes/app.stack.routes";
+
+import { CreateEditAd } from "@templates/CreateEditAd";
+
+type Props = NativeStackScreenProps<AppStackParamList, "createAd">
+
+export function CreateAd({ navigation, route }: Props) {
     return (
-        <View className="flex-1 justify-center items-center">
-            <TextApp>Criar anúncio!</TextApp>
-        </View>
+        <CreateEditAd
+            type="create"
+            onPressCancel={() => navigation.goBack()}
+            onPressGoBack={() => navigation.goBack()}
+        />
     )
 }

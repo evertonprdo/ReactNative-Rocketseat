@@ -20,7 +20,6 @@ function Header({ children, className, ...props }: ViewProps) {
 function GoBack({ ...props }: PressableProps) {
     return (
         <PressableIcon
-            className="self-start"
             {...props}
         >
             <ArrowLeft color={colors.gray[100]} size={20} />
@@ -43,7 +42,7 @@ function Add({ ...props }: PressableProps) {
         <PressableIcon
             {...props}
         >
-            <Plus color={colors.gray[100]} size={24}/>
+            <Plus color={colors.gray[100]} size={20}/>
         </PressableIcon>
     )
 }
@@ -51,7 +50,7 @@ function Add({ ...props }: PressableProps) {
 function Title({ children, ...props }: TextProps) {
     return (
         <TextApp
-            className="font-bold text-xl"
+            className="font-bold text-xl text-gray-100"
             {...props}
         >
             {children}

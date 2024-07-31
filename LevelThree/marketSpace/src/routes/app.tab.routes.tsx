@@ -26,7 +26,7 @@ export function AppTabRoutes() {
                 tabBarInactiveTintColor: colors.gray[400],
                 tabBarActiveTintColor: colors.gray[200],
                 tabBarStyle: {
-                    paddingHorizontal: 56,
+                    paddingHorizontal: 28,
                     paddingTop: 20,
                     paddingBottom: 28,
                     backgroundColor: colors.gray[700]
@@ -71,7 +71,7 @@ export function AppTabRoutes() {
                 component={ScreenPlaceholder}
                 options={{
                     tabBarIcon: () => (
-                        <View className="py-2 px-1 -my-2">
+                        <View className="py-2 px-1 -my-1">
                             <SignOut
                                 color={colors["red-light"]}
                                 size={24}

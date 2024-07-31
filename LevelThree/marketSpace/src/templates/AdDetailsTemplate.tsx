@@ -10,7 +10,7 @@ import { ImageCarrosel } from "@components/ImageCarrosel";
 
 export function AdDetailsTemplate({ children }: PropsWithChildren) {
     return (
-        <ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>
             <ImageCarrosel />
 
             <View className="p-6">
