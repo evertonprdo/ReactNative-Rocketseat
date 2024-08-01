@@ -1,23 +1,21 @@
 import { UserDTO } from "@dtos/UsersDTO";
 import { api } from "@services/api";
 
-type PostSessionsProps = {
-    email: string
-    password: string
-}
-
-type SessionsResponse = {
+type PostSessionResponseData = {
     token: string
     user: UserDTO
     refresh_token: string
 }
-export async function postSession({ email, password }: PostSessionsProps) {
+export async function postSession(email: string, password: string) {
     try {
-        const { data } = await api.post<SessionsResponse>("/sessions", { email, password })
-
-        api.defaults.headers.common['Authorization'] = `Bearer ${data.token}`
+        const { data } = await api.post<PostSessionResponseData>("/sessions", { email, password })
         return data
+        
     } catch (error) {
         throw error
     }
+}
+
+export function setDefaultHeaderAuthorizationToken(token: string) {
+    api.defaults.headers.common['Authorization'] = `Bearer ${token}`
 }

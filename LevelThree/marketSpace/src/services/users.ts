@@ -7,14 +7,12 @@ type PostUserProps = Omit<UserDTO, "id" | "avatar"> & {
     avatar: any
     password: string
 }
-export async function postUser({ avatar, email, name, password, tel }: PostUserProps) {
+export async function postUser(user: PostUserProps) {
     try {
         const userForm = new FormData();
-        userForm.append('avatar', avatar);
-        userForm.append('email', email);
-        userForm.append('name', name);
-        userForm.append('password', password);
-        userForm.append('tel', tel);
+        for (const key in user) {
+            userForm.append(key, user[key as keyof typeof user]);
+        }
 
         await api.post(prefix, userForm, {
             headers: {
@@ -22,11 +20,15 @@ export async function postUser({ avatar, email, name, password, tel }: PostUserP
             }
         })
     } catch (error) {
-        console.log(error)
         throw error
     }
 }
 
 export async function getUserMe() {
-    api.get(prefix + "/me")
+    try {
+        const { data } = await api.get<UserDTO>(`${prefix}/me`)
+        return data
+    } catch (error) {
+        throw error
+    }
 }

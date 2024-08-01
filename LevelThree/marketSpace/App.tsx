@@ -8,8 +8,7 @@ import "./src/theme/global.css"
 import { Loading } from '@components/base/Loading';
 import { Routes } from '@routes/index';
 
-import { Home } from '@screens/Home';
-import { AdDetails } from '@screens/AdDetails';
+import { AuthContextProvider } from '@contexts/AuthContext';
 
 export default function App() {
     const [ fontLoaded ] = useFonts({Karla_400Regular, Karla_700Bold})
@@ -17,11 +16,18 @@ export default function App() {
     return (
         <SafeAreaProvider>
             <View className='bg-gray-600 flex-1'>
-                <StatusBar style="auto" />
-                { !fontLoaded
-                    ? <Loading/>
-                    : <Routes/>
-                }
+                <StatusBar
+                    style="dark"
+                    backgroundColor='transparent'
+                    translucent
+                />
+
+                <AuthContextProvider>
+                    { !fontLoaded
+                        ? <Loading/>
+                        : <Routes/>
+                    }
+                </AuthContextProvider>
             </View>
         </SafeAreaProvider>
     );

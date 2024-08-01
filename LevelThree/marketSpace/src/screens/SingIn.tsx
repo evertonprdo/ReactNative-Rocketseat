@@ -1,6 +1,9 @@
 import { useState } from "react";
-import { Alert, ScrollView, View } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { ScrollView, View } from "react-native";
+import type { NativeStackScreenProps } from "@react-navigation/native-stack";
+
+import { useAuth } from "@hooks/useAuth";
+import { AppError } from "@utils/AppError";
 
 import LogoHomeImg from "@assets/SvgView/LogoHome"
 
@@ -8,11 +11,14 @@ import { Input } from "@components/base/Input";
 import { TextApp } from "@components/base/Text";
 import { Button } from "@components/base/Button";
 
-import { AuthNavigatorRoutesProps } from "@routes/auth.routes";
-import { postSession } from "@services/sessions";
+import type { AuthParamList } from "@routes/auth.routes";
+import { useToast } from "@hooks/useToast";
 
-export function SingIn() {
-    const { navigate } = useNavigation<AuthNavigatorRoutesProps>();
+export function SingIn({ navigation }: NativeStackScreenProps<AuthParamList, "singIn">) {
+    const { singIn } = useAuth();
+    const { showToast } = useToast();
+
+    const [ isLoading, setIsLoading ] = useState(false);
 
     const [ singInProps, setSingInProps ] = useState({
         email: "",
@@ -28,16 +34,25 @@ export function SingIn() {
 
     async function handleSingIn() {
         try {
-            const response = await postSession(singInProps)
-
-            Alert.alert("SingIn", `"Você iniciou uma sessão!"`)
+            setIsLoading(true);
+            await singIn(singInProps.email, singInProps.password)
+            
         } catch (error) {
-            console.log(error)
+            const isAppError = error instanceof AppError
+            const title = isAppError ? error.message : "Não foi acessar a sua conta. Tente novamente mais tarde."
+
+            showToast({message: title , variant: "red"})
+
+            setIsLoading(false)
         }
     }
 
     return (
-        <ScrollView className="bg-gray-700 flex-1" contentContainerClassName="min-h-screen">
+        <ScrollView
+            className="bg-gray-700 flex-1"
+            contentContainerClassName="min-h-screen"
+            showsVerticalScrollIndicator={false}
+        >
             <View
                 className="flex-1 justify-center p-12 w-full items-center bg-gray-600 rounded-b-3xl z-10"
             >
@@ -68,6 +83,7 @@ export function SingIn() {
                     variant="blue"
                     className="w-full"
                     onPress={handleSingIn}
+                    isLoading={isLoading}
                 >
                     <Button.Title>Entrar</Button.Title>
                 </Button>
@@ -78,7 +94,7 @@ export function SingIn() {
                     Ainda não tem acesso?
                 </TextApp>
 
-                <Button onPress={() => navigate("singUp")}>
+                <Button onPress={() => navigation.navigate("singUp")}>
                     <Button.Title>Criar uma conta</Button.Title>
                 </Button>
             </View>

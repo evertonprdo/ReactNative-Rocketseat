@@ -1,9 +1,11 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, PropsWithChildren, useContext, useState } from "react";
 import { NativeSyntheticEvent, Pressable, TextInput, TextInputFocusEventData, type TextInputProps, View, type ViewProps } from "react-native";
 import { Eye, EyeClosed } from "phosphor-react-native";
 import cn from "@utils/cn";
 
 import { colors } from "@theme/colors";
+import { TextProps } from "react-native-svg";
+import { TextApp } from "./Text";
 
 const FocusContext = createContext((v: boolean) => {});
 
@@ -51,12 +53,23 @@ function Field({ onFocus, onBlur, ...props }: TextInputProps) {
         />
     )
 }
+
+function AlertBox({ children }: PropsWithChildren) {
+    return (
+        <View className="absolute -top-5 left-1">
+            <TextApp className="text-red-500 text-xs">
+                { children }
+            </TextApp>
+        </View>
+    )
+}
+
 type InputTemplateProps = TextInputProps & {
     name?: string
     secureTextEntry?: boolean
     alert?: string
 }
-function Template({ secureTextEntry, ...props }: InputTemplateProps) {
+function Template({ secureTextEntry, alert, ...props }: InputTemplateProps) {
     const [passwordVisibility, setPassordVisibility] = useState(secureTextEntry)
     
     return (
@@ -77,6 +90,8 @@ function Template({ secureTextEntry, ...props }: InputTemplateProps) {
                     }
                 </Pressable>
             )}
+
+            { alert && <AlertBox>{ alert }</AlertBox> }
         </Input>
     )
 }

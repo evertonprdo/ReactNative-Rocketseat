@@ -12,9 +12,9 @@ type FilterProps = Omit<ModalProps, "visible"> & {
     onCloseModal?: () => void
     showModal?: boolean
 }
-export function AnimatedModal({title, showModal, onCloseModal, children, ...props }: FilterProps) {
+export function AnimatedModal({ title, showModal, onCloseModal, children, ...props }: FilterProps) {
     const { height } = useWindowDimensions();
-    const [ show, setShow ] = useState(showModal);
+    const [show, setShow] = useState(showModal);
 
     const anim = {
         bottom: {
@@ -22,37 +22,55 @@ export function AnimatedModal({title, showModal, onCloseModal, children, ...prop
             end: 0,
             sv: useSharedValue(-height)
         },
+        bgOpacity: {
+            start: 0,
+            end: 1,
+            sv: useSharedValue(0),
+            duration: 300
+        },
         config: {
-            duration: 1000,
+            duration: 750,
             easing: Easing.out(Easing.ease),
             reduceMotion: ReduceMotion.System
         }
     }
 
-    function animation(bottom: number) {
-        anim.bottom.sv.value = withDelay(300, withTiming(
+    function slideUpAnimation(bottom: number, delay = 1) {
+        anim.bottom.sv.value = withDelay(delay, withTiming(
             bottom, anim.config
         ))
     }
 
+    function bgOpacityAnimation(bgOpacity: number, delay = 1) {
+        anim.bgOpacity.sv.value = withDelay(delay,
+            withTiming(bgOpacity, {
+                ...anim.config,
+                duration: anim.bgOpacity.duration,
+            })
+        )
+    }
+
     async function handleOnCloseModal() {
-        animation(-height)
+        slideUpAnimation(-height)
+        bgOpacityAnimation(anim.bgOpacity.start, anim.config.duration)
 
         await wait(anim.config.duration)
         setShow(false)
-        
-        if(onCloseModal) {
+
+        if (onCloseModal) {
             onCloseModal();
         }
     }
-    
+
     useEffect(() => {
-        if(showModal && !show) {
+        if (showModal && !show) {
             setShow(true)
-            animation(0)
+
+            slideUpAnimation(0, anim.bgOpacity.duration -100)
+            bgOpacityAnimation(anim.bgOpacity.end)
             return
         }
-        if(!showModal && show) {
+        if (!showModal && show) {
             handleOnCloseModal();
         }
     }, [showModal])
@@ -62,22 +80,23 @@ export function AnimatedModal({title, showModal, onCloseModal, children, ...prop
         <Modal
             statusBarTranslucent
             transparent
-            animationType="fade"
+            animationType="none"
             visible={show}
             {...props}
         >
-            <View className="bg-black/60 flex-1">
-
-
+            <Animated.View
+                className="bg-black/60 flex-1"
+                style={{ opacity: anim.bgOpacity.sv }}
+            >
                 <Animated.View
                     className="absolute w-full p-6 bg-gray-600 rounded-t-3xl gap-6"
-                    style={{bottom}}
+                    style={{ bottom }}
                 >
 
                     <View className="w-14 h-1 bg-gray-400 self-center -mt-3 mb-8" />
 
                     <View className="flex-row">
-                        <TextApp className="font-bold text-xl text-gray-100 flex-1">{ title }</TextApp>
+                        <TextApp className="font-bold text-xl text-gray-100 flex-1">{title}</TextApp>
 
                         <Pressable
                             onPress={handleOnCloseModal}
@@ -86,9 +105,9 @@ export function AnimatedModal({title, showModal, onCloseModal, children, ...prop
                         </Pressable>
                     </View>
 
-                    { children }
+                    {children}
                 </Animated.View>
-            </View>
+            </Animated.View>
         </Modal>
     )
 }

@@ -3,6 +3,7 @@ import Animated, { Easing, interpolateColor, ReduceMotion, useAnimatedStyle, use
 import { PencilSimpleLine } from "phosphor-react-native"
 import cn from "@utils/cn";
 
+import { api } from "@services/api";
 import UserImg from "@assets/avatar.png"
 
 import { colors } from "@theme/colors";
@@ -22,7 +23,7 @@ function UserImage({ className, children, isLoading, imageUri, ...props }: Image
             { !isLoading
                 ? (
                     <Image
-                        source={ imageUri ? { uri: imageUri } : UserImg}
+                        source={ imageUri ? { uri:`${api.defaults.baseURL}/images/${imageUri}`} : UserImg}
                         className="rounded-full h-full w-full overflow-hidden"
                         resizeMode="cover"
                         {...props}

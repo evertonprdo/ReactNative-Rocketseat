@@ -1,4 +1,4 @@
-import { Alert, View } from "react-native"
+import { View } from "react-native"
 import { createBottomTabNavigator, type BottomTabNavigationProp } from "@react-navigation/bottom-tabs"
 import { House, SignOut, Tag } from "phosphor-react-native"
 
@@ -6,6 +6,9 @@ import { UserAds } from "@screens/UserAds"
 import { Home } from "@screens/Home"
 
 import { colors } from "@theme/colors"
+import { useAuth } from "@hooks/useAuth"
+import { useEffect } from "react"
+import { Loading } from "@components/base/Loading"
 
 export type AppTabParamList = {
     TabHome: undefined
@@ -18,6 +21,8 @@ export type AppTabNavigationRoutesProps = BottomTabNavigationProp<AppTabParamLis
 const { Navigator, Screen } = createBottomTabNavigator<AppTabParamList>()
 
 export function AppTabRoutes() {
+    const { singOut } = useAuth()
+
     return (
         <Navigator
             screenOptions={{
@@ -79,10 +84,10 @@ export function AppTabRoutes() {
                         </View>
                     )
                 }}
-                listeners={({ navigation, route }) => ({
+                listeners={() => ({
                     tabPress: (e) => {
                         e.preventDefault(); 
-                        Alert.alert("Sing Out", "Você está saindo do app")
+                        singOut();
                     }
                 })}
             />
@@ -90,6 +95,10 @@ export function AppTabRoutes() {
     )
 }
 
-function ScreenPlaceholder() {
-    return null
+function ScreenPlaceholder({ navigation }: any) {
+    useEffect(() => {
+        navigation.navigate("Home")
+    }, [])
+    
+    return <Loading/>
 }

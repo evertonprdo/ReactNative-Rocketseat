@@ -41,7 +41,7 @@ function Button({
     }
     return (
         <Pressable
-            className={cn("flex-row p-3 justify-center items-center rounded-md gap-2",{
+            className={cn("flex-row px-3 min-h-11 max-h-11 justify-center items-center rounded-md gap-2",{
                 "bg-gray-100": variant === "black",
                 "bg-gray-500": variant === "gray",
                 "bg-blue-light": variant === "blue",
@@ -58,7 +58,7 @@ function Button({
                 { isLoading
                     ? <Loading
                         className={cn({
-                            "color-gray-700": variant === "gray" || variant === "black",
+                            "color-gray-700": variant === "blue" || variant === "black",
                             "color-gray-300": variant === "gray"
                         })}
                     />

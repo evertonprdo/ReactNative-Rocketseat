@@ -6,6 +6,8 @@ import { type BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import { type CompositeScreenProps } from "@react-navigation/native";
 import { ArrowRight, MagnifyingGlass, Plus, Sliders, Tag } from "phosphor-react-native";
 
+import { useAuth } from "@hooks/useAuth";
+
 import { colors } from "@theme/colors";
 import { TextApp } from "@components/base/Text";
 import { Button } from "@components/base/Button";
@@ -24,6 +26,8 @@ type Props = CompositeScreenProps<
     NativeStackScreenProps<AppStackParamList, "Home">
 >
 export function Home({ navigation }: Props) {
+    const { user } = useAuth();
+
     const [ showModal, setShowModal ] = useState(false);
     const [ filter, setFilter ] = useState(defaultFilterStateObj)
 
@@ -49,10 +53,17 @@ export function Home({ navigation }: Props) {
                     <View className="flex-1 flex-row gap-[10px] items-center">
                         <UserImage
                             className="size-11 border-2"
+                            imageUri={user.avatar}
                         />
                         <View>
                             <TextApp>Boas vindas,</TextApp>
-                            <TextApp className="font-bold">Maria!</TextApp>
+                            <TextApp
+                                className="font-bold"
+                                numberOfLines={1}
+                                ellipsizeMode="tail"
+                            >
+                                {user.name}!
+                            </TextApp>
                         </View>
                     </View>
 

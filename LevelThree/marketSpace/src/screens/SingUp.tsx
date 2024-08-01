@@ -1,9 +1,13 @@
 import { useState } from "react";
-import { View, ScrollView, Alert } from "react-native";
+import { View, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context"
-import { useNavigation } from "@react-navigation/native";
 import * as ImagePicker from "expo-image-picker"
 import * as FileStystem from "expo-file-system";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+
+import { useToast } from "@hooks/useToast";
+import { useAuth } from "@hooks/useAuth";
+import { AppError } from "@utils/AppError";
 
 import LogoSvg from "@assets/SvgView/Logo"
 
@@ -12,16 +16,21 @@ import { UserImage } from "@components/base/UserImage";
 import { Input } from "@components/base/Input";
 import { Button } from "@components/base/Button";
 
-import type { AuthNavigatorRoutesProps } from "@routes/auth.routes";
+import type { AuthParamList } from "@routes/auth.routes";
 
 import { postUser } from "@services/users";
-import { any } from "zod";
 
-export function SingUp() {
-    const { navigate } = useNavigation<AuthNavigatorRoutesProps>();
+export function SingUp({ navigation }: NativeStackScreenProps<AuthParamList, "singUp">) {
+    const { singIn } = useAuth();
+    const { showToast } = useToast();
+    const [ isLoading, setIsLoading ] = useState(false);
 
-    const [ fields, setFields ] = useState({
-        avatar: "",
+    const [ userPhoto, setUserPhoto ] = useState({
+        name: "",
+        uri: "",
+        type: "",
+    });
+    const [fields, setFields] = useState({
         name: "",
         email: "",
         tel: "",
@@ -29,7 +38,7 @@ export function SingUp() {
         confirm_password: "",
     })
 
-    function handleOnChangeTextField(value:string, key: keyof typeof fields) {
+    function handleOnChangeTextField(value: string, key: keyof typeof fields) {
         setFields({
             ...fields,
             [key]: value
@@ -46,29 +55,22 @@ export function SingUp() {
                 allowsMultipleSelection: false,
             });
 
-            if(response.canceled) return
-            if(!response.assets[0].uri) return
+            if (response.canceled) return
+            if (!response.assets[0].uri) throw new Error("Algo deu errado tente novamente!")
+            
+            const { uri, type } = response.assets[0]
+            const photoInfo = await FileStystem.getInfoAsync(uri);
 
-            handleOnChangeTextField(response.assets[0].uri, "avatar");
-
-            const photoSelected = response.assets[0];
-            const photoInfo = await FileStystem.getInfoAsync(photoSelected.uri);
-
-            if(photoInfo.exists && (photoInfo.size / 1024 / 1024) > 3) {
+            if (photoInfo.exists && (photoInfo.size / 1024 / 1024) > 3) {
                 throw new Error("Imagem maior do que 3MB!")
             }
 
-            const fileExtension = photoSelected.uri.split('.').pop();
+            const fileExtension = uri.split('.').pop();
 
-            const photoFile = {
-                name: `${fields.email}.${fileExtension}`.toLowerCase(),
-                uri: photoSelected.uri,
-                type: `${photoSelected.type}/${fileExtension}`
-            } as any
-            
-            postUser({
-                ...fields,
-                avatar: photoFile
+            setUserPhoto({
+                name: `${fields.name}.${fileExtension}`.toLowerCase(),
+                uri: uri,
+                type: `${type}/${fileExtension}`
             })
         } catch (error) {
             console.log(error)
@@ -77,32 +79,34 @@ export function SingUp() {
 
     async function handleSingUp() {
         try {
-            const { avatar, name, email, password, tel } = fields
-            postUser({
-                avatar: avatar as any,
-                name,
-                email,
-                tel,
-                password,
-            })
+            setIsLoading(true)
+            const {confirm_password, ...newUser} = fields
+
+            await postUser({...newUser, avatar: userPhoto})
+            await singIn(fields.email, fields.password)
 
         } catch (error) {
-            
+            const isAppError = error instanceof AppError
+
+            const title = isAppError ? error.message : "Não foi possível criar a conta. Tente novamente mais tarde."
+
+            showToast({message: title , variant: "red"})
+            setIsLoading(false)
         }
     }
 
     return (
-        <SafeAreaView style={{flex:1}}>
+        <SafeAreaView style={{ flex: 1 }}>
             <ScrollView
                 className="w-full px-12"
                 showsVerticalScrollIndicator={false}
             >
                 <View className="my-12 items-center gap-3">
-                    <LogoSvg/>
-                    
+                    <LogoSvg />
+
                     <TextApp className="font-bold text-xl">Boas vindas!</TextApp>
 
-                    <TextApp 
+                    <TextApp
                         className="text-center"
                     >
                         Crie sua conta e use o espaço para comprar{"\n"}
@@ -113,7 +117,7 @@ export function SingUp() {
                 <View className="w-full gap-6 mb-12">
                     <UserImage
                         className="self-center"
-                        imageUri={fields.avatar ? fields.avatar : ""}
+                        imageUri={userPhoto.uri ? userPhoto.uri : ""}
                     >
                         <UserImage.Edit
                             onPress={handleUserPhotoSelect}
@@ -159,6 +163,8 @@ export function SingUp() {
 
                     <Button
                         variant="black"
+                        onPress={handleSingUp}
+                        isLoading={isLoading}
                     >
                         <Button.Title>Criar</Button.Title>
                     </Button>
@@ -167,7 +173,7 @@ export function SingUp() {
                 <View className="gap-4 mb-12">
                     <TextApp className="text-center">Já tem uma conta?</TextApp>
 
-                    <Button onPress={() => navigate("singIn")}>
+                    <Button onPress={() => navigation.navigate("singIn")}>
                         <Button.Title>Ir para o login</Button.Title>
                     </Button>
                 </View>

@@ -3,14 +3,14 @@ import { createNativeStackNavigator, type NativeStackNavigationProp } from "@rea
 import { SingIn } from "@screens/SingIn";
 import { SingUp } from "@screens/SingUp";
 
-type AuthRoutes = {
+export type AuthParamList = {
     singIn: undefined
     singUp: undefined
 }
 
-export type AuthNavigatorRoutesProps = NativeStackNavigationProp<AuthRoutes>
+export type AuthNavigatorRoutesProps = NativeStackNavigationProp<AuthParamList>
 
-const { Navigator, Screen } = createNativeStackNavigator<AuthRoutes>();
+const { Navigator, Screen } = createNativeStackNavigator<AuthParamList>();
 
 export function AuthRoutes() {
     return (
