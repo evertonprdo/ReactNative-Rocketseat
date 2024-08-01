@@ -2,6 +2,8 @@ import { useState } from "react";
 import { View, ScrollView, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context"
 import { useNavigation } from "@react-navigation/native";
+import * as ImagePicker from "expo-image-picker"
+import * as FileStystem from "expo-file-system";
 
 import LogoSvg from "@assets/SvgView/Logo"
 
@@ -12,13 +14,17 @@ import { Button } from "@components/base/Button";
 
 import type { AuthNavigatorRoutesProps } from "@routes/auth.routes";
 
+import { postUser } from "@services/users";
+import { any } from "zod";
+
 export function SingUp() {
     const { navigate } = useNavigation<AuthNavigatorRoutesProps>();
 
     const [ fields, setFields ] = useState({
+        avatar: "",
         name: "",
         email: "",
-        phone: "",
+        tel: "",
         password: "",
         confirm_password: "",
     })
@@ -28,6 +34,61 @@ export function SingUp() {
             ...fields,
             [key]: value
         })
+    }
+
+    async function handleUserPhotoSelect() {
+        try {
+            const response = await ImagePicker.launchImageLibraryAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                quality: 1,
+                aspect: [1, 1],
+                allowsEditing: true,
+                allowsMultipleSelection: false,
+            });
+
+            if(response.canceled) return
+            if(!response.assets[0].uri) return
+
+            handleOnChangeTextField(response.assets[0].uri, "avatar");
+
+            const photoSelected = response.assets[0];
+            const photoInfo = await FileStystem.getInfoAsync(photoSelected.uri);
+
+            if(photoInfo.exists && (photoInfo.size / 1024 / 1024) > 3) {
+                throw new Error("Imagem maior do que 3MB!")
+            }
+
+            const fileExtension = photoSelected.uri.split('.').pop();
+
+            const photoFile = {
+                name: `${fields.email}.${fileExtension}`.toLowerCase(),
+                uri: photoSelected.uri,
+                type: `${photoSelected.type}/${fileExtension}`
+            } as any
+            
+            postUser({
+                ...fields,
+                avatar: photoFile
+            })
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    async function handleSingUp() {
+        try {
+            const { avatar, name, email, password, tel } = fields
+            postUser({
+                avatar: avatar as any,
+                name,
+                email,
+                tel,
+                password,
+            })
+
+        } catch (error) {
+            
+        }
     }
 
     return (
@@ -50,11 +111,13 @@ export function SingUp() {
                 </View>
 
                 <View className="w-full gap-6 mb-12">
-                    <UserImage className="self-center">
+                    <UserImage
+                        className="self-center"
+                        imageUri={fields.avatar ? fields.avatar : ""}
+                    >
                         <UserImage.Edit
-                            onPress={() => Alert.alert("Edit image", "TODO")}
+                            onPress={handleUserPhotoSelect}
                         />
-                        
                     </UserImage>
 
                     <Input.Template
@@ -74,8 +137,8 @@ export function SingUp() {
                     <Input.Template
                         name="phone"
                         placeholder="Telefone"
-                        value={fields.phone}
-                        onChangeText={(txt) => handleOnChangeTextField(txt, "phone")}
+                        value={fields.tel}
+                        onChangeText={(txt) => handleOnChangeTextField(txt, "tel")}
                     />
 
                     <Input.Template

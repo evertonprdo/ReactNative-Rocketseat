@@ -52,14 +52,15 @@ function Field({ onFocus, onBlur, ...props }: TextInputProps) {
     )
 }
 type InputTemplateProps = TextInputProps & {
-    name: string
+    name?: string
     secureTextEntry?: boolean
+    alert?: string
 }
-function Template({ name, secureTextEntry, ...props }: InputTemplateProps) {
+function Template({ secureTextEntry, ...props }: InputTemplateProps) {
     const [passwordVisibility, setPassordVisibility] = useState(secureTextEntry)
     
     return (
-        <Input key={name}>
+        <Input>
             <Input.Field
                 secureTextEntry={passwordVisibility}
                 { ...props }

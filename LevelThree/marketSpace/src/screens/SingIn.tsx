@@ -1,5 +1,5 @@
-import { Pressable, View } from "react-native";
-import { Eye, EyeClosed } from "phosphor-react-native"
+import { useState } from "react";
+import { Alert, ScrollView, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
 import LogoHomeImg from "@assets/SvgView/LogoHome"
@@ -7,19 +7,39 @@ import LogoHomeImg from "@assets/SvgView/LogoHome"
 import { Input } from "@components/base/Input";
 import { TextApp } from "@components/base/Text";
 import { Button } from "@components/base/Button";
-import { colors } from "@theme/colors";
-import { useState } from "react";
 
 import { AuthNavigatorRoutesProps } from "@routes/auth.routes";
+import { postSession } from "@services/sessions";
 
 export function SingIn() {
-    const [ pass, setPass ] = useState(false);
     const { navigate } = useNavigation<AuthNavigatorRoutesProps>();
 
+    const [ singInProps, setSingInProps ] = useState({
+        email: "",
+        password: ""
+    })
+
+    function handleOnChangeText(val: string, key: keyof typeof singInProps) {
+        setSingInProps({
+            ...singInProps,
+            [key]: val
+        })
+    }
+
+    async function handleSingIn() {
+        try {
+            const response = await postSession(singInProps)
+
+            Alert.alert("SingIn", `"Você iniciou uma sessão!"`)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     return (
-        <View style={{flex: 1, backgroundColor: colors.gray[700]}}>
+        <ScrollView className="bg-gray-700 flex-1" contentContainerClassName="min-h-screen">
             <View
-                className="flex-1 justify-center p-12 w-full items-center bg-gray-600 rounded-b-3xl"
+                className="flex-1 justify-center p-12 w-full items-center bg-gray-600 rounded-b-3xl z-10"
             >
                 <View className="mt-4 mb-[77px]">
                     <LogoHomeImg/>
@@ -30,30 +50,25 @@ export function SingIn() {
                         Acesse sua conta
                     </TextApp>
 
-                    <Input>
-                        <Input.Field
-                            placeholder="E-mail"
-                        />
-                    </Input>
+                    <Input.Template
+                        placeholder="E-mail"
+                        value={singInProps.email}
+                        onChangeText={(val) => handleOnChangeText(val, "email")}
+                    />
 
-                    <Input>
-                        <Input.Field
-                            placeholder="Senha"
-                            secureTextEntry={pass}
-                        />
-                        <Pressable
-                            onPress={() => setPass(!pass)}
-                            hitSlop={12}
-                        >
-                            { pass
-                                ? <EyeClosed size={20} color={colors.gray[300]}/>
-                                : <Eye size={20} color={colors.gray[300]}/>
-                            }
-                        </Pressable>
-                    </Input>
+                    <Input.Template
+                        placeholder="Senha"
+                        value={singInProps.password}
+                        onChangeText={(val) => handleOnChangeText(val, "password")}
+                        secureTextEntry
+                    />
                 </View>
 
-                <Button className="w-full" variant="blue">
+                <Button
+                    variant="blue"
+                    className="w-full"
+                    onPress={handleSingIn}
+                >
                     <Button.Title>Entrar</Button.Title>
                 </Button>
             </View>
@@ -67,6 +82,6 @@ export function SingIn() {
                     <Button.Title>Criar uma conta</Button.Title>
                 </Button>
             </View>
-        </View>
+        </ScrollView>
     )
 }
