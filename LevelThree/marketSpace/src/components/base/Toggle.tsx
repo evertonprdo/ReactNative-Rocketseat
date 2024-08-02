@@ -52,7 +52,7 @@ function Toggle({value, className, ...props}: ToggleProps) {
     }
 
     return (
-        <Pressable className={cn("items-start", className)} hitSlop={5} {...props}>
+        <Pressable className={cn("self-start", className)} hitSlop={5} {...props}>
             <Animated.View
                 className="p-[2px] rounded-full"
                 style={[animatedStyle]}

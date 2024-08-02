@@ -4,23 +4,22 @@ import { Eye, EyeClosed } from "phosphor-react-native";
 import cn from "@utils/cn";
 
 import { colors } from "@theme/colors";
-import { TextProps } from "react-native-svg";
 import { TextApp } from "./Text";
 
-const FocusContext = createContext((v: boolean) => {});
+const FocusContext = createContext((v: boolean) => { });
 
 function Input({ children, className, ...props }: ViewProps) {
-    const [ isFocus, setIsFocus ] = useState(false);
-    
+    const [isFocus, setIsFocus] = useState(false);
+
     return (
-        <FocusContext.Provider value={ setIsFocus }>
+        <FocusContext.Provider value={setIsFocus}>
             <View
                 className={cn("bg-gray-700 flex-row items-center gap-2 border border-transparent rounded-md px-4 py-3", {
                     "border-gray-300": isFocus === true
                 }, className)}
                 {...props}
             >
-                { children }
+                {children}
             </View>
         </FocusContext.Provider>
     )
@@ -31,13 +30,13 @@ function Field({ onFocus, onBlur, ...props }: TextInputProps) {
 
     function handleOnFocus(e: NativeSyntheticEvent<TextInputFocusEventData>) {
         setIsFocus(true);
-        if(onFocus) {
+        if (onFocus) {
             onFocus(e)
         }
     }
     function handleOnBlur(e: NativeSyntheticEvent<TextInputFocusEventData>) {
         setIsFocus(false);
-        if(onBlur) {
+        if (onBlur) {
             onBlur(e);
         }
     }
@@ -54,11 +53,14 @@ function Field({ onFocus, onBlur, ...props }: TextInputProps) {
     )
 }
 
-function AlertBox({ children }: PropsWithChildren) {
+function AlertBox({ children, ...props }: ViewProps) {
     return (
-        <View className="absolute -top-5 left-1">
+        <View
+            className="absolute -top-5 left-1"
+            {...props}
+        >
             <TextApp className="text-red-500 text-xs">
-                { children }
+                {children}
             </TextApp>
         </View>
     )
@@ -71,12 +73,12 @@ type InputTemplateProps = TextInputProps & {
 }
 function Template({ secureTextEntry, alert, ...props }: InputTemplateProps) {
     const [passwordVisibility, setPassordVisibility] = useState(secureTextEntry)
-    
+
     return (
         <Input>
             <Input.Field
                 secureTextEntry={passwordVisibility}
-                { ...props }
+                {...props}
             />
 
             {secureTextEntry && (
@@ -91,12 +93,13 @@ function Template({ secureTextEntry, alert, ...props }: InputTemplateProps) {
                 </Pressable>
             )}
 
-            { alert && <AlertBox>{ alert }</AlertBox> }
+            {alert && <AlertBox>{alert}</AlertBox>}
         </Input>
     )
 }
 
 Input.Field = Field
 Input.Template = Template
+Input.Alert = AlertBox
 
 export { Input }
