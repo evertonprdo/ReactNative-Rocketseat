@@ -1,19 +1,19 @@
 import { createNativeStackNavigator, type NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { type NavigatorScreenParams } from "@react-navigation/native"
 
-import { AdDetails } from "@screens/AdDetails"
-import { UserAdDetails } from "@screens/UserAdDetails"
-import { CreateAd } from "@screens/CreateAd"
-import { EditAd } from "@screens/EditAd"
+import { ProductDetails } from "@screens/ProductDetails"
+import { UserProductDetails } from "@screens/UserProductDetails"
+import { CreateProduct } from "@screens/CreateProduct"
+import { EditProduct } from "@screens/EditProduct"
 
 import { AppTabRoutes, AppTabParamList } from "@routes/app.tab.routes"
 
 export type AppStackParamList = {
     Home: NavigatorScreenParams<AppTabParamList>
-    adDetails: undefined
-    userAdDetails: undefined
-    createAd: undefined
-    editAd: undefined
+    ProductDetails: undefined
+    UserProductDetails: undefined
+    CreateProduct: undefined
+    EditProduct: undefined
 }
 
 export type AppHomeNavigatorRoutesProps = NativeStackNavigationProp<AppStackParamList>
@@ -35,23 +35,23 @@ export function AppStackRoutes() {
             />
 
             <Screen
-                name="adDetails"
-                component={AdDetails}
+                name="ProductDetails"
+                component={ProductDetails}
             />
 
             <Screen
-                name="userAdDetails"
-                component={UserAdDetails}
+                name="UserProductDetails"
+                component={UserProductDetails}
             />
 
             <Screen
-                name="createAd"
-                component={CreateAd}
+                name="CreateProduct"
+                component={CreateProduct}
             />
 
             <Screen
-                name="editAd"
-                component={EditAd}
+                name="EditProduct"
+                component={EditProduct}
             />
         </Navigator>
     )

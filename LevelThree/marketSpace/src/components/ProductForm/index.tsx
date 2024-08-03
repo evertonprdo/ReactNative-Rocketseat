@@ -8,21 +8,15 @@ import { Form, SwitchInputsProsp, TextFieldsProps } from "./Form"
 import { ProductImages } from "./ProductImages"
 import { GestureHandlerRootView } from "react-native-gesture-handler"
 
-type FormInputResult = {
-    title: string
-    description: string
-    is_new?: boolean
-    price: number,
-    accept_trade?: boolean,
-    payment_method: PaymentMethodProps
-}
+import type { FileImageProps, FormFields } from "src/@types/FormProps"
 
 type ProductFormProps = {
-    onSubmit?: (form: FormInputResult) => void
+    onSubmit?: (form: FormFields, imgs: FileImageProps[]) => void
     onCancel?: () => void
-    initialValues?: FormInputResult
+    initialValues?: FormFields
+    initialImages?: FileImageProps[]
 }
-export function ProductForm({ onSubmit, initialValues, onCancel }: ProductFormProps) {
+export function ProductForm({ onSubmit, initialValues, initialImages, onCancel }: ProductFormProps) {
     const { title, description, accept_trade, is_new, payment_method } = initialValues ?? {}
     const { boleto, card, cash, deposit, pix } = payment_method ?? {}
 
@@ -35,6 +29,8 @@ export function ProductForm({ onSubmit, initialValues, onCancel }: ProductFormPr
     const [checkRules, setCheckRules] = useState(false);
     const validatedFields = useRef(false);
     const validatedImages = useRef(false);
+
+    const [ images, setImages ] = useState(initialImages ?? [])
 
     const [textFields, setTextFields] = useState({
         title: title ?? "",
@@ -84,7 +80,7 @@ export function ProductForm({ onSubmit, initialValues, onCancel }: ProductFormPr
             ...switchInput,
             price: parseFloat(textFields.price.replace(",", ".")) * dbPriceMultiplier,
             payment_method: payment
-        });
+        } as FormFields, images);
     }
 
     return (
@@ -98,6 +94,8 @@ export function ProductForm({ onSubmit, initialValues, onCancel }: ProductFormPr
                     <ProductImages
                         flag={checkRules}
                         validatedRef={validatedImages}
+                        state={images}
+                        setState={setImages}
                     />
 
                     <Form

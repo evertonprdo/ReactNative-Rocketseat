@@ -18,7 +18,7 @@ function ProductList({data, className}: ProductListProps) {
     return(
         <FlatList
             data={data}
-            keyExtractor={item => "Key_" + item?.title}
+            keyExtractor={(item, i) => "Key_" + item?.title + i}
             numColumns={2}
             renderItem={({item: {title, isNew, price, ...props}}) => (
                 <DisplayItem

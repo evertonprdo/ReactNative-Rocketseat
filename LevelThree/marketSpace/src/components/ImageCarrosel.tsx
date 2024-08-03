@@ -1,17 +1,15 @@
 import { useState } from "react";
-import { FlatList, useWindowDimensions, View, ViewProps } from "react-native"
+import { FlatList, Image, useWindowDimensions, View, ViewProps } from "react-native"
 import { TextApp } from "@components/base/Text";
 import cn from "@utils/cn";
 
 type ProductCarroselProsp = ViewProps & {
-    imagesUri?: string[],
+    imagesUri: string[],
     disabledAd?: boolean
 }
 export function ImageCarrosel({ imagesUri, disabledAd, className, ...props }: ProductCarroselProsp) {
     const [ currentView, setCurrentView ] = useState("")
     const { width } = useWindowDimensions();
-
-    imagesUri ??= ["#FF5964","#FFE74C","#35A7FF", "#6BF178", "#3A606E"]
 
     return (
         <View className={cn("w-full h-[280px]", className)} {...props}>
@@ -19,12 +17,14 @@ export function ImageCarrosel({ imagesUri, disabledAd, className, ...props }: Pr
                 data={imagesUri}
                 keyExtractor={item => item}
                 renderItem={({item}) => (
-                    <View
-                        className="w-full"
+                    <Image
+                        source={{uri: item}}
                         style={{
                             width,
                             backgroundColor: item
                         }}
+                        className="h-full"
+                        resizeMode="cover"
                     />
                 )}
                 onViewableItemsChanged={({viewableItems}) => {

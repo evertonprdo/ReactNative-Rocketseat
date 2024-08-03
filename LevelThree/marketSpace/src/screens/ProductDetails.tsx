@@ -7,21 +7,21 @@ import { TextApp } from "@components/base/Text";
 import { Button } from "@components/base/Button";
 import { Header } from "@components/Header";
 
-import { AdDetailsTemplate } from "@templates/AdDetailsTemplate";
+import { ProductDetailsTemplate } from "@templates/ProductDetailsTemplate";
 
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { AppStackParamList } from "@routes/app.stack.routes";
 
-type Props = NativeStackScreenProps<AppStackParamList, "adDetails">
-export function AdDetails({navigation}: Props) {
+type Props = NativeStackScreenProps<AppStackParamList, "ProductDetails">
+export function ProductDetails({navigation}: Props) {
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <Header className="pb-3">
                 <Header.GoBack onPress={() => navigation.goBack()}/>
             </Header>
 
-            <AdDetailsTemplate
-
+            <ProductDetailsTemplate
+                
             />
 
             <View className="bg-gray-700 p-6 flex-row items-center justify-between">

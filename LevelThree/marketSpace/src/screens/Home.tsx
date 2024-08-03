@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FlatList, Pressable, View } from "react-native";
+import { Pressable, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { type NativeStackScreenProps } from "@react-navigation/native-stack";
 import { type BottomTabScreenProps } from "@react-navigation/bottom-tabs";
@@ -27,6 +27,11 @@ type Props = CompositeScreenProps<
 >
 export function Home({ navigation }: Props) {
     const { user } = useAuth();
+    const DATA = []
+
+    for (let index = 0; index < 10; index++) {
+        DATA.push(item)
+    }
 
     const [ showModal, setShowModal ] = useState(false);
     const [ filter, setFilter ] = useState(defaultFilterStateObj)
@@ -70,7 +75,7 @@ export function Home({ navigation }: Props) {
                     <Button
                         variant="black"
                         className="flex-1"
-                        onPress={() => navigation.navigate("createAd")}
+                        onPress={() => navigation.navigate("CreateProduct")}
                     >
                         <Plus color={colors.gray[700]} size={16}/>
                         <Button.Title>Criar anúncio</Button.Title>
@@ -90,7 +95,7 @@ export function Home({ navigation }: Props) {
                             </View>
                         </View>
 
-                        <Pressable className="flex-row items-center gap-2" onPress={() => navigation.navigate("userAds")}>
+                        <Pressable className="flex-row items-center gap-2" onPress={() => navigation.navigate("UserProducts")}>
                             <TextApp className="text-blue font-bold">Meus anúncios</TextApp>
                             <ArrowRight size={16} color={colors.blue}/>
                         </Pressable>
@@ -128,80 +133,7 @@ export function Home({ navigation }: Props) {
                     </View>
                     
                     <ProductList
-                        data={[
-                            {   
-                                isNew: true,
-                                price: "11",
-                                title: "weq2we",
-                                onPress: () => navigation.navigate("adDetails")
-                            },
-                            {   
-                                isNew: true,
-                                price: "11",
-                                title: "we3qw2323e",
-                                onPress: () => navigation.navigate("adDetails")
-                            },
-                            {   
-                                isNew: true,
-                                price: "113",
-                                title: "we11q2323we",
-                                onPress: () => navigation.navigate("adDetails")
-                            },
-                            {   
-                                isNew: true,
-                                price: "1111",
-                                title: "we1q123123we",
-                                onPress: () => navigation.navigate("adDetails")
-                            },
-                            {   
-                                isNew: true,
-                                price: "11",
-                                title: "weq21352we",
-                                onPress: () => navigation.navigate("adDetails")
-                            },
-                            {   
-                                isNew: true,
-                                price: "11",
-                                title: "we3q3151we",
-                                onPress: () => navigation.navigate("adDetails")
-                            },
-                            {   
-                                isNew: true,
-                                price: "11",
-                                title: "we115215215521qwe",
-                                onPress: () => navigation.navigate("adDetails")
-                            },
-                            {   
-                                isNew: true,
-                                price: "11",
-                                title: "we1qw512125e",
-                                onPress: () => navigation.navigate("adDetails")
-                            },
-                            {   
-                                isNew: true,
-                                price: "11",
-                                title: "weq2w512521152e",
-                                onPress: () => navigation.navigate("adDetails")
-                            },
-                            {   
-                                isNew: true,
-                                price: "11",
-                                title: "we3q512251512we",
-                                onPress: () => navigation.navigate("adDetails")
-                            },
-                            {   
-                                isNew: true,
-                                price: "11",
-                                title: "we11q521521512we",
-                                onPress: () => navigation.navigate("adDetails")
-                            },
-                            {   
-                                isNew: true,
-                                price: "11",
-                                title: "we15122512515215215215qwe",
-                                onPress: () => navigation.navigate("adDetails")
-                            },
-                        ]}
+                        data={DATA}
                     />
                 </View>
             </View>
@@ -218,4 +150,10 @@ export function Home({ navigation }: Props) {
             </AnimatedModal>
         </SafeAreaView>
     )
+}
+
+const item = {
+    isNew: true,
+    title: "Tênis vermelho",
+    price: "59,90",
 }

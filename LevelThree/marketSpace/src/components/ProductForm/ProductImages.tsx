@@ -1,28 +1,25 @@
+import { useEffect, useState } from "react";
 import { Image, Pressable, PressableProps, View } from "react-native";
-import { Plus, X } from "phosphor-react-native";
+import DraggableFlatList from "react-native-draggable-flatlist";
 import * as ImagePicker from "expo-image-picker"
 import * as FileSystem from "expo-file-system"
-import DraggableFlatList from "react-native-draggable-flatlist";
+import { Plus, X } from "phosphor-react-native";
 
-import { TextApp } from "@components/base/Text";
 import { colors } from "@theme/colors";
-import { useEffect, useState } from "react";
+import { TextApp } from "@components/base/Text";
+
 import { AppError } from "@utils/AppError";
 import { useToast } from "@hooks/useToast";
 
-type FileImageProps = {
-    name: string
-    uri: string,
-    type: string
-}
+import type { FileImageProps } from "src/@types/FormProps";
 
 type Props = {
-    productImages?: FileImageProps[]
+    state: FileImageProps[],
+    setState: React.Dispatch<React.SetStateAction<FileImageProps[]>>
     flag?: boolean
     validatedRef: React.MutableRefObject<boolean>
 }
-export function ProductImages({ productImages, flag, validatedRef }: Props) {
-    const [images, setImages] = useState<FileImageProps[]>(productImages ?? [])
+export function ProductImages({ state, setState, flag, validatedRef }: Props) {
     const [index, setIndex] = useState(0);
     const { showToast } = useToast();
 
@@ -33,7 +30,7 @@ export function ProductImages({ productImages, flag, validatedRef }: Props) {
                 quality: 1,
                 aspect: [4, 5],
                 allowsMultipleSelection: true,
-                selectionLimit: 3 - images.length,
+                selectionLimit: 3 - state.length,
             })
 
             if (response.canceled) return
@@ -56,12 +53,12 @@ export function ProductImages({ productImages, flag, validatedRef }: Props) {
             const photoInfo = await FileSystem.getInfoAsync(uri);
 
             if (photoInfo.exists && (photoInfo.size / 1024 / 1024) > 3) {
-                throw new AppError("Imagem maior do que 3MB");
+                throw new AppError("Imagens maiores do que 3MB não são permitidas.");
             }
 
             const fileExtension = uri.split('.').pop();
-            setImages(prevImages => [
-                ...prevImages,
+            setState(prev => [
+                ...prev,
                 {
                     name: `product_img_${i}.${fileExtension}`.toLowerCase(),
                     uri: uri,
@@ -72,7 +69,7 @@ export function ProductImages({ productImages, flag, validatedRef }: Props) {
         } catch (error) {
             const isAppError = error instanceof AppError
             const title = isAppError
-                ? `Erro ao processar imagem ${i + 1}: ${error.message}.`
+                ? error.message
                 : "Algo inesperado aconteceu tente novamente."
 
             showToast({message: title, variant: "red"})
@@ -80,14 +77,14 @@ export function ProductImages({ productImages, flag, validatedRef }: Props) {
     }
 
     function handleOnPressRemove(key: string) {
-        setImages(images.filter(img => img.name !== key))
+        setState(state.filter(img => img.name !== key))
     }
 
     useEffect(() => {
         if(!validatedRef) return
 
-        validatedRef.current = images.length > 0;
-    }, [images])
+        validatedRef.current = state.length > 0;
+    }, [state])
     return (
         <View className="gap-4">
             <TextApp className="font-bold">Imagens</TextApp>
@@ -96,7 +93,7 @@ export function ProductImages({ productImages, flag, validatedRef }: Props) {
 
             <View className="flex-row gap-2 w-full">
                 <DraggableFlatList
-                    data={images}
+                    data={state}
                     keyExtractor={item => item.name}
                     renderItem={({ item, drag }) => (
                         <ImageBox
@@ -106,12 +103,12 @@ export function ProductImages({ productImages, flag, validatedRef }: Props) {
                             delayLongPress={25}
                         />
                     )}
-                    onDragEnd={({ data }) => setImages(data)}
+                    onDragEnd={({ data }) => setState(data)}
                     showsHorizontalScrollIndicator={false}
                     className="w-full"
                     horizontal
                     ListFooterComponent={() => (
-                        images.length < 3 && (
+                        state.length < 3 && (
                             <Pressable
                                 className="bg-gray-500 rounded-md items-center justify-center"
                                 onPress={handleProductPhotoSelect}
@@ -125,7 +122,7 @@ export function ProductImages({ productImages, flag, validatedRef }: Props) {
                 />
             </View>
             {flag && (
-                images.length > 0
+                state.length > 0
                 ? null
                 : (
                     <TextApp className="text-xs text-red-500">

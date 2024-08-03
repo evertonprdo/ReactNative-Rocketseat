@@ -2,7 +2,7 @@ import { View } from "react-native"
 import { createBottomTabNavigator, type BottomTabNavigationProp } from "@react-navigation/bottom-tabs"
 import { House, SignOut, Tag } from "phosphor-react-native"
 
-import { UserAds } from "@screens/UserAds"
+import { UserProducts } from "@screens/UserProducts"
 import { Home } from "@screens/Home"
 
 import { colors } from "@theme/colors"
@@ -12,7 +12,7 @@ import { Loading } from "@components/base/Loading"
 
 export type AppTabParamList = {
     TabHome: undefined
-    userAds: undefined
+    UserProducts: undefined
     singOut: undefined
 }
 
@@ -56,8 +56,8 @@ export function AppTabRoutes() {
             />
 
             <Screen
-                name="userAds"
-                component={UserAds}
+                name="UserProducts"
+                component={UserProducts}
                 options={{
                     tabBarIcon: ({ color, focused }) => (
                         <View className="py-2 px-4 -m-2">

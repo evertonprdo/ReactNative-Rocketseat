@@ -8,13 +8,13 @@ import { Header } from "@components/Header";
 import { colors } from "@theme/colors";
 import { Button } from "@components/base/Button";
 
-import { AdDetailsTemplate } from "@templates/AdDetailsTemplate";
+import { ProductDetailsTemplate } from "@templates/ProductDetailsTemplate";
 
 import type { AppStackParamList } from "@routes/app.stack.routes";
 
-type Props = NativeStackScreenProps<AppStackParamList, "userAdDetails">
+type Props = NativeStackScreenProps<AppStackParamList, "UserProductDetails">
 
-export function UserAdDetails({ navigation }: Props) {
+export function UserProductDetails({ navigation }: Props) {
     return (
         <SafeAreaView style={{flex: 1}}>
             <Header className="pb-3">
@@ -22,11 +22,13 @@ export function UserAdDetails({ navigation }: Props) {
                     onPress={() => navigation.goBack()}
                 />
                 <Header.Edit
-                    onPress={() => navigation.navigate("editAd")}
+                    onPress={() => navigation.navigate("EditProduct")}
                 />
             </Header>
 
-            <AdDetailsTemplate>
+            <ProductDetailsTemplate
+                
+            >
                 <View className="gap-2 mt-6">
                     <Button variant="black">
                         <Power size={16} color={colors.gray[600]}/>
@@ -38,7 +40,7 @@ export function UserAdDetails({ navigation }: Props) {
                         <Button.Title>Excluir anúncio</Button.Title>
                     </Button>
                 </View>
-            </AdDetailsTemplate>
+            </ProductDetailsTemplate>
 
         </SafeAreaView>
     )

@@ -1,24 +1,24 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { View } from "react-native";
 
 import { TextApp } from "@components/base/Text";
 import { Tag } from "@components/base/Tag";
 import { Toggle } from "@components/base/Toggle";
-import { Checkable } from "@components/base/Checkable";
 import { Button } from "@components/base/Button";
+import { PaymentMethod } from "./ProductForm/PaymentMethod";
 
 export const defaultFilterStateObj = {
     condition: {
         new: true,
         used: true,
     },
-    exchange: true,
+    acceptTrade: true,
     payment: {
-        "Boleto": true,
-        "Pix": true,
-        "Dinheiro": true,
-        "Cartão de Crédito": true,
-        "Deposito Bancário": true,
+        boleto: true,
+        pix: true,
+        cash: true,
+        card: true,
+        deposit: true,
     }
 }
 
@@ -30,18 +30,15 @@ type FilterAdProps = {
 }
 
 function FilterAd({ state, onApplyFilters }: FilterAdProps) {
-    const [ condition, setCondition ] = useState({
+    const [condition, setCondition] = useState({
         new: state.condition.new,
         used: state.condition.used
     });
-    const [ exchange, setExchange ] = useState(state.exchange);
-    const [ payment, setPayment ] = useState({
-        "Boleto": state.payment.Boleto,
-        "Pix": state.payment.Pix,
-        "Dinheiro": state.payment.Dinheiro,
-        "Cartão de Crédito": state.payment["Cartão de Crédito"],
-        "Deposito Bancário": state.payment["Deposito Bancário"],
-    });
+    const [exchange, setExchange] = useState(state.acceptTrade);
+    const [payment, setPayment] = useState(state.payment);
+
+    const [ checkRules, setCheckRules ] = useState(false)
+    const payRef = useRef(false)
 
     function handleOnConditionChange(key: keyof typeof condition) {
         setCondition({
@@ -54,24 +51,20 @@ function FilterAd({ state, onApplyFilters }: FilterAdProps) {
         setExchange(!exchange)
     }
 
-    function handleOnPaymentChange(key: keyof typeof payment) {
-        setPayment({
-            ...payment,
-            [key]: !payment[key]
-        })
-    }
-
     function handleOnResetFilters() {
         setCondition(defaultFilterStateObj.condition);
-        setExchange(defaultFilterStateObj.exchange);
+        setExchange(defaultFilterStateObj.acceptTrade);
         setPayment(defaultFilterStateObj.payment);
     }
 
     function handleOnApplyfilter() {
-        if(onApplyFilters) {
+        setCheckRules(true)
+        if (!payRef.current) return
+
+        if (onApplyFilters) {
             onApplyFilters({
                 condition,
-                exchange,
+                acceptTrade: exchange,
                 payment
             });
         }
@@ -85,11 +78,13 @@ function FilterAd({ state, onApplyFilters }: FilterAdProps) {
                     <Tag
                         onPress={() => handleOnConditionChange("new")}
                         selected={condition.new}
+                        disabled={condition.new && !condition.used}
                     >Novo</Tag>
 
                     <Tag
                         onPress={() => handleOnConditionChange("used")}
                         selected={condition.used}
+                        disabled={!condition.new && condition.used}
                     >Usado</Tag>
                 </View>
             </View>
@@ -98,35 +93,25 @@ function FilterAd({ state, onApplyFilters }: FilterAdProps) {
                 <TextApp className="font-bold text-sm">Aceita troca?</TextApp>
 
                 <View className="flex-row gap-2">
-                    <Toggle 
+                    <Toggle
                         value={exchange}
                         onPress={handleOnExchangeChange}
                     />
                 </View>
             </View>
 
-            <View className="gap-3">
-                <TextApp className="font-bold text-sm">Meios de pagamento aceitos</TextApp>
-
-                <View className="gap-2">
-                    {Object.keys(payment).map(item => (
-                        <Checkable
-                            key={item}
-                            variant="checkbox"
-                            checked={payment[item as keyof typeof payment]}
-                            onPress={() => handleOnPaymentChange(item as keyof typeof payment)}
-                        >
-                            {item}
-                        </Checkable>
-                    ))}
-                </View>
-            </View>
+            <PaymentMethod
+                state={payment}
+                setState={setPayment}
+                validatedRef={payRef}
+                flag={checkRules}
+            />
 
             <View className="flex-row gap-3 mt-16">
                 <Button
                     className="flex-1"
                     variant="gray"
-                    onPress={ handleOnResetFilters }
+                    onPress={handleOnResetFilters}
                 >
                     <Button.Title>Resetar filtros</Button.Title>
                 </Button>

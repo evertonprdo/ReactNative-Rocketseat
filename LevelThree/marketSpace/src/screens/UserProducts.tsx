@@ -13,17 +13,22 @@ import type { AppTabParamList } from "@routes/app.tab.routes";
 import type { AppStackParamList } from "@routes/app.stack.routes";
 
 type Props = CompositeScreenProps<
-    BottomTabScreenProps<AppTabParamList, "userAds">,
+    BottomTabScreenProps<AppTabParamList, "UserProducts">,
     NativeStackScreenProps<AppStackParamList, "Home">
 >
-export function UserAds({ navigation }: Props) {
+export function UserProducts({ navigation }: Props) {
+    const DATA = []
+
+    for (let index = 0; index < 5; index++) {
+        DATA.push(item)
+    }
     return (
         <SafeAreaView style={{flex: 1}}>
             <Header>
                 <Header.Empty/>
                 <Header.Title>Meus anúncios</Header.Title>
                 <Header.Add
-                    onPress={() => navigation.navigate("createAd")}
+                    onPress={() => navigation.navigate("CreateProduct")}
                 />
             </Header>
 
@@ -39,40 +44,15 @@ export function UserAds({ navigation }: Props) {
                 </View>
 
                 <ProductList
-                    data={[
-                        {   
-                            isNew: true,
-                            price: "11",
-                            title: "weq2we",
-                            onPress: () => navigation.navigate("userAdDetails")
-                        },
-                        {   
-                            isNew: true,
-                            price: "11",
-                            title: "we3qwe",
-                            onPress: () => navigation.navigate("userAdDetails")
-                        },
-                        {   
-                            isNew: true,
-                            price: "11",
-                            title: "we11qwe",
-                            onPress: () => navigation.navigate("userAdDetails")
-                        },
-                        {   
-                            isNew: true,
-                            price: "11",
-                            title: "we1qwe",
-                            onPress: () => navigation.navigate("userAdDetails")
-                        },
-                        {   
-                            isNew: true,
-                            price: "11",
-                            title: "w111e1qwe",
-                            onPress: () => navigation.navigate("userAdDetails")
-                        },
-                    ]}
+                    data={DATA}
                 />
             </View>
         </SafeAreaView>
     )
+}
+
+const item = {
+    isNew: true,
+    title: "Tênis vermelho",
+    price: "59,90",
 }
