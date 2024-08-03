@@ -23,9 +23,9 @@ type Props = {
     state: PaymentMethodProps
     setState: (obj: PaymentMethodProps) => void
     flag?: boolean
-    setValidatedFields?: (val: boolean) => void
+    validatedRef: React.MutableRefObject<boolean>
 }
-export function PaymentMethod({state, setState, flag, setValidatedFields}: Props) {
+export function PaymentMethod({state, setState, flag, validatedRef}: Props) {
     const [ isValid, setIsValid ] = useState(true);
 
     function handleOnValueChange(key: keyof PaymentMethodProps) {
@@ -35,30 +35,18 @@ export function PaymentMethod({state, setState, flag, setValidatedFields}: Props
         })
     }
 
-    function checkRules() {
-        let count = 0;
-
-        for(const key in state) {
-            if(state[key as keyof typeof paymentMethods] === true) {
-                count++
-                break
-            }
-        }
-        setIsValid(count > 0)
-    }
-
     useEffect(() => {
-        if(!flag) return
+        const checkRules = Object.values(state).includes(true)
 
-        checkRules();
-        if(setValidatedFields) setValidatedFields(isValid)
-    }, [flag, state])
-
+        setIsValid(checkRules)
+        validatedRef.current = checkRules
+    }, [state])
+    
     return (
         <View className="gap-3">
             <View className="mb-3">
                 <TextApp className="font-bold text-sm">Meios de pagamento aceitos</TextApp>
-                { !isValid && 
+                { !flag ? null : !isValid && 
                     <TextApp className="text-red-500 text-xs">
                         Selecione pelo menos 1 campo
                     </TextApp>}

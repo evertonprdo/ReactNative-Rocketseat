@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { View } from "react-native"
 
 import { PaymentMethod, PaymentMethodProps } from "./PaymentMethod"
@@ -6,6 +6,8 @@ import { TextApp } from "@components/base/Text"
 import { Input } from "@components/base/Input"
 import { Checkable } from "@components/base/Checkable"
 import { Toggle } from "@components/base/Toggle"
+
+import { InputValidation } from "@utils/inputValidation"
 
 export type TextFieldsProps = {
     title: string
@@ -28,82 +30,57 @@ type ProductFormProps = {
     onPaymentChange: (obj: PaymentMethodProps) => void
     onChangeValue: (val: boolean, key: keyof SwitchInputsProsp) => void
     flag?: boolean
-    setValidatedFields?: (val: boolean) => void
+    validatedRef: React.MutableRefObject<boolean>
 }
-export function Form({ state, flag, onTextChange, onChangeValue, onPaymentChange, setValidatedFields }: ProductFormProps) {
-    const { title, description, price, accept_trade, is_new, payment_method } = state ?? {}
+export  function Form({ state, flag, onTextChange, onChangeValue, onPaymentChange, validatedRef }: ProductFormProps) {
+    const { title, description, price, accept_trade, is_new, payment_method } = state
 
-    const [isValidTitle, setIsValidTitle] = useState(true);
-    const [isValidDesc, setisValidDescr] = useState(true);
-    const [isValidPrice, setisValidPrice] = useState(true);
-    const [isValidRadio, setisValidRadio] = useState(true);
-    const [ isValidPayment, setIsValidPayment ] = useState(true);
+    const [fieldsValidation, setFieldsValidation] = useState({
+        title: false,
+        description: false,
+        price: false,
+        radio: false
+    })
+    const isValidPayment = useRef(false);
 
-    const rules = {
-        title: {
-            min: 5,
-            max: 37
-        },
-        descr: {
-            min: 12,
-            max: 255
-        },
+    const titleRules = {
+        min: 5,
+        max: 37
+    }
+    const descrRules = {
+        min: 12,
+        max: 255
     }
 
-    function checkTitle() {
-        setIsValidTitle(
-            title.trim().length >= rules.title.min &&
-            title.trim().length <= rules.title.max
-        )
+    function setValidation() {
+        const validationFields = {
+            title: InputValidation.stringLenght(title, titleRules.min, titleRules.max),
+            description: InputValidation.stringLenght(description, descrRules.min, descrRules.max),
+            price: InputValidation.price(price),
+            radio: is_new !== undefined
+        }
+        setFieldsValidation(validationFields)
+        validatedRef.current = checkFields(validationFields)
     }
 
-    function checkDescription() {
-        setisValidDescr(
-            description.trim().length >= rules.descr.min &&
-            description.trim().length <= rules.descr.max
-        )
-    }
-
-    function checkPrice() {
-        setisValidPrice(!isNaN(parseFloat(price)))
-    }
-
-    function checkIsNewRadio() {
-        setisValidRadio(is_new !== undefined)
-    }
-
-    function checkFields() {
-        if(!isValidTitle) return false
-        if(!isValidDesc) return false
-        if(!isValidPrice) return false
-        if(!isValidRadio) return false
-        if(!isValidPayment) return false
-
+    function checkFields(checkedFields: typeof fieldsValidation) {
+        if (Object.values(checkedFields).includes(false)) return false
+        if (!isValidPayment.current) return false
         return true
     }
 
     useEffect(() => {
-        if (!flag) return
+        setValidation();
+    }, [state])
 
-        checkTitle();
-        checkDescription();
-        checkPrice();
-        checkIsNewRadio();
-
-        if(setValidatedFields) setValidatedFields(checkFields());
-    }, [flag, state])
     return (
         <>
             <View className={"gap-4"}>
                 <TextApp className="font-bold text-sm">Sobre o produto</TextApp>
 
-                {!isValidTitle &&
+                {!flag ? null : !fieldsValidation.title &&
                     <Input.Alert className="-my-3">
-                        O título deve ter no
-                        {title.length < rules.title.min
-                            ? ` mínimo ${rules.title.min}`
-                            : ` máximo ${rules.title.max}`
-                        } caracteres.
+                        O título deve ter no mínimo {titleRules.min} caracteres.
                     </Input.Alert>
                 }
                 <Input>
@@ -111,17 +88,13 @@ export function Form({ state, flag, onTextChange, onChangeValue, onPaymentChange
                         placeholder="Título do anúncio"
                         value={title}
                         onChangeText={(text) => onTextChange(text, "title")}
-                        maxLength={rules.title.max}
+                        maxLength={titleRules.max}
                     />
                 </Input>
 
-                {!isValidDesc &&
+                {!flag ? null : !fieldsValidation.description &&
                     <Input.Alert className="-my-3">
-                        A descrição deve ter no
-                        {description.length < rules.descr.min
-                            ? ` mínimo ${rules.descr.min}`
-                            : ` máximo ${rules.descr.max}`
-                        } caracteres.
+                        A descrição deve ter no mínimo {descrRules.min} caracteres.
                     </Input.Alert>
                 }
                 <Input>
@@ -129,7 +102,7 @@ export function Form({ state, flag, onTextChange, onChangeValue, onPaymentChange
                         placeholder="Descrição do produto"
                         value={description}
                         onChangeText={(text) => onTextChange(text, "description")}
-                        maxLength={rules.descr.max}
+                        maxLength={descrRules.max}
                         numberOfLines={5}
                         textAlignVertical="top"
                         multiline
@@ -155,7 +128,7 @@ export function Form({ state, flag, onTextChange, onChangeValue, onPaymentChange
                         Produto usado
                     </Checkable>
                 </View>
-                {!isValidRadio &&
+                {!flag ? null : !fieldsValidation.radio &&
                     <Input.Alert className="-my-3">
                         Selecione pelo menos uma das opções.
                     </Input.Alert>
@@ -165,9 +138,9 @@ export function Form({ state, flag, onTextChange, onChangeValue, onPaymentChange
             <View className="gap-4">
                 <TextApp className="font-bold text-sm">Venda</TextApp>
 
-                {!isValidPrice &&
+                {!flag ? null : !fieldsValidation.price &&
                     <Input.Alert className="-my-3">
-                        Você deve preencher o valor.
+                        Preencha um valo válido.
                     </Input.Alert>
                 }
                 <Input>
@@ -192,8 +165,8 @@ export function Form({ state, flag, onTextChange, onChangeValue, onPaymentChange
                 <PaymentMethod
                     state={payment_method}
                     setState={onPaymentChange}
+                    validatedRef={isValidPayment}
                     flag={flag}
-                    setValidatedFields={setIsValidPayment}
                 />
             </View>
         </>

@@ -1,11 +1,12 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { ScrollView, View } from "react-native"
 
 import { PaymentMethodProps } from "./PaymentMethod"
 
 import { Button } from "@components/base/Button"
 import { Form, SwitchInputsProsp, TextFieldsProps } from "./Form"
-import { ImagePicker } from "./ImagePicker"
+import { ProductImages } from "./ProductImages"
+import { GestureHandlerRootView } from "react-native-gesture-handler"
 
 type FormInputResult = {
     title: string
@@ -31,15 +32,17 @@ export function ProductForm({ onSubmit, initialValues, onCancel }: ProductFormPr
         : ""
     ;
 
-    const [ checkRules, setCheckRules ] = useState(false);
-    const [ validatedFields, setValidatedFields ] = useState(false);
+    const [checkRules, setCheckRules] = useState(false);
+    const validatedFields = useRef(false);
+    const validatedImages = useRef(false);
+
     const [textFields, setTextFields] = useState({
         title: title ?? "",
         price: price ?? "",
         description: description ?? "",
     })
 
-    const [ switchInput, setSwitchInput ] = useState({
+    const [switchInput, setSwitchInput] = useState({
         is_new,
         accept_trade: accept_trade ?? false
     })
@@ -53,8 +56,8 @@ export function ProductForm({ onSubmit, initialValues, onCancel }: ProductFormPr
     })
 
     function handleOnTextFieldChange(text: string, key: keyof TextFieldsProps) {
-        if(key === "price") {
-            text = text.replace(/[^0-9.,]/g, '')
+        if (key === "price") {
+            text = text.replace(/[^0-9,]/g, '')
         }
         setTextFields({
             ...textFields,
@@ -70,41 +73,47 @@ export function ProductForm({ onSubmit, initialValues, onCancel }: ProductFormPr
     }
 
     function handleOnPressSubmit() {
-        if(!onSubmit) return
+        if (!onSubmit) return
 
         setCheckRules(true);
-        if(!validatedFields) return
+        if (!validatedImages.current) return
+        if (!validatedFields.current) return
 
         onSubmit({
             ...textFields,
             ...switchInput,
-            price: parseFloat(textFields.price) * dbPriceMultiplier,
+            price: parseFloat(textFields.price.replace(",", ".")) * dbPriceMultiplier,
             payment_method: payment
         });
     }
 
     return (
         <>
-            <ScrollView
-                className="flex-1"
-                contentContainerClassName="px-6 pb-6 gap-9"
-                showsVerticalScrollIndicator={false}
-            >
-                <ImagePicker/>
+            <GestureHandlerRootView style={{ flex: 1 }}>
+                <ScrollView
+                    className="flex-1"
+                    contentContainerClassName="px-6 pb-6 gap-9"
+                    showsVerticalScrollIndicator={false}
+                >
+                    <ProductImages
+                        flag={checkRules}
+                        validatedRef={validatedImages}
+                    />
 
-                <Form
-                    state={{
-                        ...textFields,
-                        ...switchInput,
-                        payment_method: payment
-                    }}
-                    onChangeValue={handleOnValueChange}
-                    onTextChange={handleOnTextFieldChange}
-                    onPaymentChange={setPayment}
-                    flag={checkRules}
-                    setValidatedFields={setValidatedFields}
-                />
-            </ScrollView>
+                    <Form
+                        state={{
+                            ...textFields,
+                            ...switchInput,
+                            payment_method: payment
+                        }}
+                        onChangeValue={handleOnValueChange}
+                        onTextChange={handleOnTextFieldChange}
+                        onPaymentChange={setPayment}
+                        flag={checkRules}
+                        validatedRef={validatedFields}
+                    />
+                </ScrollView>
+            </GestureHandlerRootView>
 
             <View className="gap-3 px-6 flex-row py-5 bg-gray-700">
                 <Button
