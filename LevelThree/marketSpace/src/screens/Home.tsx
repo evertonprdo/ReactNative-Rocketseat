@@ -7,6 +7,7 @@ import { type CompositeScreenProps } from "@react-navigation/native";
 import { ArrowRight, MagnifyingGlass, Plus, Sliders, Tag } from "phosphor-react-native";
 
 import { useAuth } from "@hooks/useAuth";
+import { api } from "@services/api";
 
 import { colors } from "@theme/colors";
 import { TextApp } from "@components/base/Text";
@@ -33,8 +34,8 @@ export function Home({ navigation }: Props) {
         DATA.push(item)
     }
 
-    const [ showModal, setShowModal ] = useState(false);
-    const [ filter, setFilter ] = useState(defaultFilterStateObj)
+    const [showModal, setShowModal] = useState(false);
+    const [filter, setFilter] = useState(defaultFilterStateObj)
 
     function handleOnCloseModal() {
         setShowModal(false)
@@ -45,20 +46,20 @@ export function Home({ navigation }: Props) {
     }
 
     function handleOnAplyfilters(filterState: FilterOptions) {
-        if(showModal) {
+        if (showModal) {
             handleOnCloseModal();
         }
         setFilter(filterState);
     }
     return (
-        <SafeAreaView style={{flex: 1}}>
+        <SafeAreaView style={{ flex: 1 }}>
             <View className="flex-1 px-6 pt-6 gap-8">
                 <View className="flex-row w-full gap-2">
 
                     <View className="flex-1 flex-row gap-[10px] items-center">
                         <UserImage
                             className="size-11 border-2"
-                            imageUri={user.avatar}
+                            imageUri={`${api.defaults.baseURL}/images/${user.avatar}`}
                         />
                         <View>
                             <TextApp>Boas vindas,</TextApp>
@@ -77,7 +78,7 @@ export function Home({ navigation }: Props) {
                         className="flex-1"
                         onPress={() => navigation.navigate("CreateProduct")}
                     >
-                        <Plus color={colors.gray[700]} size={16}/>
+                        <Plus color={colors.gray[700]} size={16} />
                         <Button.Title>Criar anúncio</Button.Title>
                     </Button>
                 </View>
@@ -87,7 +88,7 @@ export function Home({ navigation }: Props) {
 
                     <View className="bg-blue-light/10 py-3 pl-4 pr-5 rounded-md flex-row justify-between">
                         <View className="flex-row gap-4 items-center">
-                            <Tag size={20} color={colors.blue}/>
+                            <Tag size={20} color={colors.blue} />
 
                             <View>
                                 <TextApp className="font-bold text-xl">4</TextApp>
@@ -97,7 +98,7 @@ export function Home({ navigation }: Props) {
 
                         <Pressable className="flex-row items-center gap-2" onPress={() => navigation.navigate("UserProducts")}>
                             <TextApp className="text-blue font-bold">Meus anúncios</TextApp>
-                            <ArrowRight size={16} color={colors.blue}/>
+                            <ArrowRight size={16} color={colors.blue} />
                         </Pressable>
                     </View>
                 </View>
@@ -117,8 +118,8 @@ export function Home({ navigation }: Props) {
                                         size={20}
                                     />
                                 </PressableIcon>
-                        
-                                <View className="w-[1px] h-3/4 bg-gray-400"/>
+
+                                <View className="w-[1px] h-3/4 bg-gray-400" />
 
                                 <PressableIcon
                                     className="p-2 -m-2"
@@ -131,10 +132,8 @@ export function Home({ navigation }: Props) {
                             </View>
                         </Input>
                     </View>
-                    
-                    <ProductList
-                        data={DATA}
-                    />
+
+
                 </View>
             </View>
 
@@ -145,7 +144,7 @@ export function Home({ navigation }: Props) {
             >
                 <FilterAd
                     state={filter}
-                    onApplyFilters={ handleOnAplyfilters }
+                    onApplyFilters={handleOnAplyfilters}
                 />
             </AnimatedModal>
         </SafeAreaView>

@@ -8,7 +8,7 @@ import cn from "@utils/cn";
 
 type SelectedContextProps = {
     selected: string
-    setSelected?: (v: string) => void,
+    setSelected?: (v: "all" | "active" | "inactive") => void,
     setShowOptions: (v: boolean) => void,
 }
 const SelectedContext = createContext({} as SelectedContextProps);
@@ -18,7 +18,7 @@ type OptionChildProps = {
 }
 type SelectProps = ViewProps & {
     selected?: string
-    setSelected?: (val: string) => void
+    setSelected?: (val: "all" | "active" | "inactive") => void
     children: React.ReactNode
 }
 function Select({ selected = "", setSelected, className, children, ...props }: SelectProps) {
@@ -100,7 +100,7 @@ function Select({ selected = "", setSelected, className, children, ...props }: S
 }
 
 type OptionProps = {
-    name: string
+    name: "all" | "active" | "inactive"
     children: TextProps["children"]
     className?: string
 }

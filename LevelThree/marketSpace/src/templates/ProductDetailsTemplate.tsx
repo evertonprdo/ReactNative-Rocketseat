@@ -22,8 +22,8 @@ export type ProductDetailsTemplateProps = {
 }
 export function ProductDetailsTemplate({ details, images, user, children }: ProductDetailsTemplateProps) {
     const { avatar, name } = user;
-    const { title, description, price, accept_trade, payment_method, is_new } = details;
-    const { boleto, card, cash, deposit, pix } = payment_method;
+    const { title, description, price, accept_trade, payment_methods, is_new } = details;
+    const { boleto, card, cash, deposit, pix } = payment_methods;
 
     return (
         <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>

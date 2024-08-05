@@ -10,8 +10,6 @@ import { Button } from "@components/base/Button";
 import { ProductDetailsTemplate, ProductDetailsTemplateProps } from "./ProductDetailsTemplate";
 import { ProductForm } from "@components/ProductForm";
 
-import { useAuth } from "@hooks/useAuth";
-
 import { FileImageProps, FormFields, FormResult } from "src/@types/FormProps";
 import { useState } from "react";
 
@@ -31,10 +29,10 @@ type Props = {
     onSubmit?: () => void
 
     modalVisibility?: boolean
+    isLoading: boolean
 }
-export function CreateEditAd({ type, user, state, setState, onPressGoBack, onPressCancel, onPressBackEdit, onPressNext, onSubmit, modalVisibility }: Props) {
+export function CreateEditAd({ type, user, state, setState, onPressGoBack, onPressCancel, onPressBackEdit, onPressNext, onSubmit, modalVisibility, isLoading }: Props) {
     const { top, bottom } = useSafeAreaInsets();
-
     const [ preview, setPreview ] = useState<Omit<ProductDetailsTemplateProps, "children">>({} as Omit<ProductDetailsTemplateProps, "children">);
 
     function handleOnPressNext(details: FormFields, images: FileImageProps[]) {
@@ -93,7 +91,7 @@ export function CreateEditAd({ type, user, state, setState, onPressGoBack, onPre
                     <ProductDetailsTemplate
                         images={preview.images}
                         details={preview.details}
-                        user={useAuth().user}
+                        user={user}
                     />
                     <View
                         className="flex-row w-full bg-gray-700 px-6 pt-5 gap-3"
@@ -111,6 +109,7 @@ export function CreateEditAd({ type, user, state, setState, onPressGoBack, onPre
                             variant="blue"
                             className="flex-1"
                             onPress={onSubmit}
+                            isLoading={isLoading}
                         >
                             <Tag size={16} color={colors.gray[700]} />
                             <Button.Title>Publicar</Button.Title>

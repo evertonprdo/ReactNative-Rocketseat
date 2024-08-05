@@ -24,7 +24,10 @@ function Card({ children, disabled, className, ...props }: PressableProps) {
     )
 }
 
-function Product({ children, className, ...props }: ViewProps) {
+type ProductProps = ViewProps & {
+    productImageUri: string
+}
+function Product({ children, className, productImageUri, ...props }: ProductProps) {
     const isDisable = useContext(DisableContext)
     return (
         <View
@@ -33,7 +36,7 @@ function Product({ children, className, ...props }: ViewProps) {
         >
             <ImageBackground
                 className="flex-1 flex-row rounded-md justify-between items-start p-1"
-                source={ ProductImg }
+                source={{uri: productImageUri}}
                 resizeMode="cover"
             >
                 { children }

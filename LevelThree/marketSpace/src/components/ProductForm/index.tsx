@@ -17,7 +17,7 @@ type ProductFormProps = {
     initialImages?: FileImageProps[]
 }
 export function ProductForm({ onSubmit, initialValues, initialImages, onCancel }: ProductFormProps) {
-    const { title, description, accept_trade, is_new, payment_method } = initialValues ?? {}
+    const { title, description, accept_trade, is_new, payment_methods: payment_method } = initialValues ?? {}
     const { boleto, card, cash, deposit, pix } = payment_method ?? {}
 
     const dbPriceMultiplier = 100
@@ -79,7 +79,7 @@ export function ProductForm({ onSubmit, initialValues, initialImages, onCancel }
             ...textFields,
             ...switchInput,
             price: parseFloat(textFields.price.replace(",", ".")) * dbPriceMultiplier,
-            payment_method: payment
+            payment_methods: payment
         } as FormFields, images);
     }
 

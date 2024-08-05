@@ -11,7 +11,7 @@ import { AppTabRoutes, AppTabParamList } from "@routes/app.tab.routes"
 export type AppStackParamList = {
     Home: NavigatorScreenParams<AppTabParamList>
     ProductDetails: undefined
-    UserProductDetails: undefined
+    UserProductDetails: {id: string}
     CreateProduct: undefined
     EditProduct: undefined
 }

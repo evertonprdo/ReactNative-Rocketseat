@@ -4,10 +4,10 @@ export type FormFields = {
     is_new: boolean
     price: number,
     accept_trade: boolean,
-    payment_method: PaymentMethodProps
+    payment_methods: PaymentMethodsProps
 }
 
-export type PaymentMethodProps = {
+export type PaymentMethodsProps = {
     boleto: boolean,
     pix: boolean,
     cash: boolean,

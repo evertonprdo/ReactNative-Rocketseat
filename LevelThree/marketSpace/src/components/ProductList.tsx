@@ -1,10 +1,11 @@
 import { type PressableProps, FlatList } from "react-native";
 import { Card } from "@components/Card";
 
-type CardProps = PressableProps & {
+export type CardProps = PressableProps & {
     isNew: boolean
     title: string
     price: string
+    productImageUri: string
     disabledAd?: boolean
     imgUri?: string
     currency?: string
@@ -37,13 +38,15 @@ function ProductList({data, className}: ProductListProps) {
     )
 }
 
-function DisplayItem({title, price, isNew, disabledAd, imgUri, currency = "R$", ...props}: CardProps) {
+function DisplayItem({title, price, isNew, disabledAd, imgUri, currency = "R$", productImageUri, ...props}: CardProps) {
     return (
         <Card
             disabled={disabledAd}
             {...props}
         >
-            <Card.Product>
+            <Card.Product
+                productImageUri={productImageUri}
+            >
                 <Card.User
                     imgUri={imgUri ??= ""}
                 />

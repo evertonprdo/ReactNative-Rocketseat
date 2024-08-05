@@ -3,7 +3,6 @@ import Animated, { Easing, interpolateColor, ReduceMotion, useAnimatedStyle, use
 import { PencilSimpleLine } from "phosphor-react-native"
 import cn from "@utils/cn";
 
-import { api } from "@services/api";
 import UserImg from "@assets/avatar.png"
 
 import { colors } from "@theme/colors";
@@ -20,17 +19,17 @@ function UserImage({ className, children, isLoading, imageUri, ...props }: Image
         <View
             className={cn("size-[88px] rounded-full border-[3px] border-blue-light", className)}
         >
-            { !isLoading
+            {!isLoading
                 ? (
                     <Image
-                        source={ imageUri ? { uri:`${api.defaults.baseURL}/images/${imageUri}`} : UserImg}
+                        source={imageUri ? { uri: imageUri } : UserImg}
                         className="rounded-full h-full w-full overflow-hidden"
                         resizeMode="cover"
                         {...props}
                     />
-                ) : <UserImageSkeleton/>
+                ) : <UserImageSkeleton />
             }
-                {children}
+            {children}
         </View>
     )
 }
@@ -70,16 +69,16 @@ function UserImageSkeleton() {
         animation();
     }, [])
 
-    return <Animated.View style={animatedStyle} className="flex-1 rounded-full"/>
+    return <Animated.View style={animatedStyle} className="flex-1 rounded-full" />
 }
 
-function Edit({className, ...props}: PressableProps) {
+function Edit({ className, ...props }: PressableProps) {
     return (
         <Pressable
             className={cn("absolute rounded-full active:bg-blue bg-blue-light p-3 bottom-0 -right-2", className)}
             {...props}
         >
-            <PencilSimpleLine color={colors.gray[600]} size={16}/>
+            <PencilSimpleLine color={colors.gray[600]} size={16} />
         </Pressable>
     )
 }
