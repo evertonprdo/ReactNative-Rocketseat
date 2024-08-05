@@ -34,7 +34,7 @@ export function UserProducts({ navigation }: Props) {
         list.map(product => {
             result.push({
                 title: product.name,
-                price: (product.price / 100).toFixed(2),
+                price: (product.price / 100).toFixed(2).replace(".", ","),
                 isNew: product.is_new,
                 imgUri: `${api.defaults.baseURL}/images/${user.avatar}`,
                 disabledAd: !product.is_active,

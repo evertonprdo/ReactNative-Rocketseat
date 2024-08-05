@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { Pressable, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { type NativeStackScreenProps } from "@react-navigation/native-stack";
 import { type BottomTabScreenProps } from "@react-navigation/bottom-tabs";
-import { type CompositeScreenProps } from "@react-navigation/native";
+import { useFocusEffect, type CompositeScreenProps } from "@react-navigation/native";
 import { ArrowRight, MagnifyingGlass, Plus, Sliders, Tag } from "phosphor-react-native";
 
 import { useAuth } from "@hooks/useAuth";
@@ -14,13 +14,15 @@ import { TextApp } from "@components/base/Text";
 import { Button } from "@components/base/Button";
 import { UserImage } from "@components/base/UserImage";
 import { Input } from "@components/base/Input";
-import { ProductList } from "@components/ProductList";
+import { CardProps, ProductList } from "@components/ProductList";
 import { AnimatedModal } from "@components/AnimatedModal";
 import { PressableIcon } from "@components/base/PressableIcon";
 import { defaultFilterStateObj, FilterAd, type FilterOptions } from "@components/Filter";
 
 import type { AppTabParamList } from "@routes/app.tab.routes";
 import type { AppStackParamList } from "@routes/app.stack.routes";
+import { ProductDTO } from "@dtos/ProductsDTO";
+import { Loading } from "@components/base/Loading";
 
 type Props = CompositeScreenProps<
     BottomTabScreenProps<AppTabParamList, "TabHome">,
@@ -28,11 +30,8 @@ type Props = CompositeScreenProps<
 >
 export function Home({ navigation }: Props) {
     const { user } = useAuth();
-    const DATA = []
-
-    for (let index = 0; index < 10; index++) {
-        DATA.push(item)
-    }
+    const [products, setProducts] = useState<CardProps[]>([])
+    const [isLoading, setIsLoading] = useState(true)
 
     const [showModal, setShowModal] = useState(false);
     const [filter, setFilter] = useState(defaultFilterStateObj)
@@ -51,6 +50,40 @@ export function Home({ navigation }: Props) {
         }
         setFilter(filterState);
     }
+
+    function fetchToCardProps(list: ProductDTO[]) {
+        const result: CardProps[] = []
+
+        list.map(product => {
+            result.push({
+                title: product.name,
+                price: (product.price / 100).toFixed(2).replace(".", ","),
+                isNew: product.is_new,
+                imgUri: `${api.defaults.baseURL}/images/${product.user.avatar}`,
+                disabledAd: !(product.is_active ?? true),
+                productImageUri: `${api.defaults.baseURL}/images/${product.product_images[0].path}`,
+                onPress: () => navigation.navigate("ProductDetails", { id: product.id })
+            })
+        })
+        return result
+    }
+
+    async function fetchProducts() {
+        try {
+            setIsLoading(true)
+            const { data } = await api.get('/products')
+
+            setProducts(fetchToCardProps(data))
+        } catch (error) {
+            console.log(error)
+        } finally {
+            setIsLoading(false)
+        }
+    }
+
+    useFocusEffect(useCallback(() => {
+        fetchProducts()
+    }, []))
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <View className="flex-1 px-6 pt-6 gap-8">
@@ -133,6 +166,11 @@ export function Home({ navigation }: Props) {
                         </Input>
                     </View>
 
+                    {isLoading ? <Loading /> :
+                        <ProductList
+                            data={products}
+                        />
+                    }
 
                 </View>
             </View>
@@ -149,10 +187,4 @@ export function Home({ navigation }: Props) {
             </AnimatedModal>
         </SafeAreaView>
     )
-}
-
-const item = {
-    isNew: true,
-    title: "Tênis vermelho",
-    price: "59,90",
 }

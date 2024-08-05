@@ -23,8 +23,8 @@ function ProductList({data, className}: ProductListProps) {
             numColumns={2}
             renderItem={({item: {title, isNew, price, ...props}}) => (
                 <DisplayItem
-                    title="Tênis vermelho"
-                    price="59,90"
+                    title={title}
+                    price={price}
                     isNew
                     style={{maxWidth: "50%"}}
                     {...props}
