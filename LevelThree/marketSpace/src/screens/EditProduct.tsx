@@ -65,7 +65,7 @@ export function EditProduct({ navigation, route }: Props) {
         let changed = false
         for (const img of data.images) {
             for (const oldImg of oldImages) {
-                if (oldImg.path !== img.path) {
+                if (`${api.defaults.baseURL}/images/${oldImg.path}` !== img.path) {
                     changed = true
                     break
                 }
