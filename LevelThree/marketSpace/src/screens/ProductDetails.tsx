@@ -47,14 +47,15 @@ export function ProductDetails({ navigation, route }: Props) {
                 description: data.description,
                 is_new: data.is_new,
                 accept_trade: data.accept_trade,
-                payment_methods: payment
+                payment_methods: payment,
             },
             images: data.product_images.map(img => `${api.defaults.baseURL}/images/${img.path}`),
             user: {
                 name: data.user.name,
                 avatar: `${api.defaults.baseURL}/images/${data.user.avatar}`,
                 tel: data.user.tel
-            }
+            },
+            is_active: true
         }
 
         return productDetails
@@ -87,6 +88,7 @@ export function ProductDetails({ navigation, route }: Props) {
                     details={product.details}
                     images={product.images}
                     user={product.user}
+                    is_active={product.is_active}
                 />
             }
 

@@ -3,7 +3,7 @@ import { TextApp } from "@components/base/Text";
 import { useEffect, useState } from "react";
 import { View } from "react-native";
 
-const paymentMethods = {
+export const paymentMethods = {
     boleto: "Boleto",
     pix: "Pix",
     cash: "Dinheiro",

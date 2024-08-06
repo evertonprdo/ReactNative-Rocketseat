@@ -18,6 +18,7 @@ export type ProductDetailsTemplateProps = {
         avatar: string,
         name: string
     }
+    is_active: boolean
     children?: React.ReactNode
 }
 export function ProductDetailsTemplate({ details, images, user, children }: ProductDetailsTemplateProps) {

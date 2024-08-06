@@ -37,7 +37,8 @@ export function CreateProduct({ navigation }: Props) {
             price: data.fields.price,
             is_new: data.fields.is_new,
             accept_trade: data.fields.accept_trade,
-            payment_methods: []
+            payment_methods: [],
+            is_active: true
         }
         const payment = data.fields.payment_methods
 

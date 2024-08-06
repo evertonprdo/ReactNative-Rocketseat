@@ -23,6 +23,7 @@ import type { AppTabParamList } from "@routes/app.tab.routes";
 import type { AppStackParamList } from "@routes/app.stack.routes";
 import { ProductDTO } from "@dtos/ProductsDTO";
 import { Loading } from "@components/base/Loading";
+import { getProducts } from "@services/products";
 
 type Props = CompositeScreenProps<
     BottomTabScreenProps<AppTabParamList, "TabHome">,
@@ -32,6 +33,8 @@ export function Home({ navigation }: Props) {
     const { user } = useAuth();
     const [products, setProducts] = useState<CardProps[]>([])
     const [isLoading, setIsLoading] = useState(true)
+
+    const [ search, setSearch ] = useState("");
 
     const [showModal, setShowModal] = useState(false);
     const [filter, setFilter] = useState(defaultFilterStateObj)
@@ -49,6 +52,10 @@ export function Home({ navigation }: Props) {
             handleOnCloseModal();
         }
         setFilter(filterState);
+    }
+
+    function handleOnSearch() {
+        fetchProducts()
     }
 
     function fetchToCardProps(list: ProductDTO[]) {
@@ -71,9 +78,32 @@ export function Home({ navigation }: Props) {
     async function fetchProducts() {
         try {
             setIsLoading(true)
-            const { data } = await api.get('/products')
+            const is_new = (filter.condition.new && filter.condition.used) 
+                ? undefined 
+                : filter.condition.new 
+                ? true 
+                : false
+            ;
 
-            setProducts(fetchToCardProps(data))
+            const paymentArray = []
+
+            for(const key in filter.payment) {
+                if(filter.payment[key as keyof typeof filter.payment]) {
+                    paymentArray.push(key)
+                }
+            }
+
+            const payment_methods = paymentArray.length > 0 ? paymentArray : undefined
+
+            const params = {
+                query: search,
+                is_new,
+                payment_methods,
+                accept_trade: filter.acceptTrade
+            }
+            const response = await getProducts(params)
+
+            setProducts(fetchToCardProps(response))
         } catch (error) {
             console.log(error)
         } finally {
@@ -83,7 +113,7 @@ export function Home({ navigation }: Props) {
 
     useFocusEffect(useCallback(() => {
         fetchProducts()
-    }, []))
+    }, [filter]))
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <View className="flex-1 px-6 pt-6 gap-8">
@@ -142,10 +172,13 @@ export function Home({ navigation }: Props) {
                         <Input>
                             <Input.Field
                                 placeholder="Buscar anúncio"
+                                value={search}
+                                onChangeText={setSearch}
                             />
                             <View className="flex-row gap-3 h-full items-center">
                                 <PressableIcon
                                     className="p-2 -m-2"
+                                    onPress={handleOnSearch}
                                 >
                                     <MagnifyingGlass
                                         size={20}
@@ -171,7 +204,6 @@ export function Home({ navigation }: Props) {
                             data={products}
                         />
                     }
-
                 </View>
             </View>
 

@@ -39,7 +39,7 @@ export function CreateEditAd({ type, user, state, setState, onPressGoBack, onPre
         const previewImages: string[] = []
         const previewPrice = (details.price / 100).toFixed(2).replace(".", ",")
         images.map(img => {
-            previewImages.push(img.uri);
+            previewImages.push(img.path);
         })
 
         setPreview({
@@ -48,7 +48,8 @@ export function CreateEditAd({ type, user, state, setState, onPressGoBack, onPre
                 price: previewPrice
             },
             images: previewImages,
-            user
+            user,
+            is_active: state.fields?.is_active ?? true
         })
 
         setState({
@@ -92,6 +93,7 @@ export function CreateEditAd({ type, user, state, setState, onPressGoBack, onPre
                         images={preview.images}
                         details={preview.details}
                         user={user}
+                        is_active={preview.is_active}
                     />
                     <View
                         className="flex-row w-full bg-gray-700 px-6 pt-5 gap-3"

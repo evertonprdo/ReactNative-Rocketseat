@@ -61,7 +61,7 @@ export function ProductImages({ state, setState, flag, validatedRef }: Props) {
                 ...prev,
                 {
                     name: `product_img_${i}.${fileExtension}`.toLowerCase(),
-                    uri: uri,
+                    path: uri,
                     type: `${type}/${fileExtension}`
                 }
             ]);
@@ -97,7 +97,7 @@ export function ProductImages({ state, setState, flag, validatedRef }: Props) {
                     keyExtractor={item => item.name}
                     renderItem={({ item, drag }) => (
                         <ImageBox
-                            uri={item.uri}
+                            uri={item.path}
                             onRemove={() => handleOnPressRemove(item.name)}
                             onLongPress={drag}
                             delayLongPress={25}

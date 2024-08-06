@@ -21,12 +21,13 @@ function ProductList({data, className}: ProductListProps) {
             data={data}
             keyExtractor={(item, i) => "Key_" + item?.title + i}
             numColumns={2}
-            renderItem={({item: {title, isNew, price, ...props}}) => (
+            renderItem={({item: {title, isNew, price, imgUri, ...props}}) => (
                 <DisplayItem
                     title={title}
                     price={price}
-                    isNew
+                    isNew={isNew}
                     style={{maxWidth: "50%"}}
+                    imgUri={imgUri}
                     {...props}
                 />
             )}

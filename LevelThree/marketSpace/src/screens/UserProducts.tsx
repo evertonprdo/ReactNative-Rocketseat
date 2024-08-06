@@ -23,14 +23,16 @@ type Props = CompositeScreenProps<
     NativeStackScreenProps<AppStackParamList, "Home">
 >
 export function UserProducts({ navigation }: Props) {
-    const [products, setProducts] = useState<CardProps[]>([]);
     const { user } = useAuth();
     const [isLoading, setIsLoading] = useState(true)
     const [ select, setSelect ] = useState<"all" | "active" | "inactive">("all")
+    
+    const [ products, setProducts ] = useState<CardProps[]>([]);
+    const [ activeProducts, setActiveProducts ] = useState<CardProps[]>([])
+    const [ inactiveProducts, setInactiveProducts ] = useState<CardProps[]>([])
 
-    function fetchToCardProps(list: UserProductDTO[]) {
+    function fetchToCardProps(list: UserProductDTO[]): CardProps[] {
         const result: CardProps[] = []
-
         list.map(product => {
             result.push({
                 title: product.name,
@@ -42,14 +44,31 @@ export function UserProducts({ navigation }: Props) {
                 onPress: () => navigation.navigate("UserProductDetails", { id: product.id })
             })
         })
-
         return result
+    }
+
+    function setActiveInactiveProducts(prod: CardProps[]) {
+        const actives = [] as CardProps[]
+        const inactives = [] as CardProps[]
+        
+        prod.map(item => {
+            if(item.disabledAd) {
+                inactives.push(item)
+            } else {
+                actives.push(item)
+            }
+        })
+        setActiveProducts(actives)
+        setInactiveProducts(inactives)
     }
 
     async function fetchUserProducts() {
         try {
             const data = await getUserProducts();
-            setProducts(fetchToCardProps(data));
+            const cardPropsProduct = fetchToCardProps(data)
+
+            setProducts(cardPropsProduct);
+            setActiveInactiveProducts(cardPropsProduct);
         } catch (error) {
             console.log(error)
         } finally {
@@ -60,6 +79,7 @@ export function UserProducts({ navigation }: Props) {
     useFocusEffect(useCallback(() => {
         fetchUserProducts()
     }, []))
+
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <Header>
@@ -72,7 +92,7 @@ export function UserProducts({ navigation }: Props) {
 
             <View className="px-6 flex-1">
                 <View className="flex-row justify-between items-center mb-5 z-30">
-                    <TextApp>9 anúncios</TextApp>
+                    <TextApp>{products.length} anúncios</TextApp>
 
                     <Select selected={select} setSelected={setSelect}>
                         <Select.Option name="all">Todos</Select.Option>
@@ -82,8 +102,12 @@ export function UserProducts({ navigation }: Props) {
                 </View>
                 {isLoading ? <Loading /> : (
                     <ProductList
-                        data={products}
-
+                        data={ select === "all"
+                            ? products 
+                            : select === "active"
+                            ? activeProducts
+                            : inactiveProducts
+                        }
                     />
                 )}
             </View>

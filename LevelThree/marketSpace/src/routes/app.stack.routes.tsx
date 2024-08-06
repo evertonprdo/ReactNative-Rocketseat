@@ -13,7 +13,7 @@ export type AppStackParamList = {
     ProductDetails: {id: string}
     UserProductDetails: {id: string}
     CreateProduct: undefined
-    EditProduct: undefined
+    EditProduct: {id: string}
 }
 
 export type AppHomeNavigatorRoutesProps = NativeStackNavigationProp<AppStackParamList>

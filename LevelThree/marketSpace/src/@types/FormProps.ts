@@ -5,6 +5,7 @@ export type FormFields = {
     price: number,
     accept_trade: boolean,
     payment_methods: PaymentMethodsProps
+    is_active?: boolean
 }
 
 export type PaymentMethodsProps = {
@@ -17,7 +18,7 @@ export type PaymentMethodsProps = {
 
 export type FileImageProps = {
     name: string
-    uri: string,
+    path: string,
     type: string
 }
 
