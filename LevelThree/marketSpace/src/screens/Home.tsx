@@ -23,7 +23,7 @@ import type { AppTabParamList } from "@routes/app.tab.routes";
 import type { AppStackParamList } from "@routes/app.stack.routes";
 import { ProductDTO } from "@dtos/ProductsDTO";
 import { Loading } from "@components/base/Loading";
-import { getProducts } from "@services/products";
+import { getProducts, getUserProducts } from "@services/products";
 
 type Props = CompositeScreenProps<
     BottomTabScreenProps<AppTabParamList, "TabHome">,
@@ -33,6 +33,7 @@ export function Home({ navigation }: Props) {
     const { user } = useAuth();
     const [products, setProducts] = useState<CardProps[]>([])
     const [isLoading, setIsLoading] = useState(true)
+    const [userActiveProducts, setUserActiveProducts] = useState(0)
 
     const [ search, setSearch ] = useState("");
 
@@ -111,8 +112,26 @@ export function Home({ navigation }: Props) {
         }
     }
 
+    async function fetchUserProducts() {
+        try {
+            const data = await getUserProducts();
+            let count = 0
+            data.forEach(item => {
+                if(item.is_active) {
+                    count++
+                }
+            })
+            setUserActiveProducts(count);
+        } catch (error) {
+            console.log(error)
+        } finally {
+            setIsLoading(false)
+        }
+    }
+
     useFocusEffect(useCallback(() => {
         fetchProducts()
+        fetchUserProducts()
     }, [filter]))
     return (
         <SafeAreaView style={{ flex: 1 }}>
@@ -154,7 +173,7 @@ export function Home({ navigation }: Props) {
                             <Tag size={20} color={colors.blue} />
 
                             <View>
-                                <TextApp className="font-bold text-xl">4</TextApp>
+                                <TextApp className="font-bold text-xl">{userActiveProducts}</TextApp>
                                 <TextApp>anúncios ativos</TextApp>
                             </View>
                         </View>

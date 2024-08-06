@@ -13,6 +13,7 @@ import { api } from "@services/api";
 import { useFocusEffect } from "@react-navigation/native";
 import { Loading } from "@components/base/Loading";
 import { Alert } from "react-native";
+import { AppError } from "@utils/AppError";
 
 type Props = NativeStackScreenProps<AppStackParamList, "EditProduct">
 
@@ -77,13 +78,10 @@ export function EditProduct({ navigation, route }: Props) {
     function fetchToFormProps(response: ProductDTO) {
         setOldImages(response.product_images)
         const images: FileImageProps[] = response.product_images.map(img => {
-            const path = img.path.split("images/")
-            console.log(path)
-
             return {
                 name: img.id,
                 path: `${api.defaults.baseURL}/images/${img.path}`,
-                type: `image/${img.path.split(".")[1]}`,
+                type: "_",
             }
         })
 
@@ -127,10 +125,54 @@ export function EditProduct({ navigation, route }: Props) {
 
     async function updateImages() {
         try {
-            const deleteImgs = oldImages.map(img => img.id)
-            await deleteProductImages(deleteImgs);
+            const newImages: FileImageProps[] = []
+            const deleteImgs: string[] = []
 
-            await postProductImages(data.images, id)
+            function throwAnError() {
+                Alert.alert("Server Alert!",
+                    "Oh servidor não suporta a reordenação de imagens existentes, para reorganizar suas imagens por favor exclua as imagens e envie novamente!"
+                )
+                throw new AppError("_")
+            }
+            for (let i = 0; i < 3; i++) {
+                if (data.images[i] && (data.images[i].type === "_")) {
+                    let j = 0
+                    for (const oldImg of oldImages) {
+                        if (j === i) {
+                            if (`${api.defaults.baseURL}/images/${oldImg.path}` !== data.images[i].path) {
+                                throwAnError()
+                            }
+                        } else {
+                            if (`${api.defaults.baseURL}/images/${oldImg.path}` === data.images[i].path) {
+                                throwAnError()
+                            }
+                        }
+                        j++
+                    }
+                }
+
+                if (oldImages[i]) {
+                    if (data.images[i]) {
+                        if ((`${api.defaults.baseURL}/images/${oldImages[i].path}` !== data.images[i].path)) {
+                            deleteImgs.push(oldImages[i].id)
+                            newImages.push(data.images[i])
+                        }
+                    } else {
+                        deleteImgs.push(oldImages[i].id)
+                    }
+                } else {
+                    if(data.images[i]) {
+                        newImages.push(data.images[i])
+                    }
+                }
+            }
+
+            if(newImages.length > 0) {
+                await postProductImages(newImages, id)
+            }
+            if(deleteImgs.length > 0) {
+                await deleteProductImages(deleteImgs);
+            }
         } catch (error) {
             console.log(error)
         }

@@ -22,7 +22,7 @@ export function ProductForm({ onSubmit, initialValues, initialImages, onCancel }
 
     const dbPriceMultiplier = 100
     let price = initialValues?.price
-        ? (initialValues.price / dbPriceMultiplier).toString()
+        ? (initialValues.price / dbPriceMultiplier).toFixed(2).replace(".", ",")
         : ""
     ;
 

@@ -12,7 +12,7 @@ import type { FormFields } from "src/@types/FormProps";
 export type ProductDetailsTemplateProps = {
     images: string[]
     details: Omit<FormFields, "price"> & {
-        price: string 
+        price: string
     }
     user: {
         avatar: string,
@@ -21,16 +21,23 @@ export type ProductDetailsTemplateProps = {
     is_active: boolean
     children?: React.ReactNode
 }
-export function ProductDetailsTemplate({ details, images, user, children }: ProductDetailsTemplateProps) {
+export function ProductDetailsTemplate({ details, images, user, is_active, children }: ProductDetailsTemplateProps) {
     const { avatar, name } = user;
     const { title, description, price, accept_trade, payment_methods, is_new } = details;
     const { boleto, card, cash, deposit, pix } = payment_methods;
 
     return (
         <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
-            <ImageCarrosel
-                imagesUri={images}
-            />
+            <View>
+                <ImageCarrosel
+                    imagesUri={images}
+                />
+                {!is_active &&
+                    <View className="absolute bg-black/60 w-full h-full justify-center items-center">
+                        <TextApp className="font-bold uppercase text-gray-700">Anúncio desativado</TextApp>
+                    </View>
+                }
+            </View>
 
             <View className="p-6">
                 <View className="gap-6">
@@ -59,7 +66,7 @@ export function ProductDetailsTemplate({ details, images, user, children }: Prod
 
                         </View>
                         <TextApp className="text-justify text-sm">
-                            { description }
+                            {description}
                         </TextApp>
                     </View>
 
