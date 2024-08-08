@@ -16,6 +16,7 @@ export async function storageProductGetAll() {
     const storage = await AsyncStorage.getItem(CART_STORAGE);
     const products: StorageCartProps[] = storage ? JSON.parse(storage) : [];
 
+    console.log(products)
     return products;
   } catch (error) {
     throw error;
@@ -26,9 +27,9 @@ export async function storageProductSave(newProduct: StorageCartProps) {
   try {
     let products = await storageProductGetAll();
 
-    const productExists = products.filter(product => product.id === newProduct.id);
+    const productExists = products.find(product => product.id === newProduct.id);
 
-    if (productExists.length > 0) {
+    if (productExists) {
       products = products.map(product => {
         if (product.id === newProduct.id) {
           product.quantity = Number(product.quantity) + Number(newProduct.quantity)
@@ -39,7 +40,8 @@ export async function storageProductSave(newProduct: StorageCartProps) {
     } else {
       products.push(newProduct);
     }
-
+    
+    console.log(products)
     const productsUpdated = JSON.stringify(products);
     await AsyncStorage.setItem(CART_STORAGE, productsUpdated);
 
