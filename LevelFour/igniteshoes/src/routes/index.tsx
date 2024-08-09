@@ -8,6 +8,20 @@ import { colors } from '@theme/colors';
 import { AppRoutes } from '@routes/app.routes';
 import { Notification } from '@components/Notification';
 
+const linking = {
+  prefixes: ["com.prdo.igniteshoes://"],
+  config: {
+    screens: {
+      details: {
+        path: "/details/:productId",
+        parse: {
+          productId: (productId: string) => productId
+        }
+      }
+    }
+  }
+}
+
 export function Routes() {
   const theme = DefaultTheme;
   theme.colors.background = colors.gray[700];
@@ -32,7 +46,7 @@ export function Routes() {
     )
   }, [])
   return (
-    <NavigationContainer theme={theme}>
+    <NavigationContainer theme={theme} linking={linking}>
       <AppRoutes />
 
       {notification?.title &&

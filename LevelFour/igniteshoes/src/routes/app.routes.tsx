@@ -6,10 +6,14 @@ import { Home } from '@screens/Home';
 import { Details } from '@screens/Details';
 import { colors } from '@theme/colors';
 import twcolors from 'tailwindcss/colors'
+import { useCart } from '@hooks/useCart';
 
 const { Navigator, Screen } = createBottomTabNavigator();
 
 export function AppRoutes() {
+  const { cart } = useCart()
+  const tabBarBadgeNumber = cart.length > 0 ? cart.length : undefined
+
   return (
     <Navigator
       screenOptions={{
@@ -35,6 +39,7 @@ export function AppRoutes() {
         component={Cart}
         options={{
           tabBarIcon: ({ color }) => <Feather name="shopping-bag" size={24} color={color} />,
+          tabBarBadge: tabBarBadgeNumber
         }}
       />
 

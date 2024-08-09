@@ -1,7 +1,20 @@
 # Ignite Shoes
 
-## Deep Linking e Push Notification
+A aplicação simula uma loja de calçados simplificada, para exercitar os conceitos de Push Notification e Deep Linking.
 
-Este projeto possui um repositório base, porém a component library utilizada foi descontinuada native-base; existe a glueStack que é muito semelhante, porém preferi refazer os components com nativawind para proseguir.
-Com excessão dos componentes que utilizam native-base e lógica envolvida, estarei utilzando os demais arquivos do repositório.
-repositório base: https://github.com/rocketseat-education/igniteshoesapp
+## Funcionalidades Principais
+
+- **Deep Linking:** Configurado para permitir que links externos abram diretamente o aplicativo em uma tela específica.
+- **Notificações Push:** Integração com o OneSignal para envio e recebimento de notificações push, garantindo uma comunicação eficaz com os usuários.
+
+## Tecnologias Utilizadas
+
+- **React Navigation:** Biblioteca para navegação entre telas.
+- **OneSignal:** Serviço para envio de notificações push.
+- **NativeWind:** Biblioteca para estilização baseada em TailwindCSS no React Native.
+
+## Repositório Base
+
+O projeto foi iniciado a partir de um repositório base disponibilizado pela Rocketseat. A maioria das configurações e estrutura foram mantidas, com exceção dos componentes que utilizam NativeBase e a lógica envolvida, que foram substituídos por soluções próprias.
+
+Repositório Base no GitHub: https://github.com/rocketseat-education/igniteshoesapp

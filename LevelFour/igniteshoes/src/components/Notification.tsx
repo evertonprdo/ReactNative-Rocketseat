@@ -1,6 +1,5 @@
-import { Pressable, TouchableOpacity } from 'react-native';
+import { Pressable, TouchableOpacity, Linking } from 'react-native';
 import { OSNotification } from 'react-native-onesignal';
-import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 
 import { Text } from '@components/Text';
@@ -11,20 +10,11 @@ type Props = {
     onClose: () => void;
 }
 
-type AdditionalDataProps = {
-    route?: string
-    product_id?: string
-}
-
 export function Notification({ data, onClose }: Props) {
-    const { navigate } = useNavigation()
     function handleOnPress() {
-        const { route, product_id } = data.additionalData as AdditionalDataProps
-        console.log(route, product_id)
-
-        if(route === "details" && product_id) {
-            navigate("details", {productId: product_id})
-            onClose()
+        if(data.launchURL) {
+            Linking.openURL(data.launchURL);
+            onClose();
         }
     }
 
