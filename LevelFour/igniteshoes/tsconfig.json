@@ -4,9 +4,6 @@
     "strict": true,
     "baseUrl": "./",
     "paths": {
-      "@dtos/*": [
-        "src/dtos/*"
-      ],
       "@assets/*": [
         "./src/assets/*"
       ],
@@ -39,6 +36,9 @@
       ],
       "@data/*": [
         "./src/data/*"
+      ],
+      "@notifications/*": [
+        "./src/notifications/*"
       ],
     }
   }

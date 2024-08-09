@@ -16,7 +16,6 @@ export async function storageProductGetAll() {
     const storage = await AsyncStorage.getItem(CART_STORAGE);
     const products: StorageCartProps[] = storage ? JSON.parse(storage) : [];
 
-    console.log(products)
     return products;
   } catch (error) {
     throw error;
@@ -41,7 +40,6 @@ export async function storageProductSave(newProduct: StorageCartProps) {
       products.push(newProduct);
     }
     
-    console.log(products)
     const productsUpdated = JSON.stringify(products);
     await AsyncStorage.setItem(CART_STORAGE, productsUpdated);
 

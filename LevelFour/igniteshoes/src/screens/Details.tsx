@@ -1,6 +1,7 @@
 import { Image, Platform, ScrollView, View } from 'react-native';
 import { useCallback, useState } from 'react';
 import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
+import Toast from 'react-native-toast-message';
 
 import { useCart } from '@hooks/useCart';
 
@@ -12,7 +13,6 @@ import { Button } from '@components/Button';
 import { ScreenHeader } from '@components/ScreenHeader';
 import { ProductCardProps } from '@components/ProductCard';
 import { Heading, Text } from '@components/Text';
-import Toast from 'react-native-toast-message';
 
 type RouteParamsProps = {
     productId: string;
@@ -52,7 +52,6 @@ export function Details() {
                 text1: 'Não foi possível adicionar o produto no carrinho',
                 type: 'error'
             });
-            
         }
     }
 
