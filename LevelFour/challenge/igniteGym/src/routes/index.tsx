@@ -17,8 +17,8 @@ const linking = {
     prefixes: ["com.prdo.igniteGym://"],
     config: {
         screens: {
-            home: {
-                path: "/home"
+            history: {
+                path: "/history"
             },
             exercise: {
                 path: "/exercises/:exerciseId",

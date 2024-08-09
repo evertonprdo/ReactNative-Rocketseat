@@ -1,12 +1,23 @@
-import React from 'react';
-import { View, Text } from 'react-native';
+import React, { useEffect } from 'react';
+import { View } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+
+import { useAuth } from '@hooks/useAuth';
 
 function NotFoundScreen() {
-    return (
-        <View className="flex-1 justify-center items-center">
-            <Text className="text-white">Esta página não existe!</Text>
-        </View>
-    );
+    const { user } = useAuth();
+    const navigate = useNavigation();
+
+    useEffect(() => {
+        if (user.id) {
+            navigate.reset({
+                index: 0,
+                routes: [{ name: 'home' } as never],
+            });
+        }
+    }, [user.id]);
+
+    return <View/>
 }
 
 export default NotFoundScreen;
