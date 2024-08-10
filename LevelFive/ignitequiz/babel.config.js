@@ -14,7 +14,7 @@ module.exports = function (api) {
           "@storage": "./src/storage",
           "@styles": "./src/styles",
         }
-      }]
+      }], 'react-native-reanimated/plugin'
     ]
   };
 };
