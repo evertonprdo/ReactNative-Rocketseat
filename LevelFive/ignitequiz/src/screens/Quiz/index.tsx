@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
-import { Alert, Text, View } from 'react-native';
+import { Alert, Text, View, BackHandler } from 'react-native';
 import Animated, { Easing, Extrapolation, interpolate, runOnJS, useAnimatedScrollHandler, useAnimatedStyle, useSharedValue, withSequence, withTiming } from 'react-native-reanimated';
-
+import { Audio } from 'expo-av';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import * as Haptics from "expo-haptics";
 
 import { styles } from './styles';
 
@@ -34,7 +35,7 @@ export function Quiz() {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [quiz, setQuiz] = useState<QuizProps>({} as QuizProps);
   const [alternativeSelected, setAlternativeSelected] = useState<null | number>(null);
-  const [ statusReply, setStatusReply ] = useState(0);
+  const [statusReply, setStatusReply] = useState(0);
 
   const shake = useSharedValue(0);
   const scrollY = useSharedValue(0);
@@ -44,6 +45,14 @@ export function Quiz() {
 
   const route = useRoute();
   const { id } = route.params as Params;
+
+  async function playSound(isCorrect: boolean) {
+    const file = isCorrect ? require("@assets/correct.mp3") : require("@assets/wrong.mp3")
+    const { sound } = await Audio.Sound.createAsync(file, {shouldPlay: true})
+
+    await sound.setPositionAsync(0);
+    await sound.playAsync();
+  }
 
   function handleSkipConfirm() {
     Alert.alert('Pular', 'Deseja realmente pular a questão?', [
@@ -81,10 +90,12 @@ export function Quiz() {
     }
 
     if (quiz.questions[currentQuestion].correct === alternativeSelected) {
-      setStatusReply(1)
+      await playSound(true);
+      setStatusReply(1);
       setPoints(prevState => prevState + 1);
     } else {
-      setStatusReply(2)
+      await playSound(false);
+      setStatusReply(2);
       shakeAnimation();
     }
 
@@ -108,11 +119,13 @@ export function Quiz() {
   }
 
   async function shakeAnimation() {
+    await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+
     shake.value = withSequence(
       withTiming(3, { duration: 400, easing: Easing.bounce }),
       withTiming(0, undefined, (finished) => {
         'worklet';
-        if(finished){
+        if (finished) {
           runOnJS(handleNextQuestion)();
         }
       }),
@@ -169,7 +182,7 @@ export function Quiz() {
       }
     })
     .onEnd((event) => {
-      if(event.translationX < CARD_SKIP_AREA) {
+      if (event.translationX < CARD_SKIP_AREA) {
         runOnJS(handleSkipConfirm)();
       }
       cardPosition.value = withTiming(0);
@@ -197,13 +210,19 @@ export function Quiz() {
     }
   }, [points]);
 
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', handleStop);
+
+    return () => backHandler.remove();
+  }, [])
+
   if (isLoading) {
     return <Loading />
   }
 
   return (
     <View style={styles.container}>
-      <OverlayFeedback status={statusReply}/>
+      <OverlayFeedback status={statusReply} />
 
       <Animated.View style={fixedProgressBarStyles}>
         <Text style={styles.title}>
