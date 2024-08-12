@@ -15,8 +15,8 @@ export default function App() {
   if (!isFontsLoaded) return null
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <SafeAreaProvider>
+    <SafeAreaProvider>
+      <GestureHandlerRootView style={{ flex: 1 }}>
 
         <StatusBar
           style="light"
@@ -26,7 +26,7 @@ export default function App() {
 
         <Home />
 
-      </SafeAreaProvider>
-    </GestureHandlerRootView>
+      </GestureHandlerRootView>
+    </SafeAreaProvider>
   );
 }

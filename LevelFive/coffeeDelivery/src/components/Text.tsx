@@ -11,13 +11,10 @@ export type RobotoProps = TextProps & {
 function Baloo2({ style, size = "md", children, ...props }: Baloo2Props) {
 	return (
 		<RNText
-			style={[
-				{
-					fontFamily: Fonts.Baloo2.bold,
-					fontSize: Fonts.Baloo2[size]
-				},
-				style
-			]}
+			style={[{
+				fontFamily: Fonts.Baloo2.bold,
+				fontSize: Fonts.Baloo2[size]
+			}, style]}
 			{...props}
 		>
 			{children}
@@ -28,13 +25,10 @@ function Baloo2({ style, size = "md", children, ...props }: Baloo2Props) {
 function Bold({ style, size = "md", children, ...props }: RobotoProps) {
 	return (
 		<RNText
-			style={[
-				{
-					fontFamily: Fonts.Roboto.bold,
-					fontSize: Fonts.Roboto[size]
-				},
-				style
-			]}
+			style={[{
+				fontFamily: Fonts.Roboto.bold,
+				fontSize: Fonts.Roboto[size]
+			}, style]}
 			{...props}
 		>
 			{children}
@@ -45,13 +39,10 @@ function Bold({ style, size = "md", children, ...props }: RobotoProps) {
 function Regular({ style, size = "md", children, ...props }: RobotoProps) {
 	return (
 		<RNText
-			style={[
-				{
-					fontFamily: Fonts.Roboto.regular,
-					fontSize: Fonts.Roboto[size]
-				},
-				style
-			]}
+			style={[{
+				fontFamily: Fonts.Roboto.regular,
+				fontSize: Fonts.Roboto[size]
+			}, style]}
 			{...props}
 		>
 			{children}
@@ -59,13 +50,13 @@ function Regular({ style, size = "md", children, ...props }: RobotoProps) {
 	)
 }
 
-function Tag({ style, children, ...props }: TextProps) {
+function TagText({ style, children, ...props }: TextProps) {
 	return (
 		<RNText
-			style={[
-				{ ...Fonts.TagFontStyle },
-				style
-			]}
+			style={[{
+				...Fonts.TagFontStyle,
+				textTransform: "uppercase"
+			}, style]}
 			{...props}
 		>
 			{children}
@@ -73,13 +64,13 @@ function Tag({ style, children, ...props }: TextProps) {
 	)
 }
 
-function Button({ style, children, ...props }: TextProps) {
+function ButtonText({ style, children, ...props }: TextProps) {
 	return (
 		<RNText
-			style={[
-				{ ...Fonts.ButtonFontStyle },
-				style
-			]}
+			style={[{
+				...Fonts.ButtonFontStyle,
+				textTransform: "uppercase"
+			}, style]}
 			{...props}
 		>
 			{children}
@@ -87,4 +78,4 @@ function Button({ style, children, ...props }: TextProps) {
 	)
 }
 
-export const Text = { Baloo2, Bold, Regular, Button, Tag }
+export { Baloo2, Bold, Regular, ButtonText, TagText }
