@@ -1,15 +1,15 @@
 {
   "expo": {
-    "name": "coffeeDelivery",
-    "slug": "coffeeDelivery",
+    "name": "ignitefleet",
+    "slug": "ignitefleet",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "dark",
     "splash": {
       "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#4B2995"
+      "resizeMode": "cover",
+      "backgroundColor": "#202024"
     },
     "ios": {
       "supportsTablet": true
@@ -17,14 +17,11 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#4B2995"
+        "backgroundColor": "#202024"
       }
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    },
-    "plugins": [
-      "expo-font"
-    ]
+    }
   }
 }

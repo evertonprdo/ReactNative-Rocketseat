@@ -7,7 +7,8 @@ import { StatusBar } from 'expo-status-bar';
 import { Baloo2_700Bold } from '@expo-google-fonts/baloo-2'
 import { Roboto_700Bold, Roboto_400Regular } from '@expo-google-fonts/roboto'
 import { useFonts } from "expo-font";
-import Home from "@screens/Home";
+
+import { Routes } from "@routes/index";
 
 export default function App() {
   const [isFontsLoaded] = useFonts({ Roboto_700Bold, Roboto_400Regular, Baloo2_700Bold })
@@ -24,7 +25,7 @@ export default function App() {
           translucent
         />
 
-        <Home />
+        <Routes />
 
       </GestureHandlerRootView>
     </SafeAreaProvider>

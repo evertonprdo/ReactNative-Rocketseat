@@ -8,8 +8,9 @@ import { Regular } from "@components/Text";
 type Props = PressableProps & {
 	itemsCount?: number
 }
-export function Cart({ itemsCount, ...props }: Props) {
-	const color = itemsCount && itemsCount > 0 ? Colors.app.purpleDark : Colors.app.yellowDark
+export function CartIcon({ itemsCount, ...props }: Props) {
+	const hasItemsInCart = itemsCount && itemsCount > 0
+	const color = hasItemsInCart ? Colors.app.purpleDark : Colors.app.yellowDark
 
 	return (
 		<Pressable
@@ -17,15 +18,17 @@ export function Cart({ itemsCount, ...props }: Props) {
 			{...props}
 		>
 			<ShoppingCart size={20} color={color} weight="fill" />
-			
-			<View style={st.circle}>
-				<Regular
-					style={st.number}
-					size="xs"
-				>
-					{itemsCount}
-				</Regular>
-			</View>
+
+			{hasItemsInCart &&
+				<View style={st.circle}>
+					<Regular
+						style={st.number}
+						size="xs"
+					>
+						{itemsCount}
+					</Regular>
+				</View>
+			}
 		</Pressable>
 	)
 }
