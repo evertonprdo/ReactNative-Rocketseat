@@ -1,18 +1,23 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { TextInput, ScrollView, KeyboardAvoidingView, Platform, Alert } from "react-native";
+import { LocationAccuracy, useForegroundPermissions, watchPositionAsync, LocationSubscription } from "expo-location";
 import { useNavigation } from "@react-navigation/native";
 import { useUser } from '@realm/react'
+import { Car } from "phosphor-react-native";
 
 import { useRealm } from "../../libs/realm";
 import { Historic } from "../../libs/realm/schemas/Historic";
 
+import { Container, Content, Message } from "./styles";
 import { Button } from "../../components/Button";
 import { Header } from "../../components/Header";
 import { LicensePlateInput } from "../../components/LicensePlateInput";
 import { TextAreaInput } from "../../components/TextAreaInput";
+import { LocationInfo } from "../../components/LocationInfo";
+import { Loading } from "../../components/Loading";
 
-import { Container, Content } from "./styles";
 import { licensePlateValidate } from "../../utils/licensePlateValidate";
+import { getAddressLocation } from "../../utils/getAddressLocation";
 
 const KeyboardAvoidingViewBehavior = Platform.OS === 'android' ? 'height' : 'position'
 
@@ -20,6 +25,10 @@ export function Departure() {
 	const [description, setDescription] = useState("");
 	const [licensePlate, setLicensePlate] = useState("");
 	const [isRegistering, setIsRegistering] = useState(false);
+	const [isLoadingLocation, setIsLoadingLocation] = useState(true);
+	const [currentAddress, setCurrentAddress] = useState<string | null>(null)
+
+	const [locationForegroundPermission, requestLocationForegroundPermission] = useForegroundPermissions();
 
 	const realm = useRealm();
 	const user = useUser();
@@ -58,14 +67,62 @@ export function Departure() {
 			setIsRegistering(false)
 		}
 	}
+
+	useEffect(() => {
+		requestLocationForegroundPermission();
+	}, [])
+
+	useEffect(() => {
+		if (!locationForegroundPermission?.granted) return
+
+		let subscription: LocationSubscription
+
+		watchPositionAsync(
+			{
+				accuracy: LocationAccuracy.High,
+				timeInterval: 1000
+			},
+			(location) => {
+				getAddressLocation(location.coords)
+					.then((address) => {
+						if(address) setCurrentAddress(address)
+					})
+					.finally(() => setIsLoadingLocation(false))
+			})
+			.then((response) => subscription = response);
+
+		return () => { if (subscription) subscription.remove(); }
+	}, [locationForegroundPermission])
+
+	if (!locationForegroundPermission?.granted) {
+		return (
+			<Container>
+				<Header title="Saída" />
+
+				<Message>
+					Você precisa permitir que o aplicativo tenha acesso a localização para utilizar essa funcionalidade.
+					Por favor, acesse as configurações do seu dispositivo para conceder essa permissão ao aplicativo.
+				</Message>
+			</Container>
+		)
+	}
+
+	if (isLoadingLocation) return <Loading/>
 	return (
 		<Container>
 			<Header title="Saída" />
 
 			<KeyboardAvoidingView style={{ flex: 1 }} behavior={KeyboardAvoidingViewBehavior}>
 				<ScrollView>
-
 					<Content>
+						{currentAddress &&
+							<LocationInfo
+								label='Localização atual'
+								description={currentAddress}
+								icon={Car}
+							/>
+						}
+
 						<LicensePlateInput
 							ref={licensePlateRef}
 							label="Placa do veículo"

@@ -31,6 +31,7 @@ export const LicensePlate = styled.Text`
 
 export const Description = styled.Text`
 	text-align: justify;
+
 	${({ theme }) => css`
 		color: ${theme.COLORS.GRAY_100};
 		font-size: ${theme.FONT_SIZE.MD}px;
@@ -45,4 +46,16 @@ export const Footer = styled.View`
 	padding: 32px;
 
 	margin-top: 32px;
+`;
+
+export const AsyncMessage = styled.Text`
+	flex: 1;
+	text-align: center;
+	margin: 32px;
+
+	${({ theme }) => css`
+		color: ${theme.COLORS.GRAY_300};
+		font-size: ${theme.FONT_SIZE.SM}px;
+		font-family: ${theme.FONT_FAMILY.REGULAR};
+	`};
 `;
