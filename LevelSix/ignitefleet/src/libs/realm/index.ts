@@ -1,6 +1,8 @@
 import { createRealmContext, Realm } from "@realm/react"
 import { SyncConfiguration } from "realm";
+
 import { Historic } from "./schemas/Historic";
+import { Coords } from "./schemas/Coords";
 
 
 const realmAccessBehavior: Realm.OpenRealmBehaviorConfiguration = {
@@ -11,14 +13,6 @@ export const syncConfig: Partial<SyncConfiguration> = {
 	flexible: true,
 	newRealmFileBehavior: realmAccessBehavior,
 	existingRealmFileBehavior: realmAccessBehavior,
-
-	initialSubscriptions: {
-		update(mutableSubs, realm) {
-			const historicByUserQuery = realm.objects('Historic')
-			mutableSubs.add(historicByUserQuery, { name: 'historic' })
-		},
-		rerunOnOpen: true,
-	},
 }
 
 export const {
@@ -27,5 +21,6 @@ export const {
 	useQuery,
 	useObject
 } = createRealmContext({
-	schema: [Historic]
+	schema: [Historic, Coords],
+	schemaVersion: 0
 });

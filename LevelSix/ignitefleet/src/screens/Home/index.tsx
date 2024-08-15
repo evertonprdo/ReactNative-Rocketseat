@@ -3,6 +3,7 @@ import { Alert, FlatList } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Realm } from "realm";
 import { CloudArrowUp } from "phosphor-react-native";
+import { useUser } from "@realm/react";
 import dayjs from "dayjs";
 
 import { useQuery, useRealm } from "../../libs/realm";
@@ -25,6 +26,7 @@ export function Home() {
 
 	const historic = useQuery(Historic);
 	const realm = useRealm();
+	const user = useUser();
 
 	function handleRegisterMoviment() {
 		if (vehicleInUse?._id) {
@@ -121,6 +123,15 @@ export function Home() {
 
 		return () => syncSession.removeProgressNotification(progressNotification);
 	}, [])
+
+	useEffect(() => {
+		realm.subscriptions.update((mutableSubs, realm) => {
+			const historicByUserQuery = realm.objects('Historic').filtered(`user_id = '${user!.id}'`);
+
+			mutableSubs.add(historicByUserQuery, { name: 'hostoric_by_user' });
+		})
+	}, [realm]);
+
 	return (
 		<Container>
 			{percentageToSync &&
