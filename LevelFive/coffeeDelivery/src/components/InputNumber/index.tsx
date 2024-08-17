@@ -3,7 +3,7 @@ import { View } from "react-native";
 
 import st from "./styles"
 import { PressableIcon } from "@components/PressableIcon";
-import { Regular } from "@components/Text";
+import { TextRegular } from "@components/Text";
 
 export function InputNumber() {
 	const [count, setCount] = useState(0);
@@ -24,12 +24,12 @@ export function InputNumber() {
 				onPress={handleOnPressMinus}
 			/>
 
-			<Regular
+			<TextRegular
 				size="md"
 				style={st.number}
 			>
 				{count}
-			</Regular>
+			</TextRegular>
 
 			<PressableIcon
 				variant="plus"

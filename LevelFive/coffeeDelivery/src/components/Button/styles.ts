@@ -1,4 +1,5 @@
 import { Colors } from "@styles/colors";
+import { Fonts } from "@styles/fonts";
 import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
@@ -10,7 +11,9 @@ const styles = StyleSheet.create({
 		justifyContent: "center"
 	},
 	text: {
-		color: Colors.white
+		color: Colors.white,
+		fontSize: Fonts.ButtonFontStyle.fontSize,
+		textTransform: "uppercase"
 	}
 })
 

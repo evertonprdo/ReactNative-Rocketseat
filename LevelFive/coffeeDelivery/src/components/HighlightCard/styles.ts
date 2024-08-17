@@ -1,5 +1,6 @@
-import { Colors } from "@styles/colors";
 import { StyleSheet } from "react-native";
+import { Colors } from "@styles/colors";
+import { Fonts } from "@styles/fonts";
 
 const styles = StyleSheet.create({
 	container: {
@@ -40,7 +41,9 @@ const styles = StyleSheet.create({
 		paddingHorizontal: 8,
 		paddingVertical: 4,
 		color: Colors.app.purpleDark,
-		backgroundColor: Colors.app.purpleLight
+		backgroundColor: Colors.app.purpleLight,
+		textTransform: "uppercase",
+		fontSize: Fonts.TagFontStyle.fontSize
 	},
 	priceText: {
 		color: Colors.app.yellowDark

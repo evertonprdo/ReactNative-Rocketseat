@@ -11,7 +11,7 @@ import { Tag } from "@components/Tag";
 import { useState } from "react";
 import { ScrollView, View } from "react-native";
 
-export default function ComponentsView() {
+export default function ComponsView() {
 	const [value, setValue] = useState(false)
 	const [text, setText] = useState("")
 
@@ -19,7 +19,7 @@ export default function ComponentsView() {
 		<ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingVertical: 30, paddingHorizontal: 38, gap: 50 }}>
 			<CatalogCard />
 
-			<HighlightCard />
+			<HighlightCard onPress={() => {}}/>
 
 			<CartCard />
 

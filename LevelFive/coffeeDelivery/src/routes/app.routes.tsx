@@ -4,31 +4,40 @@ import { Home } from "@screens/Home";
 import Cart from "@screens/Cart";
 import Product from "@screens/Product";
 
-const { Navigator, Screen } = createNativeStackNavigator();
+export type RootStackParamList = {
+  home: undefined,
+  product: undefined,
+  cart: undefined
+}
+
+const { Navigator, Screen } = createNativeStackNavigator<RootStackParamList>();
 
 export function AppRoutes() {
-	return (
-		<Navigator
-			screenOptions={{
-				headerShown: false,
-			}}
-		>
-			<Screen
-				name="home"
-				component={Home}
-			/>
+  return (
+    <Navigator
+      screenOptions={{
+        headerShown: false,
+        statusBarTranslucent:true,
+        statusBarStyle: "light",
+        statusBarColor: "transparent"
+      }}
+    >
+      <Screen
+        name="home"
+        component={Home}
+      />
 
-			<Screen
-				name="product"
-				component={Product}
-				options={{statusBarStyle: "light"}}
-			/>
+      <Screen
+        name="product"
+        component={Product}
+        options={{statusBarStyle: "light"}}
+      />
 
-			<Screen
-				name="cart"
-				component={Cart}
-				options={{statusBarStyle: "dark"}}
-			/>
-		</Navigator>
-	)
+      <Screen
+        name="cart"
+        component={Cart}
+        options={{statusBarStyle: "dark"}}
+      />
+    </Navigator>
+  )
 }

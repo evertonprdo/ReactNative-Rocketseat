@@ -2,7 +2,6 @@ import "react-native-gesture-handler"
 
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context'
-import { StatusBar } from 'expo-status-bar';
 
 import { Baloo2_700Bold } from '@expo-google-fonts/baloo-2'
 import { Roboto_700Bold, Roboto_400Regular } from '@expo-google-fonts/roboto'
@@ -16,18 +15,12 @@ export default function App() {
   if (!isFontsLoaded) return null
 
   return (
-    <SafeAreaProvider>
-      <GestureHandlerRootView style={{ flex: 1 }}>
-
-        <StatusBar
-          style="light"
-          backgroundColor="transparent"
-          translucent
-        />
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <SafeAreaProvider>
 
         <Routes />
 
-      </GestureHandlerRootView>
-    </SafeAreaProvider>
+      </SafeAreaProvider>
+    </GestureHandlerRootView>
   );
 }

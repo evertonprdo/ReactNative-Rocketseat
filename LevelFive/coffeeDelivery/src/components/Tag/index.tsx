@@ -1,8 +1,10 @@
 import { Pressable, PressableProps } from "react-native";
 
-import st from "./styles";
 import { Colors } from "@styles/colors";
-import { TagText } from "@components/Text";
+import { Fonts } from "@styles/fonts";
+
+import st from "./styles";
+import { TextBold } from "@components/Text";
 
 type Props = PressableProps & {
 	active?: boolean
@@ -20,9 +22,9 @@ export function Tag({ active, children, ...props }: Props) {
 			]}
 			{...props}
 		>
-			<TagText style={{ color }}>
+			<TextBold style={{ color, fontSize: Fonts.TagFontStyle.fontSize }}>
 				{children}
-			</TagText>
+			</TextBold>
 		</Pressable>
 	)
 }

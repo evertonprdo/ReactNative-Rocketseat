@@ -1,11 +1,13 @@
-import { ButtonText } from "@components/Text";
-import { Colors } from "@styles/colors";
-import { Pressable } from "react-native";
-import st from "./styles";
 import { useState } from "react";
+import { Pressable, PressableProps } from "react-native";
+
+import { Colors } from "@styles/colors";
+
+import st from "./styles";
+import { TextBold } from "@components/Text";
 
 type Variants = "yellow" | "purple"
-type Props = {
+type Props = PressableProps & {
 	children?: string
 	variant?: Variants
 }
@@ -13,7 +15,7 @@ type Props = {
 const purpleColors = [Colors.app.purpleDark, Colors.app.purple]
 const yellowColors = [Colors.app.yellowDark, Colors.app.yellow]
 
-export function Button({ children, variant = "purple" }: Props) {
+export function Button({ children, variant = "purple", ...props }: Props) {
 	const [isPressedIn, setIsPressedIn] = useState(false);
 	const bgColors = variant === "purple" ? purpleColors : yellowColors
 
@@ -24,10 +26,11 @@ export function Button({ children, variant = "purple" }: Props) {
 			style={[st.container, { backgroundColor }]}
 			onPressIn={() => setIsPressedIn(true)}
 			onPressOut={() => setIsPressedIn(false)}
+			{...props}
 		>
-			<ButtonText style={st.text}>
+			<TextBold style={st.text}>
 				{children}
-			</ButtonText>
+			</TextBold>
 		</Pressable>
 	)
 }

@@ -2,48 +2,52 @@ import { Pressable, View } from "react-native";
 import st from "./styles";
 
 import CooffeeSvg from "@assets/coffees/Irlandes.svg"
-import { Baloo2, Regular, TagText } from "@components/Text";
+import { Heading, TextRegular, TextBold} from "@components/Text";
 
-export function HighlightCard() {
+type Props = {
+	onPress: () => void
+}
+
+export function HighlightCard({ onPress }: Props) {
 	return (
-		<Pressable style={st.container}>
+		<Pressable style={st.container} onPress={onPress}>
 			<View style={st.thumbnail}>
 				<CooffeeSvg width={120} height={120} />
 			</View>
 
-			<TagText style={st.tag}>
+			<TextBold style={st.tag}>
 				Especial
-			</TagText>
+			</TextBold>
 
 			<View style={st.details}>
-				<Baloo2
+				<Heading
 					size="md"
 					style={st.title}
 				>
 					Irlandês
-				</Baloo2>
+				</Heading>
 
-				<Regular
+				<TextRegular
 					size="xs"
 					style={st.description}
 				>
 					Bebida a base de café, uísque irlandês, açúcar e chantilly
-				</Regular>
+				</TextRegular>
 			</View>
 
 			<View style={st.price}>
-				<Regular
+				<TextRegular
 					size="sm"
 					style={st.priceText}
 				>
 					R$
-				</Regular>
-				<Baloo2
+				</TextRegular>
+				<Heading
 					size="lg"
 					style={st.priceText}
 				>
 					9,90
-				</Baloo2>
+				</Heading>
 			</View>
 		</Pressable>
 	)

@@ -3,7 +3,7 @@ import { ShoppingCart } from "phosphor-react-native";
 
 import st from "./styles"
 import { Colors } from "@styles/colors";
-import { Regular } from "@components/Text";
+import { TextRegular } from "@components/Text";
 
 type Props = PressableProps & {
 	itemsCount?: number
@@ -21,12 +21,12 @@ export function CartIcon({ itemsCount, ...props }: Props) {
 
 			{hasItemsInCart &&
 				<View style={st.circle}>
-					<Regular
+					<TextRegular
 						style={st.number}
 						size="xs"
 					>
 						{itemsCount}
-					</Regular>
+					</TextRegular>
 				</View>
 			}
 		</Pressable>

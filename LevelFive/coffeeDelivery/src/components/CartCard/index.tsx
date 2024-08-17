@@ -6,7 +6,7 @@ import CoffeeSvg from "@assets/coffees/Arabe.svg"
 
 import st from "./styles";
 import { Colors } from "@styles/colors";
-import { Baloo2, Regular } from "@components/Text";
+import { Heading, TextRegular } from "@components/Text";
 import { InputNumber } from "@components/InputNumber";
 import { PressableIcon } from "@components/PressableIcon";
 
@@ -32,13 +32,13 @@ export function CartCard() {
 
 						<View style={st.header}>
 
-							<Regular style={st.title} size="md">Irlandês</Regular>
-							<Regular style={st.volume} size="sm">227ml</Regular>
+							<TextRegular style={st.title} size="md">Irlandês</TextRegular>
+							<TextRegular style={st.volume} size="sm">227ml</TextRegular>
 						</View>
 
-						<Baloo2 size="sm" style={st.title}>
+						<Heading size="sm" style={st.title}>
 							R$ 9,90
-						</Baloo2>
+						</Heading>
 					</View>
 
 					<View style={st.actions}>

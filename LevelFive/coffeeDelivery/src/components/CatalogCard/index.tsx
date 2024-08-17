@@ -1,7 +1,7 @@
 import { Pressable, View } from "react-native";
 
 import st from "./styles"
-import { Baloo2, Regular } from "@components/Text";
+import { Heading, TextRegular } from "@components/Text";
 import CooffeSvg from "@assets/coffees/Expresso.svg"
 
 export function CatalogCard() {
@@ -12,31 +12,31 @@ export function CatalogCard() {
 			</View>
 
 			<View style={st.details}>
-				<Baloo2
+				<Heading
 					style={st.title}
 					size="sm"
 				>
 					Expresso Tradicional
-				</Baloo2>
+				</Heading>
 
-				<Regular style={st.description} size="xs">
+				<TextRegular style={st.description} size="xs">
 					O tradicional café feito com água quente e grãos moídos
-				</Regular>
+				</TextRegular>
 
 				<View style={st.price}>
-					<Regular
+					<TextRegular
 						size="sm"
 						style={st.priceText}
 					>
 						R$
-					</Regular>
+					</TextRegular>
 
-					<Baloo2
+					<Heading
 						size="md"
 						style={st.priceText}
 					>
 						9,90
-					</Baloo2>
+					</Heading>
 				</View>
 			</View>
 		</Pressable>
