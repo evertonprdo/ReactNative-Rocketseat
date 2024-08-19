@@ -1,79 +1,81 @@
-import { Dimensions, View } from "react-native";
-
-import Animated, { Easing, useAnimatedStyle, useSharedValue, withRepeat, withSequence, withTiming } from "react-native-reanimated";
+import { useState } from "react";
+import { Image, Text, View } from "react-native";
+import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withSpring, withTiming } from "react-native-reanimated";
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
 import styles from "./styles";
-import { Button } from "@components/Button";
-import { useEffect, useState } from "react";
+import { HeaderCart } from "@components/HeaderCart";
 
-const TIME = 500
+import { RootStackParamList } from "@routes/app.routes";
 
-export default function Cart() {
-  const [isOnAnimation, setIsOnAnimation] = useState(false)
+const UpImgUri = "https://img-cdn.pixlr.com/image-generator/history/65bb506dcb310754719cf81f/ede935de-1138-4f66-8ed7-44bd16efc709/medium.webp"
+const DownImgUri = "https://images.nightcafe.studio/jobs/QFN6dBmJDqD8F6riDiTU/QFN6dBmJDqD8F6riDiTU--1--lh91l.jpg?tr=w-9999,c-at_max"
 
-  const top = useSharedValue<number>(0);
-  const left = useSharedValue<number>(0);
+type Props = NativeStackScreenProps<RootStackParamList, 'cart'>;
 
-  const { height, width } = Dimensions.get("screen")
-  const floor = height - 333;
+export default function Cart({ navigation, route }: Props) {
+  const pressed = useSharedValue(false);
+  const [imgUri, setImgUri] = useState(UpImgUri)
 
-  const config = {
-    duration: TIME,
-    easing: Easing.elastic(),
+  const offsetX = useSharedValue(0);
+  const offsetY = useSharedValue(0);
+
+  function handleIsUpChange() {
+    setImgUri(UpImgUri)
   }
 
-  function handleOnPress() {
-    setIsOnAnimation(!isOnAnimation)
+  function handleIsDownChange() {
+    setImgUri(DownImgUri)
   }
 
-  function animation() {
-    const sideFix = 63
-    if (!isOnAnimation) {
-      left.value = withTiming(sideFix, config)
-      top.value = withTiming(0, config)
-      return
-    }
+  const tap = Gesture.Pan()
+    .onBegin(() => {
+      pressed.value = true;
+    })
+    .onChange((event) => {
+      offsetX.value += event.changeX
+      offsetY.value += event.changeY
 
-    top.value = withRepeat(
-      withSequence(
-        withTiming(0, config),
-        withTiming(floor, config),
-        withTiming(floor, config),
-        withTiming(0, config),
-      ), -1
-    )
-
-    left.value = withRepeat(
-      withSequence(
-        withTiming(width - sideFix, config),
-        withTiming(width - sideFix, config),
-        withTiming(sideFix, config),
-        withTiming(sideFix, config),
-      ), -1
-    )
-  }
-
-  useEffect(() => {
-    animation();
-  }, [isOnAnimation])
+      if (event.changeY < 0) {
+        runOnJS(handleIsUpChange)()
+      } else {
+        runOnJS(handleIsDownChange)()
+      }
+    })
+    .onFinalize(() => {
+      offsetX.value = withSpring(0)
+      offsetY.value = withSpring(0)
+      pressed.value = false;
+    });
 
   const animatedStyles = useAnimatedStyle(() => ({
-    top: top.value,
-    left: left.value
+    backgroundColor: pressed.value ? "blue" : "red",
+    transform: [
+      { translateX: offsetX.value },
+      { translateY: offsetY.value },
+      { scale: withTiming(pressed.value ? 1.2 : 1) }
+    ]
   }))
 
   return (
-    <View style={styles.container}>
-      <View style={{ flex: 1 }}>
-        <Animated.View
-          style={[styles.ball, animatedStyles]}
+    <SafeAreaView style={styles.container}>
+      <HeaderCart onPressIcon={() => navigation.goBack()}/>
+
+      <GestureDetector gesture={tap}>
+        <Animated.View style={[animatedStyles, styles.ball]} />
+      </GestureDetector>
+
+      <View>
+        <Image
+          width={250}
+          height={250}
+          source={{ uri: imgUri }}
+          style={{ borderRadius: 10, marginBottom: 10 }}
         />
+        <Text>Pan & Move Up or Down the ball</Text>
       </View>
-
-      <View style={{ padding: 20 }}>
-
-        <Button variant={!isOnAnimation ? "purple" : "yellow"} onPress={handleOnPress}>Click Me!</Button>
-      </View>
-    </View>
+    </SafeAreaView>
   )
 }

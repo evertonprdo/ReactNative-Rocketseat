@@ -4,17 +4,18 @@ const styles = StyleSheet.create({
   ball: {
     width: 100,
     height: 100,
-    borderRadius: 100,
-    backgroundColor: 'blue',
-    position: "absolute",
-    transform: [{ translateX: -50 }]
+    borderRadius: 9999,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    zIndex: 2,
   },
 
   container: {
     flex: 1,
-    marginTop: 100,
-    justifyContent: "center"
-  }
+    justifyContent: "space-between",
+    alignItems: "center"
+  },
 });
 
 export default styles

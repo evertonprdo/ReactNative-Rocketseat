@@ -14,11 +14,14 @@ import { Heading, TextRegular } from "@components/Text";
 import { Tag } from "@components/Tag";
 
 import { RootStackParamList } from "@routes/app.routes";
-import { Button } from "@components/Button";
+import { useState } from "react";
+import { Carrosel } from "@components/Carrosel";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'home'>;
 
 export function Home({ navigation, route }: Props) {
+  const [currentFocus, setCurrentFocus] = useState(0);
+
   return (
     <ScrollView style={{ flex: 1 }}>
       <View style={st.intro}>
@@ -38,7 +41,7 @@ export function Home({ navigation, route }: Props) {
             </TextRegular>
           </View>
 
-          <CartIcon onPress={() => navigation.navigate("cart")}/>
+          <CartIcon onPress={() => navigation.navigate("cart")} />
         </SafeAreaView>
 
         <View style={st.titleContainer}>
@@ -59,16 +62,7 @@ export function Home({ navigation, route }: Props) {
         />
       </View>
 
-      <FlatList
-        data={[0, 1, 2, 3, 4]}
-        renderItem={() => (
-          <HighlightCard onPress={() => { }} />
-        )}
-        style={st.carrosel}
-        contentContainerStyle={st.contentCarrosel}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-      />
+      <Carrosel/>
 
       <View style={st.sectionHeader}>
         <Heading
