@@ -1,54 +1,85 @@
-import { Pressable, View } from "react-native";
+import { useEffect } from "react";
+import { Pressable, PressableProps, View } from "react-native";
+import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
+import { SvgProps } from "react-native-svg";
+
 import st from "./styles";
+import { Heading, TextRegular, TextBold } from "@components/Text";
 
 import CooffeeSvg from "@assets/coffees/Irlandes.svg"
-import { Heading, TextRegular, TextBold} from "@components/Text";
 
-type Props = {
-	onPress: () => void
+export type CardProps = {
+  title: string,
+  description: string
+  price: string
+  category: string
+  icon: React.FC<SvgProps>
 }
 
-export function HighlightCard({ onPress }: Props) {
-	return (
-		<Pressable style={st.container} onPress={onPress}>
-			<View style={st.thumbnail}>
-				<CooffeeSvg width={120} height={120} />
-			</View>
+type Props = PressableProps & CardProps & {
+  isCurrentFocus?: boolean
+}
 
-			<TextBold style={st.tag}>
-				Especial
-			</TextBold>
+const ON_FOCUS_SCALE = 1
+const ON_BLUER_SCALE = 0.8
 
-			<View style={st.details}>
-				<Heading
-					size="md"
-					style={st.title}
-				>
-					Irlandês
-				</Heading>
+export function HighlightCard({ onPress, isCurrentFocus, category, description, price, title, icon: IconSvg, ...rest }: Props) {
+  const isOnFocus = useSharedValue(false);
 
-				<TextRegular
-					size="xs"
-					style={st.description}
-				>
-					Bebida a base de café, uísque irlandês, açúcar e chantilly
-				</TextRegular>
-			</View>
+  const animatedStyle = useAnimatedStyle(() => ({
+    marginHorizontal: isOnFocus.value ? 0 : -21,
+    transform: [{ scale: withTiming(isOnFocus.value ? ON_FOCUS_SCALE : ON_BLUER_SCALE) }]
+  }))
 
-			<View style={st.price}>
-				<TextRegular
-					size="sm"
-					style={st.priceText}
-				>
-					R$
-				</TextRegular>
-				<Heading
-					size="lg"
-					style={st.priceText}
-				>
-					9,90
-				</Heading>
-			</View>
-		</Pressable>
-	)
+  useEffect(() => {
+    isOnFocus.value = isCurrentFocus ?? false
+  }, [isCurrentFocus])
+
+  return (
+    <Pressable {...rest}>
+
+      <Animated.View style={[st.container, animatedStyle]}>
+
+        <View style={st.thumbnail}>
+          <IconSvg width={120} height={120} />
+        </View>
+
+        <TextBold style={st.tag}>
+          {category}
+        </TextBold>
+
+        <View style={st.details}>
+          <Heading
+            size="md"
+            style={st.title}
+          >
+            {title}
+          </Heading>
+
+          <TextRegular
+            size="xs"
+            style={st.description}
+          >
+            {description}
+          </TextRegular>
+        </View>
+
+        <View style={st.price}>
+          <TextRegular
+            size="sm"
+            style={st.priceText}
+          >
+            R$
+          </TextRegular>
+          <Heading
+            size="lg"
+            style={st.priceText}
+          >
+            {price}
+          </Heading>
+        </View>
+      </Animated.View>
+
+    </Pressable>
+  )
 }
