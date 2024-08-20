@@ -2,68 +2,48 @@ import { Colors } from "@styles/colors";
 import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
-	navbarContainer: {
-		flexDirection: 'row',
+  intro: {
+    backgroundColor: Colors.gray[100],
+    paddingBottom: 50,
+    paddingHorizontal: 32,
+    marginBottom: -70,
+  },
+  titleContainer: {
+    gap: 15,
+    zIndex: 10,
+    paddingTop: 58
+  },
+  title: {
+    color: Colors.white
+  },
+  coffeeBeans: {
+    alignSelf: "flex-end",
+    marginRight: -28
+  },
 
-		paddingVertical: 20,
+  // ==================== //
 
-		alignItems: "center",
-		justifyContent: "space-between"
-	},
-	location: {
-		flexDirection: "row",
-		gap: 4
-	},
-	locationTitle: {
-		color: Colors.gray[900]
-	},
+  sectionHeader: {
+    gap: 12,
+    paddingHorizontal: 32,
+    paddingVertical: 16,
+  },
+  sectionFilter: {
+    flexDirection: "row",
+    gap: 8,
+    marginBottom: 32
+  },
+  sectionTitle: {
+    color: Colors.gray[300]
+  },
 
-	// ==================== //
+  // ==================== //
 
-	intro: {
-		backgroundColor: Colors.gray[100],
-		gap: -55,
-		height: 342,
-		paddingHorizontal: 32,
-	},
-	titleContainer: {
-		gap: 15,
-		zIndex: 10
-	},
-	title: {
-		color: Colors.white
-	},
-	coffeeBeans: {
-		alignSelf: "flex-end",
-		marginRight: -28
-	},
-
-	// ==================== //
-
-	carrosel: {
-		marginTop: -84,
-		zIndex: 30
-	},
-	contentCarrosel: {
-		gap: 32,
-		paddingHorizontal: 32,
-		paddingTop: 28,
-		zIndex: 30,
-
-	},
-
-	// ==================== //
-
-	sectionHeader: {
-		gap: 12,
-		paddingHorizontal: 32,
-		paddingVertical: 16
-	},
-	sectionFilter: {
-		flexDirection: "row",
-		gap: 8
-	},
-	sectionTitle: {}
+  catalogContainer: {
+    paddingHorizontal: 32,
+    gap: 48,
+    paddingBottom: 50
+  }
 })
 
 export default styles

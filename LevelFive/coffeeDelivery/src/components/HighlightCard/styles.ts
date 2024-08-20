@@ -3,60 +3,63 @@ import { Colors } from "@styles/colors";
 import { Fonts } from "@styles/fonts";
 
 const styles = StyleSheet.create({
-	container: {
-		width: 208,
-		alignItems: "center",
+  container: {
+    width: 208,
 
-		gap: 14,
-		paddingVertical: 16,
-		paddingRight: 16,
-		paddingLeft: 8,
+    alignItems: "center",
 
-		backgroundColor: Colors.gray[800],
+    gap: 14,
+    paddingVertical: 16,
+    paddingRight: 16,
+    paddingLeft: 8,
 
-		borderRadius: 6,
-		borderColor: Colors.gray[700],
-		borderWidth: 1,
-		borderTopRightRadius: 36,
-		borderBottomLeftRadius: 36,
+    backgroundColor: Colors.gray[800],
 
-		elevation: 1
-	},
-	thumbnail: {
-		height: 120,
-		width: 120,
-		marginTop: -48,
-	},
-	details: {
-		gap: 4,
-		alignItems: "center"
-	},
-	price: {
-		flexDirection: 'row',
-		alignItems: "baseline",
-		gap: 4,
-		marginTop: 2
-	},
+    borderRadius: 6,
+    borderColor: Colors.gray[700],
+    borderWidth: 1,
+    borderTopRightRadius: 36,
+    borderBottomLeftRadius: 36,
 
-	tag: {
-		borderRadius: 100,
-		paddingHorizontal: 8,
-		paddingVertical: 4,
-		color: Colors.app.purpleDark,
-		backgroundColor: Colors.app.purpleLight,
-		textTransform: "uppercase",
-		fontSize: Fonts.TagFontStyle.fontSize
-	},
-	priceText: {
-		color: Colors.app.yellowDark
-	},
-	title: {
-		color: Colors.gray[200],
-	},
-	description: {
-		color: Colors.gray[400],
-		textAlign: "center"
-	}
+    elevation: 1
+  },
+  thumbnail: {
+    height: 120,
+    width: 120,
+    marginTop: -48,
+  },
+  details: {
+    gap: 4,
+    alignItems: "center"
+  },
+  price: {
+    flexDirection: 'row',
+    alignItems: "baseline",
+    gap: 4,
+    marginTop: 2
+  },
+
+  tag: {
+    borderRadius: 100,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    color: Colors.app.purpleDark,
+    backgroundColor: Colors.app.purpleLight,
+    textTransform: "uppercase",
+    fontSize: Fonts.TagFontStyle.fontSize
+  },
+  priceText: {
+    color: Colors.app.yellowDark
+  },
+  title: {
+    color: Colors.gray[200],
+    textAlign: "center",
+    lineHeight: 25
+  },
+  description: {
+    color: Colors.gray[400],
+    textAlign: "center"
+  }
 })
 
 export default styles

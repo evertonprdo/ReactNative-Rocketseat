@@ -3,10 +3,11 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Home } from "@screens/Home";
 import Cart from "@screens/Cart";
 import Product from "@screens/Product";
+import { Colors } from "@styles/colors";
 
 export type RootStackParamList = {
   home: undefined,
-  product: undefined,
+  product: { id: number },
   cart: undefined
 }
 
@@ -17,9 +18,10 @@ export function AppRoutes() {
     <Navigator
       screenOptions={{
         headerShown: false,
-        statusBarTranslucent:true,
+        statusBarTranslucent: true,
         statusBarStyle: "light",
-        statusBarColor: "transparent"
+        statusBarColor: "transparent",
+        contentStyle: { flex: 1, backgroundColor: Colors.gray[900] }
       }}
     >
       <Screen
@@ -30,13 +32,13 @@ export function AppRoutes() {
       <Screen
         name="product"
         component={Product}
-        options={{statusBarStyle: "light"}}
+        options={{ statusBarStyle: "light" }}
       />
 
       <Screen
         name="cart"
         component={Cart}
-        options={{statusBarStyle: "dark"}}
+        options={{ statusBarStyle: "dark" }}
       />
     </Navigator>
   )

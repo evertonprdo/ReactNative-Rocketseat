@@ -1,44 +1,47 @@
-import { Pressable, View } from "react-native";
+import { Pressable, PressableProps, View } from "react-native";
 
 import st from "./styles"
 import { Heading, TextRegular } from "@components/Text";
-import CooffeSvg from "@assets/coffees/Expresso.svg"
 
-export function CatalogCard() {
-	return (
-		<Pressable style={st.container}>
-			<View style={st.thumbnail}>
-				<CooffeSvg height={96} width={96} />
-			</View>
+import type { CardProps } from "@components/HighlightCard";
 
-			<View style={st.details}>
-				<Heading
-					style={st.title}
-					size="sm"
-				>
-					Expresso Tradicional
-				</Heading>
+type Props = Omit<CardProps, "category"> & PressableProps
 
-				<TextRegular style={st.description} size="xs">
-					O tradicional café feito com água quente e grãos moídos
-				</TextRegular>
+export function CatalogCard({ description, icon: Icon, price, title }: Props) {
+  return (
+    <Pressable style={st.container}>
+      <View style={st.thumbnail}>
+        <Icon height={96} width={96} />
+      </View>
 
-				<View style={st.price}>
-					<TextRegular
-						size="sm"
-						style={st.priceText}
-					>
-						R$
-					</TextRegular>
+      <View style={st.details}>
+        <Heading
+          style={st.title}
+          size="sm"
+        >
+          {title}
+        </Heading>
 
-					<Heading
-						size="md"
-						style={st.priceText}
-					>
-						9,90
-					</Heading>
-				</View>
-			</View>
-		</Pressable>
-	)
+        <TextRegular style={st.description} size="xs">
+          {description}
+        </TextRegular>
+
+        <View style={st.price}>
+          <TextRegular
+            size="sm"
+            style={st.priceText}
+          >
+            R$
+          </TextRegular>
+
+          <Heading
+            size="md"
+            style={st.priceText}
+          >
+            {price}
+          </Heading>
+        </View>
+      </View>
+    </Pressable>
+  )
 }

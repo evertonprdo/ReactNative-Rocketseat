@@ -19,6 +19,8 @@ const styles = StyleSheet.create({
 		borderWidth: 1,
 		borderTopRightRadius: 36,
 		borderBottomLeftRadius: 36,
+
+		elevation: 1
 	},
 	thumbnail: {
 		height: 96,

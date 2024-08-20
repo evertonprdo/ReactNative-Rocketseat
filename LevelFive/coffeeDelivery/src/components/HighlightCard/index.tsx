@@ -6,8 +6,6 @@ import { SvgProps } from "react-native-svg";
 import st from "./styles";
 import { Heading, TextRegular, TextBold } from "@components/Text";
 
-import CooffeeSvg from "@assets/coffees/Irlandes.svg"
-
 export type CardProps = {
   title: string,
   description: string
@@ -23,7 +21,7 @@ type Props = PressableProps & CardProps & {
 const ON_FOCUS_SCALE = 1
 const ON_BLUER_SCALE = 0.8
 
-export function HighlightCard({ onPress, isCurrentFocus, category, description, price, title, icon: IconSvg, ...rest }: Props) {
+export function HighlightCard({ isCurrentFocus, category, description, price, title, icon: IconSvg, ...rest }: Props) {
   const isOnFocus = useSharedValue(false);
 
   const animatedStyle = useAnimatedStyle(() => ({
