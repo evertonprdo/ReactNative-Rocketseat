@@ -1,4 +1,5 @@
 import { Colors } from "@styles/colors";
+import { Fonts } from "@styles/fonts";
 import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
@@ -11,6 +12,12 @@ const styles = StyleSheet.create({
 		borderRadius: 9999,
 		borderWidth: 1,
 		borderColor: Colors.app.purple
+	},
+
+	text: {
+		fontSize: Fonts.TagFontStyle.fontSize,
+		fontFamily: Fonts.Roboto.bold,
+		textTransform: "uppercase"
 	}
 })
 

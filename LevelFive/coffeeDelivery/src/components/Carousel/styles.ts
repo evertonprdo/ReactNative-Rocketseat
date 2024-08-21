@@ -4,8 +4,6 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
 
-    height: 300,
-
     gap: 32,
     paddingHorizontal: 32,
   },

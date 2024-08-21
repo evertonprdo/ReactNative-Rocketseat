@@ -1,30 +1,42 @@
+import { useEffect } from "react";
 import { Pressable, PressableProps } from "react-native";
+import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 
 import { Colors } from "@styles/colors";
-import { Fonts } from "@styles/fonts";
-
 import st from "./styles";
-import { TextBold } from "@components/Text";
 
 type Props = PressableProps & {
-	active?: boolean
-	children?: React.ReactNode 
+  active?: boolean
+  children?: React.ReactNode
 }
 export function Tag({ active, children, ...props }: Props) {
-	const backgroundColor = active ?  Colors.app.purpleDark : "transparent"
-	const color = active ? Colors.white : Colors.app.purpleDark
+  const isActive = useSharedValue(active);
 
-	return (
-		<Pressable
-			style={[
-				st.container,
-				{ backgroundColor }
-			]}
-			{...props}
-		>
-			<TextBold style={{ color, fontSize: Fonts.TagFontStyle.fontSize }}>
-				{children}
-			</TextBold>
-		</Pressable>
-	)
+  const animatedStyleContainer = useAnimatedStyle(() => ({
+    backgroundColor: isActive.value
+      ? withTiming(Colors.app.purpleDark)
+      : withTiming(Colors.gray[900])
+  }))
+
+  const animatedStyleText = useAnimatedStyle(() => ({
+    color: isActive.value
+      ? withTiming("white")
+      : withTiming(Colors.app.purpleDark)
+  }))
+
+  useEffect(() => {
+    isActive.value = active
+  }, [active])
+
+  return (
+    <Pressable
+      {...props}
+    >
+      <Animated.View style={[animatedStyleContainer, st.container]}>
+        <Animated.Text style={[st.text, animatedStyleText]}>
+          {children}
+        </Animated.Text>
+      </Animated.View>
+    </Pressable>
+  )
 }

@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 
@@ -49,7 +49,7 @@ export function Carousel({ coffeeArray, navigation }: Props) {
     transform: [{ translateX: offset.value }]
   }));
 
-  useMemo(() => {
+  useEffect(() => {
     const values: number[] = []
     coffeeArray.forEach((_, i) => {
       const lastIndex = coffeeArray.length - 1

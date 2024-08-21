@@ -4,9 +4,9 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Animated, { Easing, interpolate, interpolateColor, SharedValue, useAnimatedStyle, useSharedValue, withDelay, withTiming } from "react-native-reanimated";
 import { MapPin } from "phosphor-react-native";
 
+import { Colors } from "@styles/colors";
 import st from "./styles";
 import { CartIcon } from "@components/CartIcon";
-import { Colors } from "@styles/colors";
 
 type Props = {
   onCartPress: () => void
@@ -14,11 +14,11 @@ type Props = {
   anime?: boolean
 }
 
-const ScrollInputRange = [0, 300]
+const ScrollInputRange = [50, 300]
 const DELAY = 500
 const Duration = 1750
 
-export function TopBarHome({ onCartPress, interpolateValue, anime }: Props) {
+export function TopBarHome({ onCartPress, interpolateValue }: Props) {
   const Insets = useSafeAreaInsets();
   const top = useSharedValue(-73);
 
@@ -47,9 +47,8 @@ export function TopBarHome({ onCartPress, interpolateValue, anime }: Props) {
   }));
 
   useEffect(() => {
-    top.value = -73
     top.value = withDelay(DELAY, withTiming(0, { duration: Duration - DELAY, easing: Easing.sin }))
-  }, [anime]);
+  }, []);
 
   return (
     <Animated.View style={animatedContainerStyle}>
