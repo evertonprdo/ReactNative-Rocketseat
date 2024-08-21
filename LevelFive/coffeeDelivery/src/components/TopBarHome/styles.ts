@@ -3,13 +3,16 @@ import { Fonts } from "@styles/fonts";
 
 const styles = StyleSheet.create({
   navbarContainer: {
-    flex: 1,
+    width: "100%",
+    borderBottomWidth: 1,
+  },
+  innerNavbarContainer: {
+    width: "100%",
     flexDirection: 'row',
-
+    
     alignItems: "center",
     justifyContent: "space-between",
-
-    paddingBottom: 8,
+    
     paddingHorizontal: 32
   },
   location: {

@@ -1,23 +1,20 @@
 import { Colors } from "@styles/colors";
-import { StyleSheet } from "react-native";
+import { Dimensions, StyleSheet } from "react-native";
 
 export const BANNER_HEIGHT = 400
 export const CAROUSEL_HEIGHT = 300
-export const FILTER_HEIGHT = 100
 export const BANNER_MARGIN_BOTTOM = -70
 
 const styles = StyleSheet.create({
   banner: {
-    backgroundColor: Colors.gray[100],
     paddingBottom: 50,
     paddingHorizontal: 32,
     marginBottom: BANNER_MARGIN_BOTTOM,
-    height: BANNER_HEIGHT,
   },
   titleContainer: {
     gap: 15,
     zIndex: 10,
-    paddingTop: 58
+    paddingTop: 10
   },
   title: {
     color: Colors.white
@@ -32,33 +29,27 @@ const styles = StyleSheet.create({
   },
 
   filterContainer: {
-    height: FILTER_HEIGHT,
     width: "100%",
-    
-    position: "absolute",
+    justifyContent: "flex-end",
+
+    paddingHorizontal: 32,
+    paddingVertical: 16,
 
     backgroundColor: Colors.gray[900],
   },
-  innerFilterContainer: {
-    flex: 1,
-    gap: 12,
-    paddingHorizontal: 32,
-    paddingVertical: 16,
-    justifyContent: "flex-end",
-  },
-  sectionFilter: {
+  filterOptionsContainer: {
     flexDirection: "row",
     gap: 8,
   },
-  sectionTitle: {
-    color: Colors.gray[300]
+  filtersTitle: {
+    color: Colors.gray[300],
+    marginBottom: 12
   },
 
   catalogContainer: {
-    marginTop: FILTER_HEIGHT,
     paddingHorizontal: 32,
     gap: 48,
-    paddingBottom: 50
+    paddingBottom: 100,
   },
 
   tempButton: {

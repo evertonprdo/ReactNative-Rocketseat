@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
-import { Dimensions, Image, View, StatusBar } from "react-native";
+import { Dimensions, Image, View, StatusBar, ScrollView, NativeSyntheticEvent, NativeScrollEvent } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import Animated, { Extrapolation, interpolate, runOnJS, useAnimatedScrollHandler, useAnimatedStyle, useSharedValue, withDelay, withTiming } from "react-native-reanimated";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import Animated, { interpolateColor, useAnimatedStyle, useSharedValue, withDelay, withTiming } from "react-native-reanimated";
 
-import st, { BANNER_HEIGHT, CAROUSEL_HEIGHT, BANNER_MARGIN_BOTTOM } from "./styles";
+import st, { BANNER_HEIGHT } from "./styles";
 
 import { Input } from "@components/Input";
 import { Heading } from "@components/Text";
@@ -23,7 +22,6 @@ export type HomeScreenProps = NativeStackScreenProps<RootStackParamList, 'home'>
 
 const { width, height } = Dimensions.get("window")
 
-const MARGIN_TOP_FILTER = 32
 export const ANIMATION_CONFIG = {
   duration: 1750
 }
@@ -31,16 +29,12 @@ export const ANIMATION_CONFIG = {
 const initialArray = coffeeSearchArray.sort(() => 0.5 - Math.random()).slice(0, 5);
 
 export function Home({ navigation }: HomeScreenProps) {
-  const Insets = useSafeAreaInsets();
-
   const [filters, setFilters] = useState({
     "Tradicionais": true,
     "Doces": true,
     "Especiais": true,
   })
   const [statusBarStyle, setStatusBarStyle] = useState(false);
-
-  const initialFilterTop = BANNER_HEIGHT + CAROUSEL_HEIGHT + BANNER_MARGIN_BOTTOM - Insets.top - MARGIN_TOP_FILTER
 
   const marginTop = useSharedValue(-BANNER_HEIGHT);
   const marginLeft = useSharedValue(width);
@@ -49,6 +43,7 @@ export function Home({ navigation }: HomeScreenProps) {
   const scrollY = useSharedValue(0);
 
   const headerAnimatedStyle = useAnimatedStyle(() => ({
+    backgroundColor: interpolateColor(scrollY.value, [50, 300], [Colors.gray[100], Colors.gray[900]]),
     marginTop: marginTop.value
   }))
 
@@ -59,29 +54,6 @@ export function Home({ navigation }: HomeScreenProps) {
   const catalogAnimatedStyle = useAnimatedStyle(() => ({
     paddingTop: paddingTop.value,
   }))
-
-  const filterAnimatedStyle = useAnimatedStyle(() => ({
-    marginTop: paddingTop.value + Insets.top + MARGIN_TOP_FILTER,
-    top: interpolate(scrollY.value, [0, 350], [initialFilterTop, 0], Extrapolation.CLAMP),
-    zIndex: interpolate(scrollY.value, [0, 400], [0, 20], Extrapolation.CLAMP),
-    elevation: interpolate(scrollY.value, [100, 400], [0, 3], Extrapolation.CLAMP)
-  }))
-
-  const scrollHandler = useAnimatedScrollHandler({
-    onScroll: (event) => {
-      scrollY.value = event.contentOffset.y
-    },
-    onMomentumEnd: (event) => {
-      scrollY.value = event.contentOffset.y
-
-      'worklet'
-      if (event.contentOffset.y > 300) {
-        runOnJS(setStatusBarStyle)(true)
-      } else {
-        runOnJS(setStatusBarStyle)(false)
-      }
-    }
-  })
 
   function handleFilterPress(key: keyof typeof filters) {
     const newFiltersStatus = {
@@ -94,6 +66,13 @@ export function Home({ navigation }: HomeScreenProps) {
     setFilters(newFiltersStatus)
   }
 
+  function handleOnScrollEnd(event: NativeSyntheticEvent<NativeScrollEvent>) {
+    if (event.nativeEvent.contentOffset.y > 300) {
+      return setStatusBarStyle(true)
+    }
+    return setStatusBarStyle(false)
+  }
+
   useEffect(() => {
     marginTop.value = withTiming(0, ANIMATION_CONFIG)
     marginLeft.value = withDelay(200, withTiming(0, ANIMATION_CONFIG))
@@ -101,49 +80,25 @@ export function Home({ navigation }: HomeScreenProps) {
   }, [])
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: Colors.gray[100] }}>
+      <StatusBar
+        barStyle={statusBarStyle ? "dark-content" : "light-content"}
+        backgroundColor={"transparent"}
+        translucent
+      />
 
       <TopBarHome interpolateValue={scrollY} onCartPress={() => navigation.navigate("cart")} />
 
-      <Animated.View style={[st.filterContainer, filterAnimatedStyle]}>
-        <View style={st.innerFilterContainer}>
-          <Heading
-            size="sm"
-            style={st.sectionTitle}
-          >
-            Nossos cafés
-          </Heading>
-
-          <View style={st.sectionFilter}>
-            {(Object.keys(filters) as Array<keyof typeof filters>).map((title) => (
-              <Tag
-                key={title}
-                active={filters[title]}
-                onPress={() => handleFilterPress(title)}
-              >
-                {title}
-              </Tag>
-            ))}
-          </View>
-
-        </View>
-      </Animated.View>
-
-      <Animated.ScrollView
-        style={{ flex: 1, zIndex: 1 }}
-        contentContainerStyle={{ minHeight: height * 2 }}
-        onScroll={scrollHandler}
-        scrollEventThrottle={16}
+      <ScrollView
+        onScroll={(event) => scrollY.value = event.nativeEvent.contentOffset.y}
+        onMomentumScrollEnd={handleOnScrollEnd}
+        stickyHeaderIndices={[2]}
         showsVerticalScrollIndicator={false}
         decelerationRate={"fast"}
+        contentContainerStyle={{ backgroundColor: Colors.gray[900] }}
       >
-        <StatusBar
-          barStyle={statusBarStyle ? "dark-content" : "light-content"}
-          backgroundColor={"transparent"}
-          translucent
-        />
 
-        <Animated.View style={[st.banner, headerAnimatedStyle, { paddingTop: Insets.top + 50 }]}>
+        <Animated.View style={[st.banner, headerAnimatedStyle]}>
 
           <View style={st.titleContainer}>
             <Heading size="md" style={st.title}>
@@ -169,6 +124,30 @@ export function Home({ navigation }: HomeScreenProps) {
             coffeeArray={initialArray}
           />
         </Animated.View>
+
+
+        <View style={st.filterContainer}>
+
+          <Heading
+            size="sm"
+            style={st.filtersTitle}
+          >
+            Nossos cafés
+          </Heading>
+
+          <View style={st.filterOptionsContainer}>
+            {(Object.keys(filters) as Array<keyof typeof filters>).map((title) => (
+              <Tag
+                key={title}
+                active={filters[title]}
+                onPress={() => handleFilterPress(title)}
+              >
+                {title}
+              </Tag>
+            ))}
+          </View>
+
+        </View>
 
         <Animated.View style={[{ flex: 1 }, catalogAnimatedStyle]}>
           <View style={st.catalogContainer}>
@@ -197,7 +176,7 @@ export function Home({ navigation }: HomeScreenProps) {
             }
           </View>
         </Animated.View>
-      </Animated.ScrollView>
+      </ScrollView>
     </View>
   )
 }

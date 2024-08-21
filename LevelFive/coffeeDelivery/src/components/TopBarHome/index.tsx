@@ -20,26 +20,18 @@ const Duration = 1750
 
 export function TopBarHome({ onCartPress, interpolateValue }: Props) {
   const Insets = useSafeAreaInsets();
-  const top = useSharedValue(-73);
+  const innerHeight = useSharedValue(-(Insets.top + 150));
 
-  const animatedContainerStyle = useAnimatedStyle(() => {
-    return {
-      position: 'absolute',
-      zIndex: 50,
+  const animatedContainerStyle = useAnimatedStyle(() => ({
+    paddingTop: Insets.top,
+    marginTop: innerHeight.value,
 
-      width: "100%",
-      top: top.value,
-      paddingTop: Insets.top,
-
-      borderBottomWidth: 1,
-
-      borderBottomColor: interpolateColor(interpolateValue.value, ScrollInputRange, [Colors.gray[100], Colors.gray[900]]),
-      backgroundColor: interpolateColor(interpolateValue.value, ScrollInputRange, [Colors.gray[100], Colors.gray[900]]),
-    }
-  });
+    borderBottomColor: interpolateColor(interpolateValue.value, ScrollInputRange, [Colors.gray[100], Colors.gray[900]]),
+    backgroundColor: interpolateColor(interpolateValue.value, ScrollInputRange, [Colors.gray[100], Colors.gray[900]]),
+  }));
 
   const animatedInnerStyle = useAnimatedStyle(() => ({
-    paddingTop: interpolate(interpolateValue.value, ScrollInputRange, [20, 8]),
+    paddingVertical: interpolate(interpolateValue.value, ScrollInputRange, [20, 8]),
   }));
 
   const animatedTextStyle = useAnimatedStyle(() => ({
@@ -47,12 +39,12 @@ export function TopBarHome({ onCartPress, interpolateValue }: Props) {
   }));
 
   useEffect(() => {
-    top.value = withDelay(DELAY, withTiming(0, { duration: Duration - DELAY, easing: Easing.sin }))
+    innerHeight.value = withDelay(DELAY, withTiming(0, { duration: Duration, easing: Easing.sin }))
   }, []);
 
   return (
     <Animated.View style={animatedContainerStyle}>
-      <Animated.View style={[animatedInnerStyle, st.navbarContainer]}>
+      <Animated.View style={[animatedInnerStyle, st.innerNavbarContainer]}>
 
         <View style={st.location}>
           <MapPin
