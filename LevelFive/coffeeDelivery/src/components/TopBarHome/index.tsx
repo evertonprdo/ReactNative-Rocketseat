@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import Animated, { Easing, interpolate, interpolateColor, SharedValue, useAnimatedStyle, useSharedValue, withDelay, withTiming } from "react-native-reanimated";
+import Animated, { Extrapolation, interpolate, interpolateColor, SharedValue, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import { MapPin } from "phosphor-react-native";
 
 import { Colors } from "@styles/colors";
@@ -15,23 +15,35 @@ type Props = {
 }
 
 const ScrollInputRange = [50, 300]
-const DELAY = 500
-const Duration = 1750
+export const DURATION = 500
 
-export function TopBarHome({ onCartPress, interpolateValue }: Props) {
+export function TopBarHome({ onCartPress, interpolateValue, anime }: Props) {
   const Insets = useSafeAreaInsets();
-  const innerHeight = useSharedValue(-(Insets.top + 150));
 
-  const animatedContainerStyle = useAnimatedStyle(() => ({
-    paddingTop: Insets.top,
-    marginTop: innerHeight.value,
+  const innerHeight = useSharedValue(0);
 
-    borderBottomColor: interpolateColor(interpolateValue.value, ScrollInputRange, [Colors.gray[100], Colors.gray[900]]),
-    backgroundColor: interpolateColor(interpolateValue.value, ScrollInputRange, [Colors.gray[100], Colors.gray[900]]),
-  }));
+  const containerAnimatedStyle = useAnimatedStyle(() => ({
+    transform: [{ translateY: -innerHeight.value }],
+
+    borderBottomColor: interpolateColor(
+      interpolateValue.value,
+      ScrollInputRange,
+      [Colors.gray[100], Colors.gray[800]]
+    ),
+
+    backgroundColor: interpolateColor(
+      interpolateValue.value,
+      ScrollInputRange,
+      [Colors.gray[100], Colors.gray[900]]
+    ),
+  }))
 
   const animatedInnerStyle = useAnimatedStyle(() => ({
-    paddingVertical: interpolate(interpolateValue.value, ScrollInputRange, [20, 8]),
+    paddingVertical: interpolate(
+      interpolateValue.value,
+      ScrollInputRange, [20, 8],
+      Extrapolation.CLAMP
+    ),
   }));
 
   const animatedTextStyle = useAnimatedStyle(() => ({
@@ -39,12 +51,19 @@ export function TopBarHome({ onCartPress, interpolateValue }: Props) {
   }));
 
   useEffect(() => {
-    innerHeight.value = withDelay(DELAY, withTiming(0, { duration: Duration, easing: Easing.sin }))
-  }, []);
+    innerHeight.value = 100
+    innerHeight.value = withTiming(0, { duration: DURATION })
+  }, [anime]);
 
   return (
-    <Animated.View style={animatedContainerStyle}>
-      <Animated.View style={[animatedInnerStyle, st.innerNavbarContainer]}>
+    <Animated.View
+      style={[
+        st.navbarContainer,
+        containerAnimatedStyle,
+        { paddingTop: Insets.top }
+      ]}
+    >
+      <Animated.View style={[st.innerNavbarContainer, animatedInnerStyle]}>
 
         <View style={st.location}>
           <MapPin

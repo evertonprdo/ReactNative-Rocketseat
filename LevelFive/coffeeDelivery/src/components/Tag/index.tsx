@@ -1,17 +1,14 @@
-import { useEffect } from "react";
 import { Pressable, PressableProps } from "react-native";
-import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
+import Animated, { SharedValue, useAnimatedStyle, withTiming } from "react-native-reanimated";
 
 import { Colors } from "@styles/colors";
 import st from "./styles";
 
 type Props = PressableProps & {
-  active?: boolean
+  isActive: SharedValue<boolean>
   children?: React.ReactNode
 }
-export function Tag({ active, children, ...props }: Props) {
-  const isActive = useSharedValue(active);
-
+export function Tag({ isActive: isActive, children, ...props }: Props) {
   const animatedStyleContainer = useAnimatedStyle(() => ({
     backgroundColor: isActive.value
       ? withTiming(Colors.app.purpleDark)
@@ -23,10 +20,6 @@ export function Tag({ active, children, ...props }: Props) {
       ? withTiming("white")
       : withTiming(Colors.app.purpleDark)
   }))
-
-  useEffect(() => {
-    isActive.value = active
-  }, [active])
 
   return (
     <Pressable

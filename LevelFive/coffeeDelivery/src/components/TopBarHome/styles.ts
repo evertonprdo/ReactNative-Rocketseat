@@ -7,13 +7,12 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
   },
   innerNavbarContainer: {
-    width: "100%",
     flexDirection: 'row',
-    
     alignItems: "center",
     justifyContent: "space-between",
+
+    paddingHorizontal: 32,
     
-    paddingHorizontal: 32
   },
   location: {
     flexDirection: "row",

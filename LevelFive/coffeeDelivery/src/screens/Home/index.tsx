@@ -1,69 +1,83 @@
 import { useEffect, useState } from "react";
-import { Dimensions, Image, View, StatusBar, ScrollView, NativeSyntheticEvent, NativeScrollEvent } from "react-native";
+import { Dimensions, Image, View, StatusBar, ScrollView, NativeSyntheticEvent, NativeScrollEvent, Pressable } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import Animated, { interpolateColor, useAnimatedStyle, useSharedValue, withDelay, withTiming } from "react-native-reanimated";
+import Animated, { interpolateColor, runOnJS, useAnimatedStyle, useSharedValue, withDelay, withTiming } from "react-native-reanimated";
+import { ArrowClockwise } from "phosphor-react-native";
 
-import st, { BANNER_HEIGHT } from "./styles";
+import { Colors } from "@styles/colors";
+import st from "./styles";
 
 import { Input } from "@components/Input";
 import { Heading } from "@components/Text";
 import { Tag } from "@components/Tag";
 import { Carousel } from "@components/Carousel";
+import { CatalogCard } from "@components/CatalogCard";
+import { TopBarHome, DURATION } from "@components/TopBarHome";
 
 import { RootStackParamList } from "@routes/app.routes";
 
 import CoffeeBeans from "@assets/coffeeBeans.png"
 import DATA, { coffeeSearchArray } from "@data/coffee";
-import { CatalogCard } from "@components/CatalogCard";
-import { TopBarHome } from "@components/TopBarHome";
-import { Colors } from "@styles/colors";
 
 export type HomeScreenProps = NativeStackScreenProps<RootStackParamList, 'home'>;
 
-const { width, height } = Dimensions.get("window")
-
-export const ANIMATION_CONFIG = {
-  duration: 1750
-}
-
+const ScreenDimensions = Dimensions.get("screen")
 const initialArray = coffeeSearchArray.sort(() => 0.5 - Math.random()).slice(0, 5);
 
 export function Home({ navigation }: HomeScreenProps) {
-  const [filters, setFilters] = useState({
-    "Tradicionais": true,
-    "Doces": true,
-    "Especiais": true,
-  })
-  const [statusBarStyle, setStatusBarStyle] = useState(false);
+  const [anime, setAnime] = useState(false)
 
-  const marginTop = useSharedValue(-BANNER_HEIGHT);
-  const marginLeft = useSharedValue(width);
-  const paddingTop = useSharedValue(height);
+  const [statusBarStyle, setStatusBarStyle] = useState(false);
+  const [isIntroFinished, setIsIntroFinished] = useState(false)
 
   const scrollY = useSharedValue(0);
 
-  const headerAnimatedStyle = useAnimatedStyle(() => ({
-    backgroundColor: interpolateColor(scrollY.value, [50, 300], [Colors.gray[100], Colors.gray[900]]),
-    marginTop: marginTop.value
+  const traditionalSV = useSharedValue(true);
+  const sweetSV = useSharedValue(false);
+  const specialSV = useSharedValue(false);
+
+  const bannerHeight = useSharedValue(0);
+  const carouselMargin = useSharedValue(ScreenDimensions.width);
+
+  const bannerAnimationStyles = useAnimatedStyle(() => ({
+    height: `${bannerHeight.value}%`,
+
+    backgroundColor: interpolateColor(
+      scrollY.value,
+      [50, 300],
+      [Colors.gray[100], Colors.gray[900]]
+    )
   }))
 
-  const carouselAnimatedStyle = useAnimatedStyle(() => ({
-    marginLeft: marginLeft.value
-  }))
+  function handleOnScroll(event: NativeSyntheticEvent<NativeScrollEvent>) {
+    scrollY.value = event.nativeEvent.contentOffset.y
 
-  const catalogAnimatedStyle = useAnimatedStyle(() => ({
-    paddingTop: paddingTop.value,
-  }))
+    if (scrollY.value < 1200) {
+      if (traditionalSV.value) return
 
-  function handleFilterPress(key: keyof typeof filters) {
-    const newFiltersStatus = {
-      ...filters,
-      [key]: !filters[key]
+      specialSV.value = false
+      sweetSV.value = false
+
+      traditionalSV.value = true
+      return
     }
+    
+    if (scrollY.value < 1750) {
+      if (sweetSV.value) return
 
-    if (!Object.values(newFiltersStatus).includes(true)) return
+      traditionalSV.value = false
+      specialSV.value = false
 
-    setFilters(newFiltersStatus)
+      sweetSV.value = true
+      return
+    }
+    
+    if (specialSV.value) return
+
+    traditionalSV.value = false
+    sweetSV.value = false
+
+    specialSV.value = true
   }
 
   function handleOnScrollEnd(event: NativeSyntheticEvent<NativeScrollEvent>) {
@@ -74,108 +88,123 @@ export function Home({ navigation }: HomeScreenProps) {
   }
 
   useEffect(() => {
-    marginTop.value = withTiming(0, ANIMATION_CONFIG)
-    marginLeft.value = withDelay(200, withTiming(0, ANIMATION_CONFIG))
-    paddingTop.value = withDelay(400, withTiming(0, ANIMATION_CONFIG))
-  }, [])
+    bannerHeight.value = 0
+    carouselMargin.value = ScreenDimensions.width
+    setIsIntroFinished(false)
+
+    const localDuration = DURATION * 2
+    bannerHeight.value = withDelay(DURATION, withTiming(100, { duration: localDuration }))
+    carouselMargin.value = withDelay(DURATION * 1.2, withTiming(0, { duration: localDuration },
+      () => runOnJS(setIsIntroFinished)(true)
+    ))
+  }, [anime])
 
   return (
-    <View style={{ flex: 1, backgroundColor: Colors.gray[100] }}>
+    <View style={{ flex: 1 }}>
       <StatusBar
         barStyle={statusBarStyle ? "dark-content" : "light-content"}
         backgroundColor={"transparent"}
         translucent
       />
 
-      <TopBarHome interpolateValue={scrollY} onCartPress={() => navigation.navigate("cart")} />
+      <Pressable
+        onPress={() => setAnime(!anime)}
+        style={{ position: "absolute", height: 50, width: 50, right: 15, bottom: 15, borderRadius: 100, backgroundColor: "green", justifyContent: "center", alignItems: 'center', zIndex: 30 }}
+      >
+        <ArrowClockwise color="white" />
+      </Pressable>
+
+      <TopBarHome
+        interpolateValue={scrollY}
+        onCartPress={() => navigation.navigate("cart")}
+        anime={anime}
+      />
 
       <ScrollView
-        onScroll={(event) => scrollY.value = event.nativeEvent.contentOffset.y}
+        onScroll={handleOnScroll}
         onMomentumScrollEnd={handleOnScrollEnd}
+        scrollEnabled={isIntroFinished}
         stickyHeaderIndices={[2]}
-        showsVerticalScrollIndicator={false}
+        overScrollMode="never"
         decelerationRate={"fast"}
-        contentContainerStyle={{ backgroundColor: Colors.gray[900] }}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={st.contentScrollView}
       >
+        <View style={st.topContainer}>
+          <Animated.View style={[st.banner, bannerAnimationStyles]}>
 
-        <Animated.View style={[st.banner, headerAnimatedStyle]}>
+            <View style={st.titleContainer}>
+              <Heading size="md" style={st.title}>
+                Encontre o café perfeito para{"\n"}qualquer hora do dia
+              </Heading>
 
-          <View style={st.titleContainer}>
-            <Heading size="md" style={st.title}>
-              Encontre o café perfeito para{"\n"}qualquer hora do dia
-            </Heading>
-            <Input
-              placeholder="Pesquisar"
+              <Input
+                placeholder="Pesquisar"
+              />
+            </View>
+
+            <Image
+              source={CoffeeBeans}
+              width={83}
+              height={83}
+              style={st.coffeeBeans}
             />
-          </View>
 
-          <Image
-            source={CoffeeBeans}
-            width={83}
-            height={83}
-            style={st.coffeeBeans}
-          />
+          </Animated.View>
+        </View>
 
-        </Animated.View>
-
-        <Animated.View style={[carouselAnimatedStyle, st.carouselContainer]}>
+        <Animated.View
+          style={[st.carouselContainer, {
+            marginLeft: carouselMargin,
+            marginBottom: carouselMargin
+          }]}
+        >
           <Carousel
             navigation={navigation}
-            coffeeArray={initialArray}
+            coffeeArray={coffeeSearchArray}
           />
         </Animated.View>
 
-
         <View style={st.filterContainer}>
-
-          <Heading
-            size="sm"
-            style={st.filtersTitle}
-          >
+          <Heading size="sm" style={st.filtersTitle}>
             Nossos cafés
           </Heading>
 
           <View style={st.filterOptionsContainer}>
-            {(Object.keys(filters) as Array<keyof typeof filters>).map((title) => (
-              <Tag
-                key={title}
-                active={filters[title]}
-                onPress={() => handleFilterPress(title)}
-              >
-                {title}
-              </Tag>
-            ))}
-          </View>
 
+            <Tag isActive={traditionalSV}>Tradicionais</Tag>
+            <Tag isActive={sweetSV}>Doces</Tag>
+            <Tag isActive={specialSV}>Especiais</Tag>
+
+          </View>
         </View>
 
-        <Animated.View style={[{ flex: 1 }, catalogAnimatedStyle]}>
-          <View style={st.catalogContainer}>
-            {
-              DATA.map((section) => (
-                <View
-                  key={section.title}
-                  style={{ gap: 32, display: filters[section.title as keyof typeof filters] ? "flex" : "none" }}
-                >
-                  <Heading size="sm" style={{ color: Colors.gray[400] }}>
-                    {section.title}
-                  </Heading>
+        <View style={st.catalogContainer}>
+          {
+            DATA.map((section) => (
+              <View
+                key={section.title}
+                style={{ gap: 32 }}
+              >
+                <Heading size="sm" style={{ color: Colors.gray[400] }}>
+                  {section.title}
+                </Heading>
 
-                  {section.data.map((item) => (
-                    <CatalogCard
-                      key={item.id}
-                      title={item.title}
-                      price={(item.price / 100).toFixed(2).replace('.', ',')}
-                      icon={item.icon}
-                      description={item.description}
-                      onPress={() => navigation.navigate("product", { id: item.id })}
-                    />
-                  ))}
-                </View>
-              ))
-            }
-          </View>
-        </Animated.View>
+                {section.data.map((item) => (
+                  <CatalogCard
+                    key={item.id}
+                    title={item.title}
+                    price={(item.price / 100).toFixed(2).replace('.', ',')}
+                    icon={item.icon}
+                    description={item.description}
+                    onPress={() => navigation.navigate("product", { id: item.id })}
+                  />
+                ))}
+              </View>
+            ))
+          }
+        </View>
+
       </ScrollView>
     </View>
   )

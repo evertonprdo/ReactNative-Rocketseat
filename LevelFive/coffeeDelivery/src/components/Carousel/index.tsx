@@ -3,14 +3,16 @@ import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withTiming } from 
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 
 import st from "./styles";
-import { HighlightCard } from "@components/HighlightCard";
+import { DURATION, HighlightCard } from "@components/HighlightCard";
 
 import type { CoffeeProps } from "@data/coffee";
 import type { HomeScreenProps } from "@screens/Home";
+import { Dimensions } from "react-native";
 
-const CARD_WIDTH = 166.4
 const FOCUS_CARD_WIDTH = 208
+const CARD_WIDTH = Math.round(FOCUS_CARD_WIDTH * 0.8)
 const PADDING = 32
+const ScreeWidth = Dimensions.get("screen").width
 
 type Props = {
   coffeeArray: CoffeeProps
@@ -21,7 +23,7 @@ export function Carousel({ coffeeArray, navigation }: Props) {
 
   const [snapPoints, setSnapPoints] = useState<number[]>([]);
 
-  const offset = useSharedValue(0);
+  const offset = useSharedValue(PADDING);
   const [currentFocus, setCurrentFocus] = useState(0);
 
   const pan = Gesture.Pan()
@@ -40,8 +42,7 @@ export function Carousel({ coffeeArray, navigation }: Props) {
         return isCloserThanPrev ? curr : prev;
       })
 
-      offset.value = withTiming(closestPoint, { duration: 300 });
-
+      offset.value = withTiming(closestPoint, {duration: DURATION});
       runOnJS(setCurrentFocus)(pointIndex)
     })
 
@@ -51,26 +52,32 @@ export function Carousel({ coffeeArray, navigation }: Props) {
 
   useEffect(() => {
     const values: number[] = []
+    const lastIndex = coffeeArray.length - 1
+
     coffeeArray.forEach((_, i) => {
-      const lastIndex = coffeeArray.length - 1
-
       if (i === 0) {
-        return values.push(0)
+        return values.push(PADDING)
       }
+      const magicNumber = 3 // This magic number allows the card to be centered
+
+      const screenXCenter = ScreeWidth / 2
       const focusCardXCenter = (FOCUS_CARD_WIDTH / 2)
-      const offsetXUntilCurrentFocus = (CARD_WIDTH + PADDING) * (i - 1) + PADDING
-
-      const value = focusCardXCenter + offsetXUntilCurrentFocus
-
+      const targetPosition = focusCardXCenter + ((CARD_WIDTH + PADDING) * i)
+      
+      const offsetXUntilCurrentFocus = targetPosition - screenXCenter -magicNumber
+      
       if (i === lastIndex) {
-        const offsetXWhenIsLastIndex = value - (FOCUS_CARD_WIDTH / 2) + 32
-        return values.push(-offsetXWhenIsLastIndex)
-      }
+        const valueToRollBack = screenXCenter - focusCardXCenter
+        const lastPosition = offsetXUntilCurrentFocus - valueToRollBack + PADDING + magicNumber
 
-      values.push(-value);
+        return values.push(-lastPosition)
+      }
+      values.push(-offsetXUntilCurrentFocus);
     })
 
     setSnapPoints(values)
+    setCurrentFocus(0);
+    offset.value = PADDING;
   }, [coffeeArray])
 
   return (
@@ -87,7 +94,6 @@ export function Carousel({ coffeeArray, navigation }: Props) {
             price={(item.price / 100).toFixed(2).replace('.', ',')}
             onPress={() => { navigation.navigate("product", { id: item.id }) }}
             isCurrentFocus={i === currentFocus}
-            style={{ display: currentFocus + 2 >= i ? "flex" : "none" }}
           />
         ))}
 

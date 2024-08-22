@@ -1,15 +1,26 @@
 import { Colors } from "@styles/colors";
-import { Dimensions, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 
-export const BANNER_HEIGHT = 400
+export const BANNER_HEIGHT = 275
 export const CAROUSEL_HEIGHT = 300
 export const BANNER_MARGIN_BOTTOM = -70
 
 const styles = StyleSheet.create({
-  banner: {
-    paddingBottom: 50,
-    paddingHorizontal: 32,
+  contentScrollView: {
+    backgroundColor: Colors.gray[900],
+    paddingBottom: 150
+  },
+
+  topContainer: {
+    height: BANNER_HEIGHT,
     marginBottom: BANNER_MARGIN_BOTTOM,
+  },
+
+  banner: {
+    width: "100%",
+    overflow: "hidden",
+    paddingHorizontal: 32,
+    backgroundColor: Colors.gray[100],
   },
   titleContainer: {
     gap: 15,
@@ -62,7 +73,7 @@ const styles = StyleSheet.create({
     backgroundColor: "green",
     justifyContent: "center",
     alignItems: 'center',
-    zIndex: 30 
+    zIndex: 30
   }
 })
 

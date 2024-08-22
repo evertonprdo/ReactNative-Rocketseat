@@ -20,13 +20,18 @@ type Props = PressableProps & CardProps & {
 
 const ON_FOCUS_SCALE = 1
 const ON_BLUER_SCALE = 0.8
+export const DURATION = 500
 
 export function HighlightCard({ isCurrentFocus, category, description, price, title, icon: IconSvg, ...rest }: Props) {
   const isOnFocus = useSharedValue(false);
 
   const animatedStyle = useAnimatedStyle(() => ({
     marginHorizontal: isOnFocus.value ? 0 : -21,
-    transform: [{ scale: withTiming(isOnFocus.value ? ON_FOCUS_SCALE : ON_BLUER_SCALE) }]
+    transform: [{
+      scale: withTiming(
+        isOnFocus.value ? ON_FOCUS_SCALE : ON_BLUER_SCALE,
+        { duration: DURATION })
+    }]
   }))
 
   useEffect(() => {
@@ -45,6 +50,10 @@ export function HighlightCard({ isCurrentFocus, category, description, price, ti
         <TextBold style={st.tag}>
           {category}
         </TextBold>
+
+        <View style={{ flexDirection: "row", justifyContent: "space-between", width: "100%" }}>
+          {Array.from({ length: 17 }, (_, i) => <View key={i} style={{ height: 10, width: 2, backgroundColor: "red" }} />)}
+        </View>
 
         <View style={st.details}>
           <Heading

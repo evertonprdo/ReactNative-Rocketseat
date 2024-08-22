@@ -5,7 +5,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
 
     gap: 32,
-    paddingHorizontal: 32,
   },
 })
 
