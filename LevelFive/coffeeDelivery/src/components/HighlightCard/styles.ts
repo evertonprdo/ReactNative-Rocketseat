@@ -2,9 +2,11 @@ import { StyleSheet } from "react-native";
 import { Colors } from "@styles/colors";
 import { Fonts } from "@styles/fonts";
 
+export const CARD_WIDTH = 208
+
 const styles = StyleSheet.create({
   container: {
-    width: 208,
+    width: CARD_WIDTH,
 
     alignItems: "center",
 

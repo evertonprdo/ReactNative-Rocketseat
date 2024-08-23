@@ -1,17 +1,17 @@
-import { useEffect, useState } from "react";
-import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
+import { useMemo, useState } from "react";
+import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 
-import st from "./styles";
-import { DURATION, HighlightCard } from "@components/HighlightCard";
+import st, { CARDS_GAP } from "./styles";
+import { HighlightCard, CARD_WIDTH_ON_BLUER } from "@components/HighlightCard";
+import { CARD_WIDTH } from "@components/HighlightCard/styles"
 
 import type { CoffeeProps } from "@data/coffee";
 import type { HomeScreenProps } from "@screens/Home";
 import { Dimensions } from "react-native";
 
-const FOCUS_CARD_WIDTH = 208
-const CARD_WIDTH = Math.round(FOCUS_CARD_WIDTH * 0.8)
-const PADDING = 32
+const DURATION = 333
+
 const ScreeWidth = Dimensions.get("screen").width
 
 type Props = {
@@ -23,15 +23,14 @@ export function Carousel({ coffeeArray, navigation }: Props) {
 
   const [snapPoints, setSnapPoints] = useState<number[]>([]);
 
-  const offset = useSharedValue(PADDING);
-  const [currentFocus, setCurrentFocus] = useState(0);
+  const offsetX = useSharedValue(CARDS_GAP);
 
   const pan = Gesture.Pan()
     .onChange((event) => {
-      offset.value += event.changeX
+      offsetX.value += event.changeX
     })
-    .onFinalize((event) => {
-      const translationX = offset.value + event.translationX;
+    .onEnd((event) => {
+      const translationX = offsetX.value + event.translationX;
 
       let pointIndex = 0
 
@@ -42,42 +41,41 @@ export function Carousel({ coffeeArray, navigation }: Props) {
         return isCloserThanPrev ? curr : prev;
       })
 
-      offset.value = withTiming(closestPoint, {duration: DURATION});
-      runOnJS(setCurrentFocus)(pointIndex)
+      offsetX.value = withTiming(closestPoint, { duration: DURATION });
     })
 
   const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ translateX: offset.value }]
+    transform: [{ translateX: offsetX.value }]
   }));
 
-  useEffect(() => {
+  useMemo(() => {
     const values: number[] = []
     const lastIndex = coffeeArray.length - 1
 
+    const magicNumber = 3 // This magic number allows the card to be centered
+
+    const screenXCenter = ScreeWidth / 2
+    const focusCardXCenter = (CARD_WIDTH / 2)
+
     coffeeArray.forEach((_, i) => {
       if (i === 0) {
-        return values.push(PADDING)
+        return values.push(CARDS_GAP)
       }
-      const magicNumber = 3 // This magic number allows the card to be centered
+      const targetPosition = focusCardXCenter + ((CARD_WIDTH_ON_BLUER + CARDS_GAP) * i)
 
-      const screenXCenter = ScreeWidth / 2
-      const focusCardXCenter = (FOCUS_CARD_WIDTH / 2)
-      const targetPosition = focusCardXCenter + ((CARD_WIDTH + PADDING) * i)
-      
-      const offsetXUntilCurrentFocus = targetPosition - screenXCenter -magicNumber
-      
+      const offsetXUntilCurrentFocus = targetPosition - screenXCenter - magicNumber
+
       if (i === lastIndex) {
         const valueToRollBack = screenXCenter - focusCardXCenter
-        const lastPosition = offsetXUntilCurrentFocus - valueToRollBack + PADDING + magicNumber
+        const lastPosition = offsetXUntilCurrentFocus - valueToRollBack + CARDS_GAP + magicNumber
 
         return values.push(-lastPosition)
       }
       values.push(-offsetXUntilCurrentFocus);
     })
 
-    setSnapPoints(values)
-    setCurrentFocus(0);
-    offset.value = PADDING;
+    setSnapPoints(values);
+    offsetX.value = CARDS_GAP;
   }, [coffeeArray])
 
   return (
@@ -93,7 +91,8 @@ export function Carousel({ coffeeArray, navigation }: Props) {
             category={item.category}
             price={(item.price / 100).toFixed(2).replace('.', ',')}
             onPress={() => { navigation.navigate("product", { id: item.id }) }}
-            isCurrentFocus={i === currentFocus}
+            offsetX={offsetX}
+            ownPosition={snapPoints[i] ?? 0}
           />
         ))}
 

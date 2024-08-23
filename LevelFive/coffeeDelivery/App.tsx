@@ -8,17 +8,21 @@ import { Roboto_700Bold, Roboto_400Regular } from '@expo-google-fonts/roboto'
 import { useFonts } from "expo-font";
 
 import { Routes } from "@routes/index";
+import SplashScreenView from "@components/SplashScreen";
+import { useState } from "react";
 
 export default function App() {
+  const [isAllReady, setIsAllReady] = useState(false);
   const [isFontsLoaded] = useFonts({ Roboto_700Bold, Roboto_400Regular, Baloo2_700Bold })
-
-  if (!isFontsLoaded) return null
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
 
-        <Routes />
+        {isAllReady
+          ? <Routes />
+          : <SplashScreenView isAnimationAllowedToEnd={isFontsLoaded} setIsAllReady={setIsAllReady} />
+        }
 
       </SafeAreaProvider>
     </GestureHandlerRootView>

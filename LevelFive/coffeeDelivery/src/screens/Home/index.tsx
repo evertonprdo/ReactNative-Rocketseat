@@ -161,7 +161,7 @@ export function Home({ navigation }: HomeScreenProps) {
         >
           <Carousel
             navigation={navigation}
-            coffeeArray={coffeeSearchArray}
+            coffeeArray={initialArray}
           />
         </Animated.View>
 

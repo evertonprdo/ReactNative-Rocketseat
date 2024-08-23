@@ -1,9 +1,8 @@
-import { useEffect } from "react";
 import { Pressable, PressableProps, View } from "react-native";
-import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
+import Animated, { Extrapolation, interpolate, SharedValue, useAnimatedStyle } from "react-native-reanimated";
 import { SvgProps } from "react-native-svg";
 
-import st from "./styles";
+import st, { CARD_WIDTH } from "./styles";
 import { Heading, TextRegular, TextBold } from "@components/Text";
 
 export type CardProps = {
@@ -11,32 +10,42 @@ export type CardProps = {
   description: string
   price: string
   category: string
-  icon: React.FC<SvgProps>
+  icon: React.FC<SvgProps>,
 }
 
 type Props = PressableProps & CardProps & {
-  isCurrentFocus?: boolean
+  ownPosition: number,
+  offsetX: SharedValue<number>
 }
 
-const ON_FOCUS_SCALE = 1
-const ON_BLUER_SCALE = 0.8
-export const DURATION = 500
+const CARD_SCALE_ON_FOCUS = 1
+export const CARD_SCALE_ON_BLUER = 0.8
 
-export function HighlightCard({ isCurrentFocus, category, description, price, title, icon: IconSvg, ...rest }: Props) {
-  const isOnFocus = useSharedValue(false);
+export const CARD_WIDTH_ON_BLUER = CARD_WIDTH * CARD_SCALE_ON_BLUER
+
+const MARGIN_FIX_ON_BLUER = (CARD_WIDTH_ON_BLUER - CARD_WIDTH ) / 2
+const DESVIATION = Math.round(CARD_WIDTH_ON_BLUER / 2 - MARGIN_FIX_ON_BLUER)
+
+export function HighlightCard({ category, description, price, ownPosition, title, offsetX, icon: IconSvg, ...rest }: Props) {
+  const inputRange = [ownPosition - DESVIATION, ownPosition, ownPosition + DESVIATION]
 
   const animatedStyle = useAnimatedStyle(() => ({
-    marginHorizontal: isOnFocus.value ? 0 : -21,
+    marginHorizontal: interpolate(
+      offsetX.value,
+      inputRange,
+      [MARGIN_FIX_ON_BLUER, 0, MARGIN_FIX_ON_BLUER],
+      Extrapolation.CLAMP
+    ),
+
     transform: [{
-      scale: withTiming(
-        isOnFocus.value ? ON_FOCUS_SCALE : ON_BLUER_SCALE,
-        { duration: DURATION })
+      scale: interpolate(
+        offsetX.value,
+        inputRange,
+        [CARD_SCALE_ON_BLUER, CARD_SCALE_ON_FOCUS, CARD_SCALE_ON_BLUER],
+        Extrapolation.CLAMP
+      )
     }]
   }))
-
-  useEffect(() => {
-    isOnFocus.value = isCurrentFocus ?? false
-  }, [isCurrentFocus])
 
   return (
     <Pressable {...rest}>
@@ -50,10 +59,6 @@ export function HighlightCard({ isCurrentFocus, category, description, price, ti
         <TextBold style={st.tag}>
           {category}
         </TextBold>
-
-        <View style={{ flexDirection: "row", justifyContent: "space-between", width: "100%" }}>
-          {Array.from({ length: 17 }, (_, i) => <View key={i} style={{ height: 10, width: 2, backgroundColor: "red" }} />)}
-        </View>
 
         <View style={st.details}>
           <Heading
