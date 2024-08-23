@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
-import { Dimensions, Image, View, StatusBar, ScrollView, NativeSyntheticEvent, NativeScrollEvent, Pressable } from "react-native";
+import { Dimensions, Image, View, StatusBar, ScrollView, NativeSyntheticEvent, NativeScrollEvent } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import Animated, { interpolateColor, runOnJS, useAnimatedStyle, useSharedValue, withDelay, withTiming } from "react-native-reanimated";
-import { ArrowClockwise } from "phosphor-react-native";
 
 import { Colors } from "@styles/colors";
 import st from "./styles";
@@ -21,20 +20,18 @@ import DATA, { coffeeSearchArray } from "@data/coffee";
 
 export type HomeScreenProps = NativeStackScreenProps<RootStackParamList, 'home'>;
 
+const EnteringDuration = DURATION * 2
+const BottomEnteringDelay = DURATION * 1.4
+
 const ScreenDimensions = Dimensions.get("screen")
 const initialArray = coffeeSearchArray.sort(() => 0.5 - Math.random()).slice(0, 5);
 
 export function Home({ navigation }: HomeScreenProps) {
-  const [anime, setAnime] = useState(false)
-
   const [statusBarStyle, setStatusBarStyle] = useState(false);
-  const [isIntroFinished, setIsIntroFinished] = useState(false)
+  const [isIntroFinished, setIsIntroFinished] = useState(false);
 
   const scrollY = useSharedValue(0);
-
-  const traditionalSV = useSharedValue(true);
-  const sweetSV = useSharedValue(false);
-  const specialSV = useSharedValue(false);
+  const currentSectionOnFocus = useSharedValue(0);
 
   const bannerHeight = useSharedValue(0);
   const carouselMargin = useSharedValue(ScreenDimensions.width);
@@ -49,35 +46,31 @@ export function Home({ navigation }: HomeScreenProps) {
     )
   }))
 
+  const carouselAnimationStyles = useAnimatedStyle(() => ({
+    marginLeft: carouselMargin.value,
+    marginBottom: carouselMargin.value
+  }))
+
   function handleOnScroll(event: NativeSyntheticEvent<NativeScrollEvent>) {
     scrollY.value = event.nativeEvent.contentOffset.y
 
     if (scrollY.value < 1200) {
-      if (traditionalSV.value) return
+      if (currentSectionOnFocus.value === 0) return
 
-      specialSV.value = false
-      sweetSV.value = false
-
-      traditionalSV.value = true
+      currentSectionOnFocus.value = 0
       return
     }
-    
+
     if (scrollY.value < 1750) {
-      if (sweetSV.value) return
+      if (currentSectionOnFocus.value === 1) return
 
-      traditionalSV.value = false
-      specialSV.value = false
-
-      sweetSV.value = true
+      currentSectionOnFocus.value = 1
       return
     }
-    
-    if (specialSV.value) return
 
-    traditionalSV.value = false
-    sweetSV.value = false
+    if (currentSectionOnFocus.value === 2) return
 
-    specialSV.value = true
+    currentSectionOnFocus.value = 2
   }
 
   function handleOnScrollEnd(event: NativeSyntheticEvent<NativeScrollEvent>) {
@@ -88,16 +81,17 @@ export function Home({ navigation }: HomeScreenProps) {
   }
 
   useEffect(() => {
-    bannerHeight.value = 0
-    carouselMargin.value = ScreenDimensions.width
-    setIsIntroFinished(false)
+    bannerHeight.value = withDelay(DURATION, withTiming(100, { duration: EnteringDuration }))
 
-    const localDuration = DURATION * 2
-    bannerHeight.value = withDelay(DURATION, withTiming(100, { duration: localDuration }))
-    carouselMargin.value = withDelay(DURATION * 1.2, withTiming(0, { duration: localDuration },
-      () => runOnJS(setIsIntroFinished)(true)
+    carouselMargin.value = withDelay(BottomEnteringDelay, withTiming(0,
+      { duration: EnteringDuration },
+      (finished) => {
+        'worklet'
+        if (finished)
+          runOnJS(setIsIntroFinished)(true)
+      }
     ))
-  }, [anime])
+  }, [])
 
   return (
     <View style={{ flex: 1 }}>
@@ -107,17 +101,9 @@ export function Home({ navigation }: HomeScreenProps) {
         translucent
       />
 
-      <Pressable
-        onPress={() => setAnime(!anime)}
-        style={{ position: "absolute", height: 50, width: 50, right: 15, bottom: 15, borderRadius: 100, backgroundColor: "green", justifyContent: "center", alignItems: 'center', zIndex: 30 }}
-      >
-        <ArrowClockwise color="white" />
-      </Pressable>
-
       <TopBarHome
         interpolateValue={scrollY}
         onCartPress={() => navigation.navigate("cart")}
-        anime={anime}
       />
 
       <ScrollView
@@ -153,12 +139,7 @@ export function Home({ navigation }: HomeScreenProps) {
           </Animated.View>
         </View>
 
-        <Animated.View
-          style={[st.carouselContainer, {
-            marginLeft: carouselMargin,
-            marginBottom: carouselMargin
-          }]}
-        >
+        <Animated.View style={[st.carouselContainer, carouselAnimationStyles]}>
           <Carousel
             navigation={navigation}
             coffeeArray={initialArray}
@@ -172,9 +153,9 @@ export function Home({ navigation }: HomeScreenProps) {
 
           <View style={st.filterOptionsContainer}>
 
-            <Tag isActive={traditionalSV}>Tradicionais</Tag>
-            <Tag isActive={sweetSV}>Doces</Tag>
-            <Tag isActive={specialSV}>Especiais</Tag>
+            <Tag currentFocus={currentSectionOnFocus} ownIndex={0} >Tradicionais</Tag>
+            <Tag currentFocus={currentSectionOnFocus} ownIndex={1} >Doces</Tag>
+            <Tag currentFocus={currentSectionOnFocus} ownIndex={2} >Especiais</Tag>
 
           </View>
         </View>

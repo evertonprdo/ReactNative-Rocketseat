@@ -1,16 +1,13 @@
-import { Colors } from "@styles/colors";
-import { Dimensions, StatusBar, View } from "react-native";
+import { useEffect, useState } from "react";
+import { StatusBar, View } from "react-native";
 import Animated, { Keyframe, runOnJS, useAnimatedStyle, useSharedValue, withDelay, withTiming } from "react-native-reanimated";
 
 import LogoSvg from "@assets/logo/logo.svg"
 import LettersSvg from "@assets/logo/letters.svg"
-import { useEffect, useRef, useState } from "react";
+import st from "./styles";
 
 const LettersSvgWidth = 96
 const FirstAnimationDuration = 630
-
-const ScreenDimensions = Dimensions.get("screen")
-const purpleCircleSize = ScreenDimensions.width * 2.5
 
 type Props = {
   isAnimationAllowedToEnd?: boolean
@@ -22,7 +19,7 @@ export default function SplashScreenView({ isAnimationAllowedToEnd, setIsAllRead
   const lettersContainerOpacity = useSharedValue(0);
 
   const containerOpacity = useSharedValue(1);
-  const isAnimationAlredyDone = useRef(false);
+  const [isAnimationAlredyDone, setIsAnimationAlredyDone] = useState(false);
 
   const enteringKeyFrame = new Keyframe({
     0: { transform: [{ scale: 0 }], opacity: 0 },
@@ -41,34 +38,42 @@ export default function SplashScreenView({ isAnimationAllowedToEnd, setIsAllRead
 
   function onFirstAnimationEnd() {
     'worklet'
+    lettersContainerOpacity.value = withDelay(300, withTiming(1, { duration: 500 }))
+
     lettersContainerWidth.value = withDelay(300, withTiming(
       LettersSvgWidth,
       { duration: 700 },
       (finished) => {
-        if (finished)
-          runOnJS(runAnimationEnd)()
+        if (finished) {
+          runOnJS(setIsAnimationAlredyDone)(true)
+        }
       }
     ))
-
-    lettersContainerOpacity.value = withDelay(300, withTiming(1, { duration: 500 }))
   }
 
   function runAnimationEnd() {
-    containerOpacity.value = withTiming(0, { duration: 500 }, switchToApplication)
+    containerOpacity.value = withTiming(0, { duration: 500 }, (finished) => {
+      if (finished)
+        runOnJS(setIsAllReady)(true)
+    })
   }
 
-  function switchToApplication() {
-    'worklet'
-    runOnJS(setIsAllReady)(true)
-  }
+  useEffect(() => {
+    if (isAnimationAllowedToEnd && isAnimationAlredyDone) {
+      runAnimationEnd()
+    }
+  }, [isAnimationAllowedToEnd, isAnimationAlredyDone])
 
   return (
-    <Animated.View style={[{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: Colors.app.purpleDark }, containerOpacityStyle]}>
+    <Animated.View style={[st.container, containerOpacityStyle]}>
       <StatusBar translucent backgroundColor={"transparent"} />
 
       <Animated.View
-        style={{ height: purpleCircleSize, width: purpleCircleSize, justifyContent: "center", alignItems: "center", backgroundColor: Colors.app.purple, borderRadius: 9999 }}
-        entering={enteringKeyFrame.duration(FirstAnimationDuration).withCallback(onFirstAnimationEnd)}
+        style={st.innerContainer}
+        entering={enteringKeyFrame
+          .duration(FirstAnimationDuration)
+          .withCallback(onFirstAnimationEnd)
+        }
       >
         <View style={{ flexDirection: 'row', gap: 15 }}>
           <LogoSvg />

@@ -7,9 +7,12 @@ import type { CardProps } from "@components/HighlightCard";
 
 type Props = Omit<CardProps, "category"> & PressableProps
 
-export function CatalogCard({ description, icon: Icon, price, title }: Props) {
+export function CatalogCard({ description, icon: Icon, price, title, ...rest }: Props) {
   return (
-    <Pressable style={st.container}>
+    <Pressable
+      style={st.container}
+      {...rest}
+    >
       <View style={st.thumbnail}>
         <Icon height={96} width={96} />
       </View>

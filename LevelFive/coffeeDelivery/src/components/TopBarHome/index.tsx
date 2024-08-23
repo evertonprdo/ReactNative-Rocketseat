@@ -11,16 +11,16 @@ import { CartIcon } from "@components/CartIcon";
 type Props = {
   onCartPress: () => void
   interpolateValue: SharedValue<number>
-  anime?: boolean
 }
 
 const ScrollInputRange = [50, 300]
 export const DURATION = 500
 
-export function TopBarHome({ onCartPress, interpolateValue, anime }: Props) {
+export function TopBarHome({ onCartPress, interpolateValue }: Props) {
   const Insets = useSafeAreaInsets();
+  const translateY = Insets.top + 150
 
-  const innerHeight = useSharedValue(0);
+  const innerHeight = useSharedValue(translateY);
 
   const containerAnimatedStyle = useAnimatedStyle(() => ({
     transform: [{ translateY: -innerHeight.value }],
@@ -51,9 +51,8 @@ export function TopBarHome({ onCartPress, interpolateValue, anime }: Props) {
   }));
 
   useEffect(() => {
-    innerHeight.value = 100
     innerHeight.value = withTiming(0, { duration: DURATION })
-  }, [anime]);
+  }, []);
 
   return (
     <Animated.View

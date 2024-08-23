@@ -5,18 +5,19 @@ import { Colors } from "@styles/colors";
 import st from "./styles";
 
 type Props = PressableProps & {
-  isActive: SharedValue<boolean>
+  currentFocus: SharedValue<number>
+  ownIndex: number
   children?: React.ReactNode
 }
-export function Tag({ isActive: isActive, children, ...props }: Props) {
+export function Tag({ currentFocus, ownIndex, children, ...props }: Props) {
   const animatedStyleContainer = useAnimatedStyle(() => ({
-    backgroundColor: isActive.value
+    backgroundColor: currentFocus.value === ownIndex
       ? withTiming(Colors.app.purpleDark)
       : withTiming(Colors.gray[900])
   }))
 
   const animatedStyleText = useAnimatedStyle(() => ({
-    color: isActive.value
+    color: currentFocus.value === ownIndex
       ? withTiming("white")
       : withTiming(Colors.app.purpleDark)
   }))
