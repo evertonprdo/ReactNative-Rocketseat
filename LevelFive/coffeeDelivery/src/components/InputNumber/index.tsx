@@ -1,40 +1,42 @@
-import { useState } from "react";
 import { View } from "react-native";
 
 import st from "./styles"
-import { PressableIcon } from "@components/PressableIcon";
+import { InputNumberIcon } from "@components/InputNumberIcon";
 import { TextRegular } from "@components/Text";
 
-export function InputNumber() {
-	const [count, setCount] = useState(1);
+type Props = {
+  count: number
+  onCountChange: (val: number) => void
+}
 
-	function handleOnPressPlus() {
-		if(count === 99) return
-		setCount(count + 1)
-	}
+export function InputNumber({ count, onCountChange }: Props) {
+  function handleOnPressPlus() {
+    if (count === 99) return
+    onCountChange(count + 1)
+  }
 
-	function handleOnPressMinus() {
-		if(count === 1) return
-		setCount(count - 1)
-	}
-	return (
-		<View style={st.container}>
-			<PressableIcon
-				variant="minus"
-				onPress={handleOnPressMinus}
-			/>
+  function handleOnPressMinus() {
+    if (count === 1) return
+    onCountChange(count - 1)
+  }
+  return (
+    <View style={st.container}>
+      <InputNumberIcon
+        variant="minus"
+        onPress={handleOnPressMinus}
+      />
 
-			<TextRegular
-				size="md"
-				style={st.number}
-			>
-				{count}
-			</TextRegular>
+      <TextRegular
+        size="md"
+        style={st.number}
+      >
+        {count}
+      </TextRegular>
 
-			<PressableIcon
-				variant="plus"
-				onPress={handleOnPressPlus}
-			/>
-		</View>
-	)
+      <InputNumberIcon
+        variant="plus"
+        onPress={handleOnPressPlus}
+      />
+    </View>
+  )
 }

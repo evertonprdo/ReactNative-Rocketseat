@@ -13,8 +13,9 @@ const styles = StyleSheet.create({
     zIndex: 10,
   },
   smokeContainer: {
-    width: 86,
+    width: "100%",
     height: heightOfGreatestSmoke,
+    overflow: 'hidden',
     justifyContent: "center",
     alignItems: "center",
     alignSelf: "center",

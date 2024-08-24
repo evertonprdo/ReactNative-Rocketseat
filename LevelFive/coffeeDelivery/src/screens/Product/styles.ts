@@ -9,6 +9,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 32,
     paddingVertical: 20,
     justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 12
   },
   infoContainer: {
@@ -77,7 +78,6 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flex: 1,
-    height: 48
   }
 })
 

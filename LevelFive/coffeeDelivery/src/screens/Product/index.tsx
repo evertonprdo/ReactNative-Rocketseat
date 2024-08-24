@@ -19,6 +19,7 @@ import { Button } from "@components/Button";
 import { Loading } from "@components/Loading";
 
 import { RootStackParamList } from "@routes/app.routes";
+import { PressableArrowLeft } from "@components/PressableArrowLeft";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'product'>;
 
@@ -30,6 +31,7 @@ export default function Product({ navigation, route }: Props) {
   const [isLoadingCoffee, setIsLoadingCoffee] = useState(true);
   const [alertFlag, setAlertFlag] = useState(false)
   const [coffeeSize, setCoffeeSize] = useState<String | null>(null)
+  const [amount, setAmount] = useState(1)
 
   const [coffee, setCoffee] = useState({
     title: "",
@@ -81,9 +83,7 @@ export default function Product({ navigation, route }: Props) {
     <SafeAreaView style={st.container}>
 
       <View style={st.navBar}>
-        <Pressable onPress={() => navigation.goBack()}>
-          <ArrowLeft size={24} color={Colors.white} />
-        </Pressable>
+        <PressableArrowLeft onPress={() => navigation.goBack()}/>
 
         <CartIcon onPress={() => navigation.navigate("cart")} />
       </View>
@@ -138,7 +138,10 @@ export default function Product({ navigation, route }: Props) {
         </View>
 
         <View style={st.addToCartContainer}>
-          <InputNumber />
+          <InputNumber
+            count={amount}
+            onCountChange={setAmount}
+          />
 
           <Animated.View style={[buttonAnimatedStyles, st.buttonContainer]}>
             <Button onPress={handleOnAddToCart}>
