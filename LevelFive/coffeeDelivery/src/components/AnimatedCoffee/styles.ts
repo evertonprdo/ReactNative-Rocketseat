@@ -1,22 +1,26 @@
 import { StyleSheet } from "react-native";
 
-const heightOfGreatestSmoke = 136
-const imageMarginTop = -75
+const heightOfGreatestSmoke = 137
+const smokeMarginBottom = -77
 
 const styles = StyleSheet.create({
   container: {
     alignSelf: "center",
     alignItems: "center",
     width: "100%",
-    marginBottom: -55,
+    marginBottom: -52,
 
     zIndex: 10,
   },
   smokeContainer: {
-    justifyContent: "flex-end",
-    height: heightOfGreatestSmoke
+    width: 86,
+    height: heightOfGreatestSmoke,
+    justifyContent: "center",
+    alignItems: "center",
+    alignSelf: "center",
+    marginBottom: smokeMarginBottom,
+    opacity: 0.2
   },
-  image: { marginTop: imageMarginTop }
 })
 
 export default styles

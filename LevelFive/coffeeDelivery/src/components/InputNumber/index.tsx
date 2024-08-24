@@ -6,7 +6,7 @@ import { PressableIcon } from "@components/PressableIcon";
 import { TextRegular } from "@components/Text";
 
 export function InputNumber() {
-	const [count, setCount] = useState(0);
+	const [count, setCount] = useState(1);
 
 	function handleOnPressPlus() {
 		if(count === 99) return
@@ -14,7 +14,7 @@ export function InputNumber() {
 	}
 
 	function handleOnPressMinus() {
-		if(count === 0) return
+		if(count === 1) return
 		setCount(count - 1)
 	}
 	return (

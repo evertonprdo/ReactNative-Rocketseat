@@ -74,6 +74,10 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     
     backgroundColor: Colors.gray[700],
+  },
+  buttonContainer: {
+    flex: 1,
+    height: 48
   }
 })
 

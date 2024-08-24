@@ -5,13 +5,13 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { useFonts } from "expo-font";
 
-import { Colors } from "@styles/colors";
 import { Baloo2_700Bold } from '@expo-google-fonts/baloo-2'
 import { Roboto_700Bold, Roboto_400Regular } from '@expo-google-fonts/roboto'
 
 import SplashScreenView from "@components/SplashScreen";
 
 import { Routes } from "@routes/index";
+import { StatusBar } from "react-native";
 
 export default function App() {
   const [isAllReady, setIsAllReady] = useState(false);
@@ -25,16 +25,23 @@ export default function App() {
     }, 5000)
   }, [])
 
+  if (!isAllReady) {
+    return (
+      <SplashScreenView
+        isAnimationAllowedToEnd={fakePreload}
+        setIsAllReady={setIsAllReady}
+      />
+    )
+  }
+
   return (
-    <GestureHandlerRootView
-      style={{ flex: 1, backgroundColor: fakePreload ? Colors.gray[900] : Colors.app.purpleDark }}
-    >
-      <SafeAreaProvider>
-        {isAllReady
-          ? <Routes />
-          : <SplashScreenView isAnimationAllowedToEnd={fakePreload} setIsAllReady={setIsAllReady} />
-        }
-      </SafeAreaProvider>
-    </GestureHandlerRootView>
+    <>
+      <StatusBar translucent backgroundColor={"transparent"} />
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <SafeAreaProvider>
+          <Routes />
+        </SafeAreaProvider>
+      </GestureHandlerRootView>
+    </>
   );
 }

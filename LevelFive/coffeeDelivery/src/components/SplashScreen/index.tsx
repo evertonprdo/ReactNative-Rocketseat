@@ -67,7 +67,6 @@ export default function SplashScreenView({ isAnimationAllowedToEnd, setIsAllRead
   return (
     <Animated.View style={[st.container, containerOpacityStyle]}>
       <StatusBar translucent backgroundColor={"transparent"} />
-
       <Animated.View
         style={st.innerContainer}
         entering={enteringKeyFrame
