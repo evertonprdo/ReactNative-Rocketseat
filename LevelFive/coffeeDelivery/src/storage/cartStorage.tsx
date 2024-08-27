@@ -75,9 +75,19 @@ export async function updateCartItem(updateItem: CartItemProps) {
 export async function removeItemCart(id: number, size: CoffeeSizes) {
   try {
     const response = await getCartItems();
-    const newData = response.filter(item => item.id !== id && item.coffee_size !== size)
+
+    const newData = response.filter(item => !(item.id === id && item.coffee_size === size))
 
     await AsyncStorage.setItem(CART_KEY, JSON.stringify(newData))
+  } catch (error) {
+    throw error
+  }
+}
+
+export async function removeAllItems() {
+  try {
+    AsyncStorage.removeItem(CART_KEY)
+
   } catch (error) {
     throw error
   }

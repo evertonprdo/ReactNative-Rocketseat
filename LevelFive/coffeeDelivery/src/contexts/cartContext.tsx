@@ -1,6 +1,6 @@
 import { createContext, PropsWithChildren, useEffect, useState } from "react";
 import { CoffeeProps, coffeeSearchArray } from "@data/coffee";
-import { addCartItem, CartItemProps, getCartItems, updateCartItem } from "@storage/cartStorage";
+import { addCartItem, CartItemProps, CoffeeSizes, getCartItems, removeAllItems, removeItemCart, updateCartItem } from "@storage/cartStorage";
 
 type CoffeeCartProps = CoffeeProps & CartItemProps
 
@@ -12,6 +12,8 @@ export type CartContextProps = {
   }
   addItem: (newItem: CartItemProps) => Promise<void>
   updateItem: (updItem: CartItemProps) => Promise<void>
+  deleteItem: (id: number, size: CoffeeSizes) => Promise<void>
+  onFinishPurchase: () => void
 }
 
 export const CartContext = createContext<CartContextProps | null>(null);
@@ -63,12 +65,34 @@ export function CartProvider({ children }: PropsWithChildren) {
     }
   }
 
+  async function deleteItem(id: number, size: CoffeeSizes) {
+    try {
+      await removeItemCart(id, size)
+
+      fetchStorageCart()
+    } catch (error) {
+      console.log(error)
+    }
+
+  }
+
+  async function onFinishPurchase() {
+    try {
+      await removeAllItems()
+
+      fetchStorageCart()
+
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   useEffect(() => {
     fetchStorageCart()
   }, [])
 
   return (
-    <CartContext.Provider value={{ cart, addItem, updateItem }}>
+    <CartContext.Provider value={{ cart, addItem, updateItem, deleteItem, onFinishPurchase }}>
       {children}
     </CartContext.Provider>
   )

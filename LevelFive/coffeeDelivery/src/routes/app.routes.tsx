@@ -4,11 +4,13 @@ import { Home } from "@screens/Home";
 import Cart from "@screens/Cart";
 import Product from "@screens/Product";
 import { Colors } from "@styles/colors";
+import Purchase from "@screens/Purchase";
 
 export type RootStackParamList = {
   home: undefined,
   product: { id: number },
   cart: undefined
+  purchase: undefined
 }
 
 const { Navigator, Screen } = createNativeStackNavigator<RootStackParamList>();
@@ -38,6 +40,11 @@ export function AppRoutes() {
       <Screen
         name="cart"
         component={Cart}
+        options={{ statusBarStyle: "dark" }}
+      />
+      <Screen
+        name="purchase"
+        component={Purchase}
         options={{ statusBarStyle: "dark" }}
       />
     </Navigator>

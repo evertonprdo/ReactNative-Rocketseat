@@ -22,6 +22,8 @@ import { RootStackParamList } from "@routes/app.routes";
 import { CoffeeSizes } from "@storage/cartStorage";
 
 import { useCart } from "@hooks/useCart";
+import Toast from "react-native-toast-message";
+import { Audio } from "expo-av";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'product'>;
 
@@ -53,9 +55,18 @@ export default function Product({ navigation, route }: Props) {
       : withTiming(Colors.gray[400])
   }))
 
+  async function playAudio(isGood: boolean) {
+    const file = isGood ? require('@assets/correct.mp3') : require("@assets/wrong.mp3")
+
+    const { sound } = await Audio.Sound.createAsync(file, { shouldPlay: true })
+    await sound.setPositionAsync(0);
+    await sound.playAsync();
+  }
+
   async function handleOnAddToCart() {
     if (coffeeSize === null) {
       setAlertFlag(true)
+      playAudio(false)
       return
     }
 
@@ -65,6 +76,15 @@ export default function Product({ navigation, route }: Props) {
         coffee_size: coffeeSize,
         amount: amount,
       })
+
+      Toast.show({
+        type: "info",
+        text1: coffee.title,
+        text2: coffeeSize,
+        onPress: () => navigation.navigate("cart")
+      })
+
+      playAudio(true)
 
       navigation.goBack()
     } catch (error) {
@@ -98,7 +118,7 @@ export default function Product({ navigation, route }: Props) {
     <SafeAreaView style={st.container}>
 
       <View style={st.navBar}>
-        <PressableArrowLeft onPress={() => navigation.goBack()}/>
+        <PressableArrowLeft onPress={() => navigation.goBack()} />
 
         <CartIcon onPress={() => navigation.navigate("cart")} />
       </View>

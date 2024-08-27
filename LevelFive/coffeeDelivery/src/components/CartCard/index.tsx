@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { View } from "react-native";
+import { Alert, View } from "react-native";
 import { Swipeable } from "react-native-gesture-handler";
 import { Trash } from "phosphor-react-native";
 import { SvgProps } from "react-native-svg";
@@ -9,71 +9,84 @@ import { Colors } from "@styles/colors";
 import { Heading, TextRegular } from "@components/Text";
 import { InputNumber } from "@components/InputNumber";
 import { InputNumberIcon } from "@components/InputNumberIcon";
+import { useCart } from "@hooks/useCart";
+import { CoffeeSizes, removeItemCart } from "@storage/cartStorage";
 
 type Props = {
-	icon: React.FC<SvgProps>,
-	title: string
-	price: string
-	amount: number
-	size: string
+  id: number
+  icon: React.FC<SvgProps>,
+  title: string
+  price: string
+  amount: number
+  size: CoffeeSizes
 }
 
-export function CartCard({ title, price, amount, size, icon: Icon }: Props) {
-	const [count, setCount] = useState(amount)
+export function CartCard({ id, title, price, amount, size, icon: Icon }: Props) {
+  const cartContext = useCart()
+  const [count, setCount] = useState(amount)
 
-	useEffect(() => {
-		
-	}, [count])
-	
-	return (
-		<Swipeable
-			containerStyle={st.swipeableContainer}
-			overshootRight={false}
-			renderRightActions={() => null}
-			renderLeftActions={() => (
-				<View style={st.backContainer}>
-					<Trash size={28} color={Colors.feedback.redDark} />
-				</View>
-			)}
-		>
-			<View style={st.container}>
+  function handleOnDelete() {
+    cartContext.deleteItem(id, size)
+  }
 
-				<Icon height={64} width={64} style={st.thumbnail} />
+  useEffect(() => {
+    cartContext.updateItem({
+      id,
+      amount: count,
+      coffee_size: size
+    })
+  }, [count])
 
-				<View style={st.info}>
+  return (
+    <Swipeable
+      containerStyle={st.swipeableContainer}
+      overshootRight={false}
+      renderRightActions={() => null}
+      renderLeftActions={() => (
+        <View style={st.backContainer}>
+          <Trash size={28} color={Colors.feedback.redDark} />
+        </View>
+      )}
+      onSwipeableOpen={handleOnDelete}
+    >
+      <View style={st.container}>
 
-					<View style={st.about}>
+        <Icon height={64} width={64} style={st.thumbnail} />
 
-						<View style={st.header}>
+        <View style={st.info}>
 
-							<TextRegular style={st.title} size="md">
-								{title}
-							</TextRegular>
-							<TextRegular style={st.volume} size="sm">
-								{size}
-							</TextRegular>
-						</View>
+          <View style={st.about}>
 
-						<Heading size="sm" style={st.title}>
-							R$ {price}
-						</Heading>
-					</View>
+            <View style={st.header}>
 
-					<View style={st.actions}>
-						<View style={st.inputNumber}>
+              <TextRegular style={st.title} size="md">
+                {title}
+              </TextRegular>
+              <TextRegular style={st.volume} size="sm">
+                {size}
+              </TextRegular>
+            </View>
 
-							<InputNumber
-								count={count}
-								onCountChange={setCount}
-							/>
+            <Heading size="sm" style={st.title}>
+              R$ {price}
+            </Heading>
+          </View>
 
-						</View>
+          <View style={st.actions}>
+            <View style={st.inputNumber}>
 
-						<InputNumberIcon variant="trash" />
-					</View>
+              <InputNumber
+                count={count}
+                onCountChange={setCount}
+              />
 
-				</View>
-			</View>
-		</Swipeable>
-	)
+            </View>
+
+            <InputNumberIcon variant="trash" onPress={handleOnDelete}/>
+          </View>
+
+        </View>
+      </View>
+    </Swipeable>
+  )
 }

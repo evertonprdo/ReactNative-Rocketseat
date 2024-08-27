@@ -17,6 +17,7 @@ import { RootStackParamList } from "@routes/app.routes";
 
 import CoffeeBeans from "@assets/coffeeBeans.png"
 import DATA, { coffeeSearchArray } from "@data/coffee";
+import Toast from "react-native-toast-message";
 
 export type HomeScreenProps = NativeStackScreenProps<RootStackParamList, 'home'>;
 

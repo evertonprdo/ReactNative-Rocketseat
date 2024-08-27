@@ -13,6 +13,8 @@ import SplashScreenView from "@components/SplashScreen";
 import { Routes } from "@routes/index";
 import { StatusBar } from "react-native";
 import { CartProvider } from "@contexts/cartContext";
+import { toastConfig } from "@components/Toast";
+import Toast from "react-native-toast-message";
 
 export default function App() {
   const [isAllReady, setIsAllReady] = useState(false);
@@ -41,7 +43,10 @@ export default function App() {
       <GestureHandlerRootView style={{ flex: 1 }}>
         <SafeAreaProvider>
           <CartProvider>
+
             <Routes />
+            <Toast position="bottom" config={toastConfig} bottomOffset={0} />
+
           </CartProvider>
         </SafeAreaProvider>
       </GestureHandlerRootView>
