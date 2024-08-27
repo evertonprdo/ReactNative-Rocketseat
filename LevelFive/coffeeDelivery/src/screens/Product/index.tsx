@@ -1,9 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
-import { Pressable, View } from "react-native";
+import { View } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useFocusEffect } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { ArrowLeft } from "phosphor-react-native";
 import Animated, { useAnimatedStyle, withTiming } from "react-native-reanimated";
 
 import { Colors } from "@styles/colors";
@@ -17,20 +16,24 @@ import { Select, ALERT_ANIMATION_CONFIG } from "@components/Select";
 import { InputNumber } from "@components/InputNumber";
 import { Button } from "@components/Button";
 import { Loading } from "@components/Loading";
+import { PressableArrowLeft } from "@components/PressableArrowLeft";
 
 import { RootStackParamList } from "@routes/app.routes";
-import { PressableArrowLeft } from "@components/PressableArrowLeft";
+import { CoffeeSizes } from "@storage/cartStorage";
+
+import { useCart } from "@hooks/useCart";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'product'>;
 
-const COFFEE_SIZES = ["114ml", "140ml", "227ml"]
+const COFFEE_SIZES: CoffeeSizes[] = ["114ml", "140ml", "227ml"]
 
 export default function Product({ navigation, route }: Props) {
   const { id: queryId } = route.params
+  const cart = useCart();
 
   const [isLoadingCoffee, setIsLoadingCoffee] = useState(true);
   const [alertFlag, setAlertFlag] = useState(false)
-  const [coffeeSize, setCoffeeSize] = useState<String | null>(null)
+  const [coffeeSize, setCoffeeSize] = useState<CoffeeSizes | null>(null)
   const [amount, setAmount] = useState(1)
 
   const [coffee, setCoffee] = useState({
@@ -50,10 +53,22 @@ export default function Product({ navigation, route }: Props) {
       : withTiming(Colors.gray[400])
   }))
 
-  function handleOnAddToCart() {
+  async function handleOnAddToCart() {
     if (coffeeSize === null) {
       setAlertFlag(true)
       return
+    }
+
+    try {
+      await cart.addItem({
+        id: queryId,
+        coffee_size: coffeeSize,
+        amount: amount,
+      })
+
+      navigation.goBack()
+    } catch (error) {
+      console.log(error)
     }
   }
 

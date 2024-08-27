@@ -74,6 +74,7 @@ export function TopBarHome({ onCartPress, interpolateValue }: Props) {
             Porto Alegre, RS
           </Animated.Text>
         </View>
+        
         <CartIcon onPress={onCartPress} />
 
       </Animated.View>

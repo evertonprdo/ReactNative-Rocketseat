@@ -5,30 +5,33 @@ import st from "./styles"
 import { Colors } from "@styles/colors";
 import { TextRegular } from "@components/Text";
 
-type Props = PressableProps & {
-	itemsCount?: number
-}
-export function CartIcon({ itemsCount, ...props }: Props) {
-	const hasItemsInCart = itemsCount && itemsCount > 0
-	const color = hasItemsInCart ? Colors.app.purpleDark : Colors.app.yellowDark
+import { useCart } from "src/hooks/useCart";
 
-	return (
-		<Pressable
-			style={st.container}
-			{...props}
-		>
-			<ShoppingCart size={20} color={color} weight="fill" />
+type Props = PressableProps
+export function CartIcon({ ...props }: Props) {
+  const { cart } = useCart();
+  const itemsCount = cart.lenght
 
-			{hasItemsInCart &&
-				<View style={st.circle}>
-					<TextRegular
-						style={st.number}
-						size="xs"
-					>
-						{itemsCount}
-					</TextRegular>
-				</View>
-			}
-		</Pressable>
-	)
+  const hasItemsInCart = itemsCount > 0
+  const color = hasItemsInCart ? Colors.app.purpleDark : Colors.app.yellowDark
+
+  return (
+    <Pressable
+      style={st.container}
+      {...props}
+    >
+      <ShoppingCart size={20} color={color} weight="fill" />
+
+      {hasItemsInCart &&
+        <View style={st.circle}>
+          <TextRegular
+            style={st.number}
+            size="xs"
+          >
+            {itemsCount}
+          </TextRegular>
+        </View>
+      }
+    </Pressable>
+  )
 }

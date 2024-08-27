@@ -51,5 +51,5 @@ const DATA = [
 
 
 
-export type CoffeeProps = typeof DATA[0]["data"]
+export type CoffeeProps = typeof DATA[0]["data"][0]
 export default DATA

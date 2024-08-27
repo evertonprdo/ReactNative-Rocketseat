@@ -25,6 +25,12 @@
       "@styles/*": [
         "./src/styles/*"
       ],
+      "@contexts/*": [
+        "./src/contexts/*"
+      ],
+      "@hooks/*": [
+        "./src/hooks/*"
+      ],
     }
   }
 }

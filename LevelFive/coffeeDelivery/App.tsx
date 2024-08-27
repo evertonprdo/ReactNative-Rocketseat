@@ -12,6 +12,7 @@ import SplashScreenView from "@components/SplashScreen";
 
 import { Routes } from "@routes/index";
 import { StatusBar } from "react-native";
+import { CartProvider } from "@contexts/cartContext";
 
 export default function App() {
   const [isAllReady, setIsAllReady] = useState(false);
@@ -39,7 +40,9 @@ export default function App() {
       <StatusBar translucent backgroundColor={"transparent"} />
       <GestureHandlerRootView style={{ flex: 1 }}>
         <SafeAreaProvider>
-          <Routes />
+          <CartProvider>
+            <Routes />
+          </CartProvider>
         </SafeAreaProvider>
       </GestureHandlerRootView>
     </>

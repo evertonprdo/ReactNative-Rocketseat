@@ -14,16 +14,17 @@ type Props = {
 	icon: React.FC<SvgProps>,
 	title: string
 	price: string
-	amount: React.MutableRefObject<number>
+	amount: number
 	size: string
 }
 
 export function CartCard({ title, price, amount, size, icon: Icon }: Props) {
-	const [count, setCount] = useState(amount.current)
+	const [count, setCount] = useState(amount)
 
 	useEffect(() => {
-		amount.current = count
+		
 	}, [count])
+	
 	return (
 		<Swipeable
 			containerStyle={st.swipeableContainer}

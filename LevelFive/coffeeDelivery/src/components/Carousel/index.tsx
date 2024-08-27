@@ -15,7 +15,7 @@ const DURATION = 333
 const ScreeWidth = Dimensions.get("screen").width
 
 type Props = {
-  coffeeArray: CoffeeProps
+  coffeeArray: CoffeeProps[]
   navigation: HomeScreenProps["navigation"]
 }
 
