@@ -5,78 +5,77 @@ import styles from "./styles";
 import Participant from "../../components/Participant";
 
 export default function Home() {
-    const [ participant, setParticipant ] = useState('')
-    const [ participants, setParticipants ] = useState<string[]>([])
+  const [participant, setParticipant] = useState('')
+  const [participants, setParticipants] = useState<string[]>([])
 
-    function handleParticipantAdd() {
-        if(participants.includes(participant)) {
-            return Alert.alert("Participante existe", "Já existe um participante na lista com esse nome")
-        }
-
-        setParticipants(prevState => [...prevState, participant])
-        setParticipant('')
-    }
-    function handleParticipantRemove(name: string) {
-        Alert.alert("Remover", `Remover o participante ${name}?`,[
-            {
-                text: 'Sim',
-                onPress: () => { setParticipants(prev => prev.filter((value) => value !== name)) }
-            },
-            {
-                text: 'Não',
-                style: 'cancel',
-            }
-        ])
-
-        console.log(`Você clicou em remover o participante ${name}`)
+  function handleParticipantAdd() {
+    if (participants.includes(participant)) {
+      return Alert.alert("Participant exists", "There is already a participant on the list with that name")
     }
 
-    return (
-        <View style={styles.container}>
-            <Text style= {styles.eventName}>
-                Nome do evento
-            </Text>
+    setParticipants(prevState => [...prevState, participant])
+    setParticipant('')
+  }
+  
+  function handleParticipantRemove(name: string) {
+    Alert.alert("Remove", `Remove participant ${name}?`, [
+      {
+        text: 'Yes',
+        onPress: () => { setParticipants(prev => prev.filter((value) => value !== name)) }
+      },
+      {
+        text: 'No',
+        style: 'cancel',
+      }
+    ])
+  }
 
-            <Text style= {styles.eventDate}>
-                Sexta, 4 de Novembro de 2022
-            </Text>
+  return (
+    <View style={styles.container}>
+      <Text style={styles.eventName}>
+        Event name
+      </Text>
 
-            <View style= {styles.form}>
-                <TextInput
-                    style={styles.input}
+      <Text style={styles.eventDate}>
+        Friday, November 4, 2022
+      </Text>
 
-                    placeholder="Nome do participante"
-                    placeholderTextColor={"#6b6b6b"}
+      <View style={styles.form}>
+        <TextInput
+          style={styles.input}
 
-                    onChangeText={ setParticipant }
-                    value= {participant}
-                />
-                <TouchableOpacity
-                    style= {styles.button}
-                    onPress={ handleParticipantAdd }
-                >
-                    <Text style= {styles.buttonText}>
-                        +
-                    </Text>
-                </TouchableOpacity>
-            </View>
+          placeholder="Participant name"
+          placeholderTextColor={"#6b6b6b"}
 
-            <FlatList 
-                data={ participants }
-                keyExtractor={ item => item }
-                renderItem={({ item }) => (
-                    <Participant
-                        name={item}
-                        onRemove={() => handleParticipantRemove(item)}
-                    />
-                )} 
-                showsVerticalScrollIndicator={false}
-                ListEmptyComponent={() => (
-                    <Text style= {styles.listEmptyText}>
-                        Ninguém chegou no evento ainda? Adicione participantes a sua lista de presença.
-                    </Text>
-                )}
-            />
-        </View>
-    )
+          onChangeText={setParticipant}
+          value={participant}
+        />
+        <TouchableOpacity
+          style={styles.button}
+          onPress={handleParticipantAdd}
+        >
+          <Text style={styles.buttonText}>
+            +
+          </Text>
+        </TouchableOpacity>
+      </View>
+
+      <FlatList
+        data={participants}
+        keyExtractor={item => item}
+        renderItem={({ item }) => (
+          <Participant
+            name={item}
+            onRemove={() => handleParticipantRemove(item)}
+          />
+        )}
+        showsVerticalScrollIndicator={false}
+        ListEmptyComponent={() => (
+          <Text style={styles.listEmptyText}>
+            No one has arrived the event yet?{'\n'}Add participants to your presence list.
+          </Text>
+        )}
+      />
+    </View>
+  )
 }
