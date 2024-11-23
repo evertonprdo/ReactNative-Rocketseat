@@ -15,4 +15,5 @@ The project is intentionally kept simple, utilizing only essential tools like **
 
 ![imhere](screenshots/1.png)
 
+Check out a full video demonstration of the app in action: [YouTube - Imhere App Demo](https://youtube.com/shorts/AiciqzxPlkY)
 [![Demonstration](https://img.youtube.com/vi/AiciqzxPlkY/0.jpg)](https://youtube.com/shorts/AiciqzxPlkY)
